@@ -11,6 +11,8 @@ push: data-pre
 	hexo deploy
 
 data-pre:
+	# clear unused init files
+	rm -rf source
 	# copy source files to overwrite init files
 	cp -rf ../data/* .
 	# get themes
