@@ -31,9 +31,9 @@
 <meta property="og:site_name" content="码渣十七">
 <meta property="og:description" content="&amp;emsp;&amp;emsp;Windows 8.1 已经内建 USB 3.0 控制器驱动，正常情况下无需单独安装 USB 3.0 驱动程序。但有时由于兼容性问题或电源策略问题，系统睡眠并重新唤醒后 USB 3.0 端口无法正常工作，现象为 USB 3.0 设备传输速度限制在 30MB&#x2F;s 上下，系统识别端口为 USB 2.0 端口。如图，设备和打印机中查看 3.0 设备时提示可在 3.0 端口上获得更">
 <meta property="og:locale">
-<meta property="og:image" content="http://img.devchen.com/blogimg/20150903-win81-usb3/1.png">
-<meta property="og:image" content="http://img.devchen.com/blogimg/20150903-win81-usb3/3.png">
-<meta property="og:image" content="http://img.devchen.com/blogimg/20150903-win81-usb3/2.png">
+<meta property="og:image" content="https://www.coder17.com/blogimg/20150903-win81-usb3/1.png">
+<meta property="og:image" content="https://www.coder17.com/blogimg/20150903-win81-usb3/3.png">
+<meta property="og:image" content="https://www.coder17.com/blogimg/20150903-win81-usb3/2.png">
 <meta property="article:published_time" content="2015-09-06T14:49:00.000Z">
 <meta property="article:modified_time" content="2015-09-06T14:49:00.000Z">
 <meta property="article:author" content="東城十七">
@@ -41,7 +41,7 @@
 <meta property="article:tag" content="USB 3.0">
 <meta property="article:tag" content="Intel">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://img.devchen.com/blogimg/20150903-win81-usb3/1.png">
+<meta name="twitter:image" content="https://www.coder17.com/blogimg/20150903-win81-usb3/1.png">
 
 
 <link rel="canonical" href="https://www.coder17.com/posts/20150903-win81-usb3/">
@@ -136,9 +136,9 @@
   <ul class="main-menu menu">
         <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
         <li class="menu-item menu-item-coding-notes-|-码渣"><a href="/categories/Coding" rel="section"><i class="fa fa-code fa-fw"></i>Coding Notes | 码渣</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-project-diagram fa-fw"></i>Categories<span class="badge">12</span></a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">51</span></a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-box-open fa-fw"></i>Archives<span class="badge">19</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-project-diagram fa-fw"></i>Categories<span class="badge">11</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">47</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-box-open fa-fw"></i>Archives<span class="badge">15</span></a></li>
         <li class="menu-item menu-item-labs"><a href="/labs/" rel="section"><i class="fa fa-magic fa-fw"></i>Labs</a></li>
         <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-address-card fa-fw"></i>About</a></li>
   </ul>
@@ -353,9 +353,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>&emsp;&emsp;Windows 8.1 已经内建 USB 3.0 控制器驱动，正常情况下无需单独安装 USB 3.0 驱动程序。但有时由于兼容性问题或电源策略问题，系统睡眠并重新唤醒后 USB 3.0 端口无法正常工作，现象为 USB 3.0 设备传输速度限制在 30MB/s 上下，系统识别端口为 USB 2.0 端口。如图，设备和打印机中查看 3.0 设备时提示可在 3.0 端口上获得更快速度。<br><img src="http://img.devchen.com/blogimg/20150903-win81-usb3/1.png"></p>
+        <p>&emsp;&emsp;Windows 8.1 已经内建 USB 3.0 控制器驱动，正常情况下无需单独安装 USB 3.0 驱动程序。但有时由于兼容性问题或电源策略问题，系统睡眠并重新唤醒后 USB 3.0 端口无法正常工作，现象为 USB 3.0 设备传输速度限制在 30MB/s 上下，系统识别端口为 USB 2.0 端口。如图，设备和打印机中查看 3.0 设备时提示可在 3.0 端口上获得更快速度。<br><img src="/blogimg/20150903-win81-usb3/1.png"></p>
 <span id="more"></span>
-<p>&emsp;&emsp;首先强制重新安装驱动。在<a target="_blank" rel="noopener" href="https://downloadcenter.intel.com/download/22824/USB-3-0-Driver-Intel-USB-3-0-eXtensible-Host-Controller-Driver-for-Intel-8-9-100-Series-and-C220-C610-Chipset-Family">英特尔官网</a>下载最新版本驱动程序。此时若直接安装会提示系统版本不正确，无法安装。<br>&emsp;&emsp;进入 <code>\Drivers\Win7</code> 下与系统版本对应（32/64位）的目录，右键 <code>iusb3hub.inf</code> 和 <code>iusb3xhc.inf</code> 安装。<br>&emsp;&emsp;在设备管理器中双击 USB 设备中最下面的 <code>USB Root Hub (xHCI)</code>，在电源管理选项卡中取消选择“允许计算机关闭此设备以节约电力”。<br><img src="http://img.devchen.com/blogimg/20150903-win81-usb3/3.png"><br>&emsp;&emsp;重启电脑。<br>&emsp;&emsp;在设备和打印机中重新查看设备工作状态，提示已插入 3.0 端口。测速 200+MB/s。 休眠并唤醒后不变。Done.<br><img src="http://img.devchen.com/blogimg/20150903-win81-usb3/2.png"></p>
+<p>&emsp;&emsp;首先强制重新安装驱动。在<a target="_blank" rel="noopener" href="https://downloadcenter.intel.com/download/22824/USB-3-0-Driver-Intel-USB-3-0-eXtensible-Host-Controller-Driver-for-Intel-8-9-100-Series-and-C220-C610-Chipset-Family">英特尔官网</a>下载最新版本驱动程序。此时若直接安装会提示系统版本不正确，无法安装。<br>&emsp;&emsp;进入 <code>\Drivers\Win7</code> 下与系统版本对应（32/64位）的目录，右键 <code>iusb3hub.inf</code> 和 <code>iusb3xhc.inf</code> 安装。<br>&emsp;&emsp;在设备管理器中双击 USB 设备中最下面的 <code>USB Root Hub (xHCI)</code>，在电源管理选项卡中取消选择“允许计算机关闭此设备以节约电力”。<br><img src="/blogimg/20150903-win81-usb3/3.png"><br>&emsp;&emsp;重启电脑。<br>&emsp;&emsp;在设备和打印机中重新查看设备工作状态，提示已插入 3.0 端口。测速 200+MB/s。 休眠并唤醒后不变。Done.<br><img src="/blogimg/20150903-win81-usb3/2.png"></p>
 <p align = right>
 by Sykie Chen
 2015.9.6
@@ -441,12 +441,12 @@ by Sykie Chen
           <span class="post-meta-item-icon">
             <i class="fa fa-chart-area"></i>
           </span>
-          <span title="站点总字数">62k</span>
+          <span title="站点总字数">53k</span>
           <span class="post-meta-divider">|</span>
           <span class="post-meta-item-icon">
             <i class="fa fa-coffee"></i>
           </span>
-          <span title="站点阅读时长">1:52</span>
+          <span title="站点阅读时长">1:36</span>
 
       </div>
         <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>

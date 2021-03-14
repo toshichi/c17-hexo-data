@@ -31,10 +31,10 @@
 <meta property="og:site_name" content="码渣十七">
 <meta property="og:description" content="很多学校教授 C++ 图形编程时，为了规避 Windows 下 VC++ 较为复杂的绘图 API，都会（强制）要求学生使用 EasyX 这一绘图框架。该框架十分简陋地实现了初学者所需的图形功能。同时，此框架也存在大量不足，最为不便的就是不支持 png 格式图片，不支持透明背景绘图。">
 <meta property="og:locale">
-<meta property="og:image" content="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/1.png">
-<meta property="og:image" content="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/2.png">
-<meta property="og:image" content="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/3.png">
-<meta property="og:image" content="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/4.png">
+<meta property="og:image" content="https://www.coder17.com/blogimg/20160217-easyx-trans-trick/1.png">
+<meta property="og:image" content="https://www.coder17.com/blogimg/20160217-easyx-trans-trick/2.png">
+<meta property="og:image" content="https://www.coder17.com/blogimg/20160217-easyx-trans-trick/3.png">
+<meta property="og:image" content="https://www.coder17.com/blogimg/20160217-easyx-trans-trick/4.png">
 <meta property="article:published_time" content="2016-02-16T19:45:00.000Z">
 <meta property="article:modified_time" content="2016-02-16T19:45:00.000Z">
 <meta property="article:author" content="東城十七">
@@ -43,7 +43,7 @@
 <meta property="article:tag" content="trick">
 <meta property="article:tag" content="图片">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/1.png">
+<meta name="twitter:image" content="https://www.coder17.com/blogimg/20160217-easyx-trans-trick/1.png">
 
 
 <link rel="canonical" href="https://www.coder17.com/posts/20160217-easyx-trans-trick/">
@@ -138,9 +138,9 @@
   <ul class="main-menu menu">
         <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
         <li class="menu-item menu-item-coding-notes-|-码渣"><a href="/categories/Coding" rel="section"><i class="fa fa-code fa-fw"></i>Coding Notes | 码渣</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-project-diagram fa-fw"></i>Categories<span class="badge">12</span></a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">51</span></a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-box-open fa-fw"></i>Archives<span class="badge">19</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-project-diagram fa-fw"></i>Categories<span class="badge">11</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">47</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-box-open fa-fw"></i>Archives<span class="badge">15</span></a></li>
         <li class="menu-item menu-item-labs"><a href="/labs/" rel="section"><i class="fa fa-magic fa-fw"></i>Labs</a></li>
         <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-address-card fa-fw"></i>About</a></li>
   </ul>
@@ -357,10 +357,10 @@
     <div class="post-body" itemprop="articleBody">
         <p>很多学校教授 C++ 图形编程时，为了规避 Windows 下 VC++ 较为复杂的绘图 API，都会（强制）要求学生使用 <a target="_blank" rel="noopener" href="http://easyx.cn/">EasyX</a> 这一绘图框架。该框架十分简陋地实现了初学者所需的图形功能。同时，此框架也存在大量不足，最为不便的就是不支持 png 格式图片，不支持透明背景绘图。  </p>
 <span id="more"></span>
-<p>鉴于此框架的 putimage 函数支持三元光栅操作码，我们可以利用掩码位图来变相实现透明背景绘图。<br>参考了 <a target="_blank" rel="noopener" href="http://code.qtuba.com/article-15636.html">http://code.qtuba.com/article-15636.html</a><br>##1. 创建一个掩码位图<br>掩码位图是一个单色位图，它的黑色部分就是位图显示时要保留的部分，白色部分就是要透明的部分。这里使用马里奥举例：<br>原图：<br><img src="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/1.png"><br>掩码图：<br><img src="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/2.png">  </p>
+<p>鉴于此框架的 putimage 函数支持三元光栅操作码，我们可以利用掩码位图来变相实现透明背景绘图。<br>参考了 <a target="_blank" rel="noopener" href="http://code.qtuba.com/article-15636.html">http://code.qtuba.com/article-15636.html</a><br>##1. 创建一个掩码位图<br>掩码位图是一个单色位图，它的黑色部分就是位图显示时要保留的部分，白色部分就是要透明的部分。这里使用马里奥举例：<br>原图：<br><img src="/blogimg/20160217-easyx-trans-trick/1.png"><br>掩码图：<br><img src="/blogimg/20160217-easyx-trans-trick/2.png">  </p>
 <p>##2.把掩码位图用SRCINVERT（XOR）方式叠加到原图<br>白色XOR白色=黑色（白色的RGB都是255，1^1=0），黑色XOR任何颜色=原颜色（0^0=0，0^1=1）。操作完成后原图的透明区应被黑色填充。<br>也可以直接用黑色填充原图。  </p>
-<p>##3.把掩码位图用SRCAND（AND）方式叠加背景中<br>白色and任何颜色=原颜色(1&amp;1=1,1&amp;0=0)，黑色and任何颜色=黑色（0&amp;0=0，0&amp;1=0）。<br><img src="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/3.png">  </p>
-<p>##4.把叠加过的原图用SRCPAINT(or)方式叠加到背景中<br>黑色or任何颜色=原颜色(0|1=1,0|0=0)。<br><img src="http://img.devchen.com/blogimg/20160217-easyx-trans-trick/4.png">  </p>
+<p>##3.把掩码位图用SRCAND（AND）方式叠加背景中<br>白色and任何颜色=原颜色(1&amp;1=1,1&amp;0=0)，黑色and任何颜色=黑色（0&amp;0=0，0&amp;1=0）。<br><img src="/blogimg/20160217-easyx-trans-trick/3.png">  </p>
+<p>##4.把叠加过的原图用SRCPAINT(or)方式叠加到背景中<br>黑色or任何颜色=原颜色(0|1=1,0|0=0)。<br><img src="/blogimg/20160217-easyx-trans-trick/4.png">  </p>
 <hr>
 <p>代码如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;graphics.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	initgraph(<span class="number">800</span>, <span class="number">600</span>);</span><br><span class="line">	<span class="comment">// Load background</span></span><br><span class="line">	loadimage(<span class="literal">NULL</span>, _T(<span class="string">&quot;img\\background.jpg&quot;</span>));</span><br><span class="line">	<span class="comment">// Load mario</span></span><br><span class="line">	IMAGE mariox, mario;</span><br><span class="line">	loadimage(&amp;mariox, _T(<span class="string">&quot;img\\mariox.bmp&quot;</span>));</span><br><span class="line">	loadimage(&amp;mario, _T(<span class="string">&quot;img\\mario.bmp&quot;</span>));</span><br><span class="line">	<span class="comment">// Trick to display transparent image</span></span><br><span class="line">	SetWorkingImage(&amp;mario);</span><br><span class="line">	putimage(<span class="number">0</span>, <span class="number">0</span>, &amp;mariox, SRCINVERT);</span><br><span class="line">	SetWorkingImage(<span class="literal">NULL</span>);</span><br><span class="line">	putimage(<span class="number">400</span>, <span class="number">465</span>, &amp;mariox, SRCAND);</span><br><span class="line">	putimage(<span class="number">400</span>, <span class="number">465</span>, &amp;mario, SRCPAINT);</span><br><span class="line"></span><br><span class="line">	getchar();</span><br><span class="line">	closegraph();</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -452,12 +452,12 @@ by Sykie Chen
           <span class="post-meta-item-icon">
             <i class="fa fa-chart-area"></i>
           </span>
-          <span title="站点总字数">62k</span>
+          <span title="站点总字数">53k</span>
           <span class="post-meta-divider">|</span>
           <span class="post-meta-item-icon">
             <i class="fa fa-coffee"></i>
           </span>
-          <span title="站点阅读时长">1:52</span>
+          <span title="站点阅读时长">1:36</span>
 
       </div>
         <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>

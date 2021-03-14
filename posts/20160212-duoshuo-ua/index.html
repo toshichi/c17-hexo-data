@@ -31,7 +31,7 @@
 <meta property="og:site_name" content="码渣十七">
 <meta property="og:description" content="多说评论系统被很多中文网站使用。网上有很多添加站长回复标记和浏览器操作系统信息的方法。但大部分均已随着多说 JS 的更新而不再有效或存在兼容性问题。我参考了这些教程并重写了相关代码以改进显示效果。">
 <meta property="og:locale">
-<meta property="og:image" content="http://img.devchen.com/blogimg/20160212-duoshuo-ua/1.png">
+<meta property="og:image" content="https://www.coder17.com/blogimg/20160212-duoshuo-ua/1.png">
 <meta property="article:published_time" content="2016-02-11T16:51:00.000Z">
 <meta property="article:modified_time" content="2016-02-11T16:51:00.000Z">
 <meta property="article:author" content="東城十七">
@@ -42,7 +42,7 @@
 <meta property="article:tag" content="JS">
 <meta property="article:tag" content="UA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://img.devchen.com/blogimg/20160212-duoshuo-ua/1.png">
+<meta name="twitter:image" content="https://www.coder17.com/blogimg/20160212-duoshuo-ua/1.png">
 
 
 <link rel="canonical" href="https://www.coder17.com/posts/20160212-duoshuo-ua/">
@@ -137,9 +137,9 @@
   <ul class="main-menu menu">
         <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
         <li class="menu-item menu-item-coding-notes-|-码渣"><a href="/categories/Coding" rel="section"><i class="fa fa-code fa-fw"></i>Coding Notes | 码渣</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-project-diagram fa-fw"></i>Categories<span class="badge">12</span></a></li>
-        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">51</span></a></li>
-        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-box-open fa-fw"></i>Archives<span class="badge">19</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-project-diagram fa-fw"></i>Categories<span class="badge">11</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">47</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-box-open fa-fw"></i>Archives<span class="badge">15</span></a></li>
         <li class="menu-item menu-item-labs"><a href="/labs/" rel="section"><i class="fa fa-magic fa-fw"></i>Labs</a></li>
         <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-address-card fa-fw"></i>About</a></li>
   </ul>
@@ -357,7 +357,7 @@
     <div class="post-body" itemprop="articleBody">
         <p>多说评论系统被很多中文网站使用。网上有很多添加站长回复标记和浏览器操作系统信息的方法。但大部分均已随着多说 JS 的更新而不再有效或存在兼容性问题。我参考了这些教程并重写了相关代码以改进显示效果。  </p>
 <span id="more"></span>
-<p>先上图：<br><img src="http://img.devchen.com/blogimg/20160212-duoshuo-ua/1.png"><br>可以解析 IE/Egde, Chrome, Safari, Firefox, Opera 等浏览器以及常见的几种国内壳浏览器。微博微信内置浏览器也可解析。<br>系统方面除了做了 iPhone/iPad 区分外，还加入了对1%的WP支持=。=<br>已有的教程多修改为带圆角矩形背景的文字， <del>难看的一笔</del> 不是十分的优雅。因此我改为了无背景，彩色加粗文字。<br>以及在无法识别的时候会显示 <del>奇怪♂的浏览器</del> 和 <del>奇怪♂的操作系统</del> 字样 <del>增加情趣</del> 提示用户。  </p>
+<p>先上图：<br><img src="/blogimg/20160212-duoshuo-ua/1.png"><br>可以解析 IE/Egde, Chrome, Safari, Firefox, Opera 等浏览器以及常见的几种国内壳浏览器。微博微信内置浏览器也可解析。<br>系统方面除了做了 iPhone/iPad 区分外，还加入了对1%的WP支持=。=<br>已有的教程多修改为带圆角矩形背景的文字， <del>难看的一笔</del> 不是十分的优雅。因此我改为了无背景，彩色加粗文字。<br>以及在无法识别的时候会显示 <del>奇怪♂的浏览器</del> 和 <del>奇怪♂的操作系统</del> 字样 <del>增加情趣</del> 提示用户。  </p>
 <p>##1. 多说 JS 和 CSS 的本地化<br>多说引用的 JS 脚本地址为 <code>http://static.duoshuo.com/embed.js</code>，搞下来，改个名字或者不改也行。我这里改为 <code>ds_embed.js</code> 并放置到主题目录 <code>/source/js/</code> 中。<br>多说的 CSS 分为两部分，其一为通用部分，即多说后台设置的“主题”所包含的。这部分无需本地化。其二为多说后台“自定义CSS”的部分。这部分严格来说也无需本地化，但自己写的代码还是存成自己的文件比较稳妥，也便于本地维护，放在后台谁知道它哪天抽了就没了。<br>将多说后台“自定义CSS”中已有的内容剪切，写入到主题目录 <code>/source/css/duoshuo.css</code> 中。<br>然后修改<code>多说公共JS代码</code>，即我在 <a target="_blank" rel="noopener" href="http://www.devchen.com/blog/coding/HTML/hexo-theme/">Hexo Landscape 主题修改优化</a> 一文中插入到 <code>layout\_partial\after-footer.ejs</code> 文件中的部分代码。<br>原来的</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ds.src = (<span class="built_in">document</span>.location.protocol == <span class="string">&#x27;https:&#x27;</span> ? <span class="string">&#x27;https:&#x27;</span> : <span class="string">&#x27;http:&#x27;</span>) + <span class="string">&#x27;//static.duoshuo.com/embed.js&#x27;</span>;</span><br></pre></td></tr></table></figure>
 <p>修改为</p>
@@ -472,12 +472,12 @@ by Sykie Chen
           <span class="post-meta-item-icon">
             <i class="fa fa-chart-area"></i>
           </span>
-          <span title="站点总字数">62k</span>
+          <span title="站点总字数">53k</span>
           <span class="post-meta-divider">|</span>
           <span class="post-meta-item-icon">
             <i class="fa fa-coffee"></i>
           </span>
-          <span title="站点阅读时长">1:52</span>
+          <span title="站点阅读时长">1:36</span>
 
       </div>
         <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
