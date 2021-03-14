@@ -1,0 +1,44 @@
+name: 'Github Pages Deployment'
+
+# This file should only be edited from master branch
+# The workflow file in data branch is auto-generated from master branch, manual mod may be lost
+
+on:
+  push:
+    branches:
+      - master
+      - data
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout makefile
+        uses: actions/checkout@v2
+      - name: Checkout data
+        uses: actions/checkout@v2
+        with:
+          ref: 'data'
+          path: 'data'
+      - name: Generate and update workflow in data branch
+        working-directory: data
+        run: |
+          cp -rf ../.github .
+          git config user.name ${{ github.event.head_commit.author.name }}
+          git config user.email ${{ github.event.head_commit.author.email }}
+          git add .github
+          git commit -m "${{ github.event.head_commit.message }}"
+          git push
+      - name: Use docker to generate html files
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          make
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          cname: www.coder17.com
