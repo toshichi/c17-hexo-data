@@ -1,5 +1,8 @@
 name: 'Github Pages Deployment'
 
+# This file should only be edited from master branch
+# The workflow file in data branch is auto-generated from master branch, manual mod may be lost
+
 on:
   push:
     branches:
@@ -17,6 +20,13 @@ jobs:
         with:
           ref: 'data'
           path: 'data'
+      - name: Generate and update workflow in data branch
+        working-directory: data
+        run: |
+          cp -rf ../.github .
+          git add .github
+          git commit -m "${{ github.event.head_commit.message }}"
+          git push
       - name: Use docker to generate html files
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
