@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#57a0e8">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#57a0e8">
+  <link rel="manifest" href="/images/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.coder17.com","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+  </script>
+<meta name="description" content="5.0系统下 xposed 框架不稳定且对三星 TouchWiz 支持不佳，故手动反编译并修改 SystemUI 添加部分常用功能。部分内容源于 xda 论坛等。用 apktool 反编译。注意，使用 apktool 2.0 版本无法正常回编译 SystemUI.apk，此处使用 2.0 RC3 版本，可正常编译。基于 SM-G9200 大陆公开版 G9200ZCU1AOE4 固件。 1. 电量数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三星 Galaxy S6 的 SystemUI 修改与功能添加">
+<meta property="og:url" content="https://www.coder17.com/posts/20150710-sgs6-mod/">
+<meta property="og:site_name" content="码渣十七">
+<meta property="og:description" content="5.0系统下 xposed 框架不稳定且对三星 TouchWiz 支持不佳，故手动反编译并修改 SystemUI 添加部分常用功能。部分内容源于 xda 论坛等。用 apktool 反编译。注意，使用 apktool 2.0 版本无法正常回编译 SystemUI.apk，此处使用 2.0 RC3 版本，可正常编译。基于 SM-G9200 大陆公开版 G9200ZCU1AOE4 固件。 1. 电量数">
+<meta property="og:locale">
+<meta property="article:published_time" content="2015-07-10T05:04:20.000Z">
+<meta property="article:modified_time" content="2015-07-10T05:04:20.000Z">
+<meta property="article:author" content="東城十七">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="S6">
+<meta property="article:tag" content="SystemUI">
+<meta property="article:tag" content="反编译">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.coder17.com/posts/20150710-sgs6-mod/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+<title>三星 Galaxy S6 的 SystemUI 修改与功能添加 | 码渣十七</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="码渣十七" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">码渣十七</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">一抔码渣的屁话笔记<br>雑魚ーダーの支離滅裂なメモ帳</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-coding-notes-|-码渣"><a href="/categories/Coding" rel="section"><i class="fa fa-code fa-fw"></i>Coding Notes | 码渣</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-project-diagram fa-fw"></i>Categories<span class="badge">12</span></a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">51</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-box-open fa-fw"></i>Archives<span class="badge">20</span></a></li>
+        <li class="menu-item menu-item-labs"><a href="/labs/" rel="section"><i class="fa fa-magic fa-fw"></i>Labs</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-address-card fa-fw"></i>About</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%94%B5%E9%87%8F%E6%95%B0%E5%AD%97%E5%A4%A7%E5%B0%8F%E4%BF%AE%E6%94%B9"><span class="nav-number">1.</span> <span class="nav-text">1. 电量数字大小修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%A7%BB%E5%8A%A8%E7%BD%91%E7%BB%9C%E6%96%AD%E5%BC%80%E6%97%B6%E4%B8%8D%E6%98%BE%E7%A4%BAG-E-3G-4G"><span class="nav-number">2.</span> <span class="nav-text">2.移动网络断开时不显示G&#x2F;E&#x2F;3G&#x2F;4G</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-SystemUI"><span class="nav-number">2.1.</span> <span class="nav-text">7.1 SystemUI</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="東城十七"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">東城十七</p>
+  <div class="site-description" itemprop="description">雑魚ーダー / ヲタク</div>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/SykieChen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SykieChen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chen17@coder17.com" title="E-Mail → mailto:chen17@coder17.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/TojoSaiki" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;TojoSaiki" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/TojoToshichi" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;TojoToshichi" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fas fa-link fa-fw"></i>
+      Friends・小伙伴
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://nyan.im/" title="https:&#x2F;&#x2F;nyan.im&#x2F;" rel="noopener" target="_blank">Frank's Weblog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.wangyufeng.org/" title="http:&#x2F;&#x2F;www.wangyufeng.org&#x2F;" rel="noopener" target="_blank">王雨峰的博客</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://pengzhendong.cn/" title="https:&#x2F;&#x2F;pengzhendong.cn&#x2F;" rel="noopener" target="_blank">Randy's Notes</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jobslong.com/" title="http:&#x2F;&#x2F;jobslong.com&#x2F;" rel="noopener" target="_blank">Jobs Long</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.rayjun.cn/" title="http:&#x2F;&#x2F;www.rayjun.cn&#x2F;" rel="noopener" target="_blank">Rayjun</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://wasteland.touko.moe/" title="https:&#x2F;&#x2F;wasteland.touko.moe&#x2F;" rel="noopener" target="_blank">Touko</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-inner" style="margin-top: 12px;">
+        
+
+  <div class="links-of-blogroll animated">
+    <div class="links-of-blogroll-title"><i class="fas fa-link fa-fw"></i>
+      Friends・小伙伴
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://nyan.im/" title="https:&#x2F;&#x2F;nyan.im&#x2F;" rel="noopener" target="_blank">Frank's Weblog</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.wangyufeng.org/" title="http:&#x2F;&#x2F;www.wangyufeng.org&#x2F;" rel="noopener" target="_blank">王雨峰的博客</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://pengzhendong.cn/" title="https:&#x2F;&#x2F;pengzhendong.cn&#x2F;" rel="noopener" target="_blank">Randy's Notes</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jobslong.com/" title="http:&#x2F;&#x2F;jobslong.com&#x2F;" rel="noopener" target="_blank">Jobs Long</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.rayjun.cn/" title="http:&#x2F;&#x2F;www.rayjun.cn&#x2F;" rel="noopener" target="_blank">Rayjun</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://wasteland.touko.moe/" title="https:&#x2F;&#x2F;wasteland.touko.moe&#x2F;" rel="noopener" target="_blank">Touko</a>
+        </li>
+    </ul>
+  </div>
+
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://www.coder17.com/posts/20150710-sgs6-mod/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="東城十七">
+      <meta itemprop="description" content="码渣十七 | 雑魚ーダー17 | 一抔码渣的屁话笔记 | 雑魚ーダーの支離滅裂なメモ帳">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="码渣十七">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          三星 Galaxy S6 的 SystemUI 修改与功能添加
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created：2015-7-10 14:04:20" itemprop="dateCreated datePublished" datetime="2015-07-10T14:04:20+09:00">2015-7-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B0%8F%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">小技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B0%8F%E6%8A%80%E6%9C%AF/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">字数：</span>
+      <span>5.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时间">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时间 &asymp;</span>
+      <span>11 分</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>5.0系统下 xposed 框架不稳定且对三星 TouchWiz 支持不佳，故手动反编译并修改 SystemUI 添加部分常用功能。<br>部分内容源于 xda 论坛等。用 apktool 反编译。<br>注意，使用 apktool 2.0 版本无法正常回编译 SystemUI.apk，此处使用 2.0 RC3 版本，可正常编译。<br>基于 SM-G9200 大陆公开版 G9200ZCU1AOE4 固件。</p>
+<h2 id="1-电量数字大小修改"><a href="#1-电量数字大小修改" class="headerlink" title="1. 电量数字大小修改"></a>1. 电量数字大小修改</h2><p>默认电量百分比的数字字号太大了，占用过多空间。<br><code>SystemUI\res\values\dimens.xml</code> 971行  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;battery_text_marginStart&quot;</span>&gt;</span>0.0dip<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dimen</span> <span class="attr">name</span>=<span class="string">&quot;battery_text_size&quot;</span>&gt;</span>9.0dip<span class="tag">&lt;/<span class="name">dimen</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+
+<h2 id="2-移动网络断开时不显示G-E-3G-4G"><a href="#2-移动网络断开时不显示G-E-3G-4G" class="headerlink" title="2.移动网络断开时不显示G/E/3G/4G"></a>2.移动网络断开时不显示G/E/3G/4G</h2><p>修改 <code>/System/build.prop</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ro.product.name=zerofltezc</span><br><span class="line">ro.product.device=zerofltechn</span><br></pre></td></tr></table></figure>
+<p>改为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ro.product.name=zeroflte</span><br><span class="line">ro.product.device=zeroflte</span><br></pre></td></tr></table></figure>
+
+<p>如此可达到最初目的，即断开移动网络时隐藏网络类型指示器。但似乎并不稳定，更改机型可能导致某些专用软件的兼容性问题，也可能影响 Smart Switch 的识别。故修改布局与图片资源使网络类型指示器与信号重叠变通解决。</p>
+<p><code>systemui\layout\msim_signal_cluster_view.xml</code><br>将 separate_mobile 下的 inout 和 mobiletype 移动到 mobile_combo 下。<br>注意，卡1有两个 mobile_combo ，第一个 sub3 平时并不显示，怀疑是电信卡的双信号格，移动的时候注意放到不带 sub 的 frame 中，卡2无此问题，只有一个 sub2<br>改动后替换 png 资源防止文字重叠。覆盖即可。<br>png图标包：<a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1i3F2YiD">http://pan.baidu.com/s/1i3F2YiD</a></p>
+<p>##3. 隐藏下拉的 S 搜索、快速连接 ##</p>
+<p><code>SystemUI.apk\smali\com\android\systemui\statusbar\phone\PhoneStatusBar.smali</code> 找到并修改如下内容</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">.method</span><span class="keyword"> public</span> showHideQConnectLayout()V</span><br><span class="line"><span class="keyword">    .locals</span> 13</span><br><span class="line"></span><br><span class="line"><span class="keyword">    .prologue</span></span><br><span class="line">   <span class="built_in"> const/16 </span>v12, 0x64</span><br><span class="line"></span><br><span class="line">   <span class="built_in"> const/4 </span>v11, 0x1</span><br><span class="line"></span><br><span class="line">   <span class="built_in"> const/16 </span>v10, 0x8</span><br><span class="line"></span><br><span class="line">   <span class="built_in"> const/4 </span>v9, 0x0</span><br><span class="line"></span><br><span class="line"><span class="keyword">    .line</span> 7422</span><br><span class="line">   <span class="built_in"> iget-boolean </span>v6, p0, <span class="class">Lcom/android/systemui/statusbar/phone/PhoneStatusBar;</span>-&gt;mShowSFinderQConnectView:Z</span><br><span class="line"></span><br><span class="line">   <span class="built_in"> if-eqz </span>v6,<span class="keyword"> :cond_6</span></span><br><span class="line"></span><br><span class="line">   <span class="built_in"> iget-object </span>v6, p0, <span class="class">Lcom/android/systemui/statusbar/phone/PhoneStatusBar;</span>-&gt;mQconnectSfinderView:<span class="class">Lcom/android/systemui/statusbar/QconnectSfinderView;</span></span><br><span class="line"></span><br><span class="line">   <span class="built_in"> if-nez </span>v6,<span class="keyword"> :cond_0</span> //0改为6</span><br><span class="line"></span><br><span class="line">   <span class="built_in"> iget-object </span>v6, p0, <span class="class">Lcom/android/systemui/statusbar/phone/PhoneStatusBar;</span>-&gt;mQsQConnectView:<span class="class">Landroid/view/View;</span></span><br><span class="line"></span><br><span class="line">   <span class="built_in"> if-eqz </span>v6,<span class="keyword"> :cond_6</span></span><br></pre></td></tr></table></figure>
+
+
+<p>##4. 隐藏状态栏 卡1 卡2 图标 ##</p>
+<p><code>systemui\layout\msim_signal_cluster_view.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ImageView</span> <span class="attr">android:id</span>=<span class="string">&quot;@id/sim_icon_chn&quot;</span> <span class="attr">android:layout_width</span>=<span class="string">&quot;0px&quot;</span> <span class="attr">android:layout_marginRight</span>=<span class="string">&quot;0dip&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>##5. 添加铃声、修改低电量、截屏等UI声音、禁用音量调节声##</p>
+<p>铃声包：<a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1eQfHqAQ">http://pan.baidu.com/s/1eQfHqAQ</a><br>解压替换<code>/System/Media/</code></p>
+<p>##6. 相机声音开关、浏览器谷歌搜索 ##<br><code>/System/csc/others.xml</code><br>添加 <code>ShutterSoundMenu</code>项为 <code>True</code><br>谷歌搜索记不住了，看着英文改就好，很简单的。<br>或使用 <code>CSC Feature Expert</code><br>地址：<a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1jGrewUa">http://pan.baidu.com/s/1jGrewUa</a> 密码：m5ui</p>
+<p>##7. 状态栏网速 ##<br>参考这个教程 <a target="_blank" rel="noopener" href="http://forum.xda-developers.com/android/general/mod-status-bar-network-traffic-separate-t3024878">http://forum.xda-developers.com/android/general/mod-status-bar-network-traffic-separate-t3024878</a>  </p>
+<p>首先 deodex <code>SystemUI</code> 和 <code>SecSettings</code> 两个系统 apk。<br>下载 <a target="_blank" rel="noopener" href="http://pan.baidu.com/s/1dDpSC1N">http://pan.baidu.com/s/1dDpSC1N</a> 这里的文件包。</p>
+<h3 id="7-1-SystemUI"><a href="#7-1-SystemUI" class="headerlink" title="7.1 SystemUI"></a>7.1 SystemUI</h3><p>首先将压缩包里的 smali 文件和 png 图放到反编译后相应的路径下。<br>打开压缩包里的 values 文件夹，将其中 xml 文件的内容添加到反编译后相应文件中。<br>打开 <code>layout/status_bar.xml</code> 文件添加以下内容：  </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">com.android.systemui.statusbar.policy.NetworkTraffic</span> <span class="attr">android:id</span>=<span class="string">&quot;@id/networkTraffic&quot;</span> <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span> <span class="attr">android:layout_height</span>=<span class="string">&quot;fill_parent&quot;</span> <span class="attr">android:singleLine</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>编译 SystemUI 再反编译，打开 <code>res/values/public.xml</code>，再打开 <code>smali/com/android/systemui/statusbar/policy/NetworkTraffic.smali</code> 搜索以下 ID 并用 xml 文件中的值替换 smali 文件中的对应值。压缩包内有相应文件。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x7f0c00c9</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;dimen&quot; <span class="type">name</span>=&quot;net_traffic_single_text_size&quot;</span><br><span class="line"><span class="number">0x7f0c00ca</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;dimen&quot; <span class="type">name</span>=&quot;net_traffic_multi_text_size&quot;</span><br><span class="line"><span class="number">0x7f02042a</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;drawable&quot; <span class="type">name</span>=&quot;stat_sys_network_traffic_updown&quot;</span><br><span class="line"><span class="number">0x7f020429</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;drawable&quot; <span class="type">name</span>=&quot;stat_sys_network_traffic_up&quot;</span><br><span class="line"><span class="number">0x7f020428</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;drawable&quot; <span class="type">name</span>=&quot;stat_sys_network_traffic_down&quot;</span><br></pre></td></tr></table></figure>
+
+<p>完成后编译之，替换 resources 文件，不多说。</p>
+<p>###7.2 SecSettings ###<br>基本步骤同上，再次反编译后替换如下 smali 中相应 ID：<br><code>NetworkTraffic.smali</code></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x7f0e000f</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;integer&quot; <span class="type">name</span>=&quot;maskUp&quot;</span><br><span class="line"><span class="number">0x7f0e0010</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;integer&quot; <span class="type">name</span>=&quot;maskDown&quot;</span><br><span class="line"><span class="number">0x7f0e0011</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;integer&quot; <span class="type">name</span>=&quot;maskUnit&quot;</span><br><span class="line"><span class="number">0x7f0e0012</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;integer&quot; <span class="type">name</span>=&quot;maskPeriod&quot;</span><br><span class="line"><span class="number">0x7f09188a</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;string&quot; <span class="type">name</span>=&quot;network_traffic_color_reset&quot;</span><br><span class="line"><span class="number">0x7f09188b</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;string&quot; <span class="type">name</span>=&quot;network_traffic_color_reset_message&quot;</span><br><span class="line"><span class="number">0x7f091677</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;string&quot; <span class="type">name</span>=&quot;ok&quot;</span><br><span class="line"><span class="number">0x7f090198</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;string&quot; <span class="type">name</span>=&quot;cancel&quot;</span><br><span class="line"><span class="number">0x7f0700ef</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;xml&quot; <span class="type">name</span>=&quot;network_traffic&quot;</span><br><span class="line"><span class="number">0x7f09188a</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;string&quot; <span class="type">name</span>=&quot;network_traffic_color_reset&quot;</span><br><span class="line"><span class="number">0x7f02021d</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;drawable&quot; <span class="type">name</span>=&quot;ic_settings_backup&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>SeekBarPreference.smali</code></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x7f0b0696</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;id&quot; <span class="type">name</span>=&quot;seekBarPrefBarContainer&quot;</span><br><span class="line"><span class="number">0x7f040229</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;layout&quot; <span class="type">name</span>=&quot;seek_bar_preference&quot;</span><br><span class="line"><span class="number">0x7f0b0694</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;id&quot; <span class="type">name</span>=&quot;seekBarPrefValue&quot;</span><br><span class="line"><span class="number">0x7f0b0693</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;id&quot; <span class="type">name</span>=&quot;seekBarPrefUnitsRight&quot;</span><br><span class="line"><span class="number">0x7f0b0695</span>    &lt;<span class="built_in">public</span> <span class="keyword">type</span>=&quot;id&quot; <span class="type">name</span>=&quot;seekBarPrefUnitsLeft&quot;</span><br></pre></td></tr></table></figure>
+
+<p><code>ColorPickerDialog.smali</code></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">0x7f04022b    &lt;public <span class="attribute">type</span>=<span class="string">&quot;layout&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;dialog_color_picker”</span></span><br><span class="line"><span class="string">0x7f091920    &lt;public type=&quot;</span>string&quot; <span class="attribute">name</span>=<span class="string">&quot;dialog_color_picker&quot;</span></span><br><span class="line">0x7f0b069f    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;color_picker_view&quot;</span></span><br><span class="line">0x7f0b06a2    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;old_color_panel&quot;</span></span><br><span class="line">0x7f0b069a    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;new_color_panel&quot;</span></span><br><span class="line">0x7f0b069b    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;white_panel&quot;</span></span><br><span class="line">0x7f0b069d    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;black_panel&quot;</span></span><br><span class="line">0x7f0b069c    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;cyan_panel&quot;</span></span><br><span class="line">0x7f0b069e    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;red_panel&quot;</span></span><br><span class="line">0x7f0b06a0    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;green_panel&quot;</span></span><br><span class="line">0x7f0b06a1    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;yellow_panel&quot;</span></span><br><span class="line">0x7f0b06a5    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;hex&quot;</span></span><br><span class="line">0x7f0b06a6    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;enter&quot;</span></span><br><span class="line">0x7f0b069a    &lt;public <span class="attribute">type</span>=<span class="string">&quot;id&quot;</span> <span class="attribute">name</span>=<span class="string">&quot;new_color_panel&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后将以下代码添加到 <code>res/layout</code>下合适的设置大项中</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PreferenceScreen</span> <span class="attr">android:title</span>=<span class="string">&quot;@string/network_traffic_title&quot;</span> <span class="attr">android:key</span>=<span class="string">&quot;network_traffic_state &quot;</span> <span class="attr">android:summary</span>=<span class="string">&quot;@string/network_traffic_summary&quot;</span> <span class="attr">android:fragment</span>=<span class="string">&quot;com.android.settings.temasek.NetworkTraffic&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>编译替换，完工。</p>
+<p>##8. S助手 长按 home 修改 ##</p>
+<p>framework-res/value/integers/config_holdHomeButton - 1</p>
+<p align = right>
+by Sykie Chen
+2015.7.10
+</p>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/S6/" rel="tag"># S6</a>
+              <a href="/tags/SystemUI/" rel="tag"># SystemUI</a>
+              <a href="/tags/%E5%8F%8D%E7%BC%96%E8%AF%91/" rel="tag"># 反编译</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/posts/sgs6-root/" rel="prev" title="三星 Galaxy S6 保持 knox 0x0 的 root">
+                  <i class="fa fa-chevron-left"></i> 三星 Galaxy S6 保持 knox 0x0 的 root
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/posts/20150816-never-experence/" rel="next" title="不曾走过，怎会懂得 （上：走过）">
+                  不曾走过，怎会懂得 （上：走过） <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+<table width="100%" border="0">
+  <tr>
+    <td style="text-align:left; border:0">
+      <div class="copyright">
+        
+        &copy;
+        2015
+          –
+        
+        <span itemprop="copyrightYear">2021</span>
+        <span class="with-love">
+          <i class="fa fa-terminal"></i>
+        </span>
+        <span class="author" itemprop="copyrightHolder">東城十七 (Sykie Chen)</span>
+          <span class="post-meta-divider">|</span>
+          <span class="post-meta-item-icon">
+            <i class="fa fa-chart-area"></i>
+          </span>
+          <span title="站点总字数">62k</span>
+          <span class="post-meta-divider">|</span>
+          <span class="post-meta-item-icon">
+            <i class="fa fa-coffee"></i>
+          </span>
+          <span title="站点阅读时长">1:53</span>
+
+      </div>
+        <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+            <span class="post-meta-divider">|</span>Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-SA</a>
+        </div>
+    </td>
+    <td style="text-align:right; border:0">
+      <div class="links-of-author" style="font-size: 20px; justify-content: flex-end; line-height: 24px;">
+            <span class="links-of-author-item">
+              <a href="https://github.com/SykieChen" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;SykieChen" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+            </span>
+            <span class="links-of-author-item">
+              <a href="mailto:chen17@coder17.com" title="E-Mail → mailto:chen17@coder17.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+            </span>
+            <span class="links-of-author-item">
+              <a href="https://weibo.com/TojoSaiki" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;TojoSaiki" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i></a>
+            </span>
+            <span class="links-of-author-item">
+              <a href="https://twitter.com/TojoToshichi" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;TojoToshichi" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i></a>
+            </span>
+            <span class="links-of-author-item">
+              <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fas fa-rss fa-fw"></i></a>
+            </span>
+      </div><a href="/sitemap.xml">网站地图</a>
+            <span class="post-meta-divider">|</span><a href="/atom.xml">订阅本站</a>
+            <span class="post-meta-divider">|</span><a href="/about">联系博主</a>
+          <span class="post-meta-divider">|</span><a href="https://winniethepooh.disney.com/winnie-the-pooh" rel="noopener" target="_blank">ICP 备案你妹</a>
+
+    </td>
+  </tr>
+</table>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
