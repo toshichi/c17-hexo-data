@@ -9,7 +9,8 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout makefile
+        uses: actions/checkout@v2
       - name: Checkout data
         uses: actions/checkout@v2
         with:
