@@ -7,7 +7,7 @@ toc: false
 ---
 微博小尾巴的审核通过啦=。=
 
-![](http://img.devchen.com/blogimg/weibo-tail-passed/1.png)
+![](/blogimg/weibo-tail-passed/1.png)
 以后可以愉快地装X了哈哈哈哈哈
 <!-- more --->
 

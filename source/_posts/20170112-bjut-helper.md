@@ -45,9 +45,9 @@ toc: true
 ##二维码
 来，扫码吧！  
 王雨峰的公众号：七系  
-![](http://img.devchen.com/blogimg/20170112-bjut-helper/1.png)  
+![](/blogimg/20170112-bjut-helper/1.png)  
 十七的空指针：  
-![](http://img.devchen.com/blogimg/20170112-bjut-helper/2.png)
+![](/blogimg/20170112-bjut-helper/2.png)
 
 
 

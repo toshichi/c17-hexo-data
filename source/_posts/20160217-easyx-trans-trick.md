@@ -12,9 +12,9 @@ toc: false
 ##1. 创建一个掩码位图  
 掩码位图是一个单色位图，它的黑色部分就是位图显示时要保留的部分，白色部分就是要透明的部分。这里使用马里奥举例：  
 原图：  
-![](http://img.devchen.com/blogimg/20160217-easyx-trans-trick/1.png)  
+![](/blogimg/20160217-easyx-trans-trick/1.png)  
 掩码图：  
-![](http://img.devchen.com/blogimg/20160217-easyx-trans-trick/2.png)  
+![](/blogimg/20160217-easyx-trans-trick/2.png)  
 
 ##2.把掩码位图用SRCINVERT（XOR）方式叠加到原图  
 白色XOR白色=黑色（白色的RGB都是255，1^1=0），黑色XOR任何颜色=原颜色（0^0=0，0^1=1）。操作完成后原图的透明区应被黑色填充。  
@@ -22,11 +22,11 @@ toc: false
 
 ##3.把掩码位图用SRCAND（AND）方式叠加背景中  
 白色and任何颜色=原颜色(1&1=1,1&0=0)，黑色and任何颜色=黑色（0&0=0，0&1=0）。  
-![](http://img.devchen.com/blogimg/20160217-easyx-trans-trick/3.png)  
+![](/blogimg/20160217-easyx-trans-trick/3.png)  
 
 ##4.把叠加过的原图用SRCPAINT(or)方式叠加到背景中  
 黑色or任何颜色=原颜色(0|1=1,0|0=0)。  
-![](http://img.devchen.com/blogimg/20160217-easyx-trans-trick/4.png)  
+![](/blogimg/20160217-easyx-trans-trick/4.png)  
   
 ---
 代码如下：
