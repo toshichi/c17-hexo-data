@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Checkout data
+        uses: actions/checkout@v2
+        with:
+          ref: 'data'
+          path: 'data'
       - name: Use docker to generate html files
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
