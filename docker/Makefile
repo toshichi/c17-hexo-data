@@ -15,6 +15,8 @@ data-pre:
 	rm -rf source
 	# copy source files to overwrite init files
 	cp -rf ../data/* .
+	# move image files and process image paths in md files
+	./mdprocess.sh
 	# get themes
 	git clone --depth 1 https://github.com/toshichi/hexo-theme-coder17.git themes/coder17
 

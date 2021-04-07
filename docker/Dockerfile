@@ -6,8 +6,8 @@ RUN npm install hexo-cli -g && \
     hexo init /usr/src/app/blog && \
     cd /usr/src/app/blog && \
     npm install && \
-    npm install hexo-deployer-git hexo-generator-feed hexo-generator-sitemap hexo-symbols-count-time
+    npm install hexo-deployer-git hexo-generator-feed hexo-generator-sitemap hexo-symbols-count-time hexo-toc
 WORKDIR /usr/src/app/blog
-COPY Makefile ./
+COPY . .
 ENTRYPOINT [ "make" ]
 VOLUME [ "/usr/src/app/data" ]
