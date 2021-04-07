@@ -15,7 +15,7 @@ timezone: 'Japan'
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://www.coder17.com
 root: /
-permalink: posts/:title/
+permalink: posts/:id/
 permalink_defaults:
 pretty_urls:
   trailing_index: false # Set to false to remove trailing 'index.html' from permalinks
@@ -106,6 +106,7 @@ plugins:
   hexo-generator-feed
   hexo-generator-sitemap
   hexo-symbols-count-time
+  hexo-toc
 
 theme: coder17
 
@@ -134,3 +135,14 @@ symbols_count_time:
   awl: 2
   wpm: 275
   suffix: "mins."
+
+# toc
+toc:
+  maxdepth: 3
+  class: toc
+  slugify: transliteration
+  decodeEntities: false
+  anchor:
+    position: after
+    symbol: '#'
+    style: header-anchor
