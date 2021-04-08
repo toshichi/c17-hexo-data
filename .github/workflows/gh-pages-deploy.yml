@@ -27,7 +27,7 @@ jobs:
           git config user.name ${{ github.event.head_commit.author.name }}
           git config user.email ${{ github.event.head_commit.author.email }}
           git add .github
-          if  [ -n $(git status -s) ]; then
+          if  [[ -n $(git status -s) ]]; then
             git commit -m "Sync from: ${{ github.event.head_commit.message }} (${{ github.event.head_commit.id }})"
             git push
           fi
