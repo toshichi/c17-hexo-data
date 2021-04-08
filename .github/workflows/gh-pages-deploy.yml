@@ -27,8 +27,10 @@ jobs:
           git config user.name ${{ github.event.head_commit.author.name }}
           git config user.email ${{ github.event.head_commit.author.email }}
           git add .github
-          git commit -m "Sync from: ${{ github.event.head_commit.message }} (${{ github.event.head_commit.id }})"
-          git push
+          if  [[ -z $(git status -s) ]]; then
+            git commit -m "Sync from: ${{ github.event.head_commit.message }} (${{ github.event.head_commit.id }})"
+            git push
+          fi
       - name: Use docker to generate html files
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
