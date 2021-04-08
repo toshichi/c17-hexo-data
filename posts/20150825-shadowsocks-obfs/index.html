@@ -167,7 +167,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%85%8D%E7%BD%AE-shadowsocks-libev-%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">1.</span> <span class="nav-text">1. 配置 shadowsocks-libev 服务端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E9%85%8D%E7%BD%AE-shadowsocks-%E5%AE%A2%E6%88%B7%E7%AB%AF%EF%BC%88Windows-%E5%B9%B3%E5%8F%B0%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">2. 配置 shadowsocks 客户端（Windows 平台）</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">1. 配置 shadowsocks-libev 服务端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">2. 配置 shadowsocks 客户端（Windows 平台）</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -351,7 +351,7 @@
     
     <div class="post-body" itemprop="articleBody">
         <p>&emsp;&emsp;Shadowsocks 的作者 <a target="_blank" rel="noopener" href="https://twitter.com/clowwindy">@clowwindy</a> 近期被喝茶了，并被迫删除了 Github 上的源码。这意味着 ss 以后不会得到更新，其流量特征也许会被不断进化的 GFW 识别并封锁。故使用 obfsproxy 进行二次混淆，降低被识别的风险。<br>&emsp;&emsp;以下步骤均在 Debian 7 32 位系统上进行。</p>
-<h2 id="1-配置-shadowsocks-libev-服务端"><a href="#1-配置-shadowsocks-libev-服务端" class="headerlink" title="1. 配置 shadowsocks-libev 服务端"></a>1. 配置 shadowsocks-libev 服务端</h2><p>参考<a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-libev">官方文档</a>，这里从源直接安装。</p>
+<h2><span id="1-配置-shadowsocks-libev-服务端">1. 配置 shadowsocks-libev 服务端</span></h2><p>参考<a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-libev">官方文档</a>，这里从源直接安装。</p>
 <p>添加 GPG public key</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O- http://shadowsocks.org/debian/1D27208A.gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure>
 <span id="more"></span>
@@ -364,7 +364,7 @@
 <p>server 填写 0.0.0.0 允许所有设备连接，填写 127.0.0.1 则仅允许本机内环连接。<br>加密方式一般选择 aes-256-cfb。<br>配置完成后执行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/shadowsocks-libev start</span><br></pre></td></tr></table></figure>
 <p>启动ss服务端。</p>
-<h2 id="2-配置-shadowsocks-客户端（Windows-平台）"><a href="#2-配置-shadowsocks-客户端（Windows-平台）" class="headerlink" title="2. 配置 shadowsocks 客户端（Windows 平台）"></a>2. 配置 shadowsocks 客户端（Windows 平台）</h2><p>在 <a target="_blank" rel="noopener" href="http://shadowsocks.org/en/download/clients.html">http://shadowsocks.org/en/download/clients.html</a> 下载 win 客户端<br>启动后在 GUI 中填写服务器信息并保存，本地端口以666举例。<br>右击托盘图标以配置开机启动，将代理方式设置为 PAC。视情况使用 PAC 脚本或搭配 SwitchyOmega + Chrome 使用。<br>若连接正常，则继续进行 obfsproxy 的部署。</p>
+<h2><span id="2-配置-shadowsocks-客户端windows-平台">2. 配置 shadowsocks 客户端（Windows 平台）</span></h2><p>在 <a target="_blank" rel="noopener" href="http://shadowsocks.org/en/download/clients.html">http://shadowsocks.org/en/download/clients.html</a> 下载 win 客户端<br>启动后在 GUI 中填写服务器信息并保存，本地端口以666举例。<br>右击托盘图标以配置开机启动，将代理方式设置为 PAC。视情况使用 PAC 脚本或搭配 SwitchyOmega + Chrome 使用。<br>若连接正常，则继续进行 obfsproxy 的部署。</p>
 <p>##3. 配置 obfsproxy 服务端 ##</p>
 <p>使用 python-pip 安装：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install gcc python-pip python-dev</span><br><span class="line">pip install obfsproxy</span><br></pre></td></tr></table></figure>
@@ -386,7 +386,7 @@
 <p>全部完工后端口如下：<br>服务端：<br>2333   -   Shadowsocks 服务端口<br>23333  -   obfsproxy 转发服务端口</p>
 <p>客户端：<br>666    -   Shadowsocks 代理服务端口<br>6666   -   obfsproxy 转发服务端口</p>
 <p>加入 obfs 混淆后访问速度及稳定性明显增加。</p>
-<p align = right>
+<p align="right">
 by Sykie Chen
 2015.8.25
 </p>
