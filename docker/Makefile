@@ -11,14 +11,14 @@ push: data-pre
 	hexo deploy
 
 data-pre:
-	# clear unused init files
+# clear unused init files
 	rm -rf source
-	# copy source files to overwrite init files
+# copy source files to overwrite init files
 	cp -rf ../data/* .
-	# move image files and process image paths in md files
+# move image files and process image paths in md files
 	chmod +rx ./mdprocess.sh
 	./mdprocess.sh
-	# get themes
+# get themes
 	git clone --depth 1 https://github.com/toshichi/hexo-theme-coder17.git themes/coder17
 
 clean:
