@@ -14,10 +14,10 @@ menu:
   码渣 || fas fa-code:
     Static: //static.coder17.com/ || fas fa-folder-open
   # Link: /link/ || fas fa-link
-  About/Guestbook: /about/ || fas fa-address-card
+  About: /about/ || fas fa-address-card
   '' : /atom.xml || fas fa-rss
+  # '' : /sitemap.xml || fas fa-sitemap
   #schedule: /schedule/ || fa fa-calendar
-  #sitemap: /sitemap.xml || fa fa-sitemap
   #commonweal: /404/ || fa fa-heartbeat
 
 # Hide the child menu items in mobile sidebar
@@ -62,7 +62,7 @@ algolia_search:
 
 # Local search
 local_search:
-  enable: false
+  enable: true
 
 # Math (數學)
 # --------------------------------------
@@ -435,7 +435,7 @@ baidu_analytics:
 
 # Google Analytics
 # https://analytics.google.com/analytics/web/
-google_analytics:
+google_analytics: UA-173993389-1
 
 # Tencent Analytics ID
 # https://mta.qq.com
@@ -705,9 +705,9 @@ aside:
 # busuanzi count for PV / UV in site
 # 訪問人數
 busuanzi:
-  site_uv: true
-  site_pv: true
-  page_pv: true
+  site_uv: false
+  site_pv: false
+  page_pv: false
 
 # Time difference between publish date and now (網頁運行時間)
 # Formal: Month/Day/Year Time or Year/Month/Day Time
