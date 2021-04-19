@@ -13,8 +13,8 @@ menu:
   Archives: /archives/ || fas fa-box-open
   码渣 || fas fa-code:
     Static: //static.coder17.com/ || fas fa-folder-open
-  # Link: /link/ || fas fa-link
   About: /about/ || fas fa-address-card
+  Friends: /link/ || fas fa-user-friends
   '' : /atom.xml || fas fa-rss
   # '' : /sitemap.xml || fas fa-sitemap
   #schedule: /schedule/ || fa fa-calendar
@@ -145,8 +145,8 @@ cover:
 
 # Replace Broken Images (替換無法顯示的圖片)
 error_img:
-  flink: /img/friend_404.gif
-  post_page: /img/404.jpg
+  flink: /images/err.png
+  post_page: /images/err.png
 
 # A simple 404 page
 error_404:
@@ -170,7 +170,7 @@ post_meta:
 
 # wordcount (字數統計)
 wordcount:
-  enable: false
+  enable: true
   post_wordcount: true
   min2read: true
   total_wordcount: true
@@ -843,14 +843,14 @@ instantpage: false
 # https://github.com/vinta/pangu.js
 # Insert a space between Chinese character and English character (中英文之間添加空格)
 pangu:
-  enable: false
+  enable: true
   field: site # site/post
 
 # Lazyload (圖片懶加載)
 # https://github.com/verlok/lazyload
 lazyload:
-  enable: false
-  post: /img/loading.gif
+  enable: true
+  post: /images/loading.gif
 
 # PWA
 # See https://github.com/JLHwung/hexo-offline
