@@ -6,7 +6,9 @@ RUN npm install hexo-cli -g && \
     hexo init /usr/src/app/blog && \
     cd /usr/src/app/blog && \
     npm install && \
-    npm install hexo-deployer-git hexo-generator-feed hexo-generator-sitemap hexo-symbols-count-time hexo-toc
+    npm install hexo-deployer-git hexo-generator-feed \
+    hexo-generator-sitemap hexo-symbols-count-time hexo-toc \
+    hexo-renderer-pug hexo-renderer-stylus
 WORKDIR /usr/src/app/blog
 COPY . .
 ENTRYPOINT [ "make" ]
