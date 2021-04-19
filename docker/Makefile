@@ -19,7 +19,8 @@ data-pre:
 	chmod +rx ./mdprocess.sh
 	./mdprocess.sh
 # get themes
-	git clone --depth 1 https://github.com/toshichi/hexo-theme-coder17.git themes/coder17
+# git clone --depth 1 https://github.com/toshichi/hexo-theme-coder17.git themes/coder17
+	git clone -b master --depth 1 https://github.com/toshichi/hexo-theme-butterfly.git themes/butterfly
 
 clean:
 	hexo clean
