@@ -7,7 +7,7 @@ RUN npm install hexo-cli -g && \
     cd /usr/src/app/blog && \
     npm install && \
     npm install hexo-generator-feed \
-    hexo-generator-sitemap hexo-symbols-count-time hexo-toc \
+    hexo-generator-sitemap hexo-symbols-count-time \
     hexo-renderer-pug hexo-renderer-stylus \
     hexo-generator-search
 WORKDIR /usr/src/app/blog
