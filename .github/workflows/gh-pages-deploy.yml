@@ -42,6 +42,7 @@ jobs:
           disqusjs.siteName: ${{ secrets.DISQUS_SITENAME }}
           disqusjs.apikey: ${{ secrets.DISQUS_APIKEY }}
           disqusjs.api: ${{ secrets.DISQUS_API }}
+          google_analytics: ${{ secrets.GOOGLE_ANALYTICS }}
       - name: Use docker to generate html files
         run: |
           make
