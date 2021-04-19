@@ -32,10 +32,9 @@ jobs:
             git push
           fi
       - name: replace secrets in yaml config
-        working-directory: data
         uses: microsoft/variable-substitution@v1
         with:
-          files: '_config.butterfly.yml'
+          files: 'data/_config.butterfly.yml'
         env:
           disqusjs.shortname: ${{ secrets.DISQUS_SHORTNAME }}
           disqusjs.siteName: ${{ secrets.DISQUS_SITENAME }}
