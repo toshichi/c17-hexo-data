@@ -31,10 +31,17 @@ jobs:
             git commit -m "Sync from: ${{ github.event.head_commit.message }} (${{ github.event.head_commit.id }})"
             git push
           fi
-      - name: Use docker to generate html files
+      - name: replace secrets in yaml config
+        working-directory: data
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: '_config.butterfly.yml'
         env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.CHAT_ID }}
+          disqusjs.shortname: ${{ secrets.DISQUS_SHORTNAME }}
+          disqusjs.siteName: ${{ secrets.DISQUS_SITENAME }}
+          disqusjs.apikey: ${{ secrets.DISQUS_APIKEY }}
+          disqusjs.api: ${{ secrets.DISQUS_API }}
+      - name: Use docker to generate html files
         run: |
           make
 
