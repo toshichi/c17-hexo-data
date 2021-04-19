@@ -1,8 +1,9 @@
+---
 title: "微博小尾巴审核通过啦"
 date: 2015-05-19 21:00:21
 tags: [微博, API]
 category: 小技术
-toc: false
+id: weibo-tail-passed
 
 ---
 微博小尾巴的审核通过啦=。=

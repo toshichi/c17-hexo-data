@@ -1,9 +1,9 @@
+---
 title: EasyX 框架实现透明图片显示的 trick
 date: 2016-02-17 04:45
 tags: [C, EasyX, trick, 图片]
 category: [小技术, C]
-list_number: false
-toc: false
+id: 20160217-easyx-trans-trick
 ---
 很多学校教授 C++ 图形编程时，为了规避 Windows 下 VC++ 较为复杂的绘图 API，都会（强制）要求学生使用 [EasyX](http://easyx.cn/) 这一绘图框架。该框架十分简陋地实现了初学者所需的图形功能。同时，此框架也存在大量不足，最为不便的就是不支持 png 格式图片，不支持透明背景绘图。  
 <!-- more -->

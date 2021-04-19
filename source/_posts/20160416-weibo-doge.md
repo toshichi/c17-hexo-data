@@ -1,9 +1,9 @@
+---
 title: 一个微博小游戏的 hack 历程
 date: 2016-04-16 21:10
 tags: [JavaScript, HTML, 微博]
 category: [小技术, HTML]
-list_number: false
-toc: false
+id: 20160416-weibo-doge
 ---
 今天在微博上看到一个找狗的[小游戏](http://m.weibo.cn/client/game?sinainternalbrowser=topnav)：  
 

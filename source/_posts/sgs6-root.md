@@ -1,9 +1,9 @@
+---
 title: 三星 Galaxy S6 保持 knox 0x0 的 root
 date: 2015-06-11 16:48:25
 tags: [Android, root, S6]
 category: [小技术, Android]
-list_number: false
-toc: false
+id: sgs6-root
 
 ---
 &emsp;&emsp;新入手三星 S6 公开版，按以往的经验 root 时线刷刷入第三方 rocovery 的过程中会导致 knox 0x1 从而失去保修。而且 S6 的国行有 BL 锁，解锁同样会失去保修。

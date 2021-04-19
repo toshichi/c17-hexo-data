@@ -1,9 +1,9 @@
+---
 title: Shadowsocks + obfsproxy 混淆翻墙的实现
 date: 2015-08-25 02:58:03
 tags: [Linux, VPS, 科学上网]
 category: [小技术, Linux]
-list_number: false
-toc: true
+id: 20150825-shadowsocks-obfs
 ---
 &emsp;&emsp;Shadowsocks 的作者 [@clowwindy](https://twitter.com/clowwindy) 近期被喝茶了，并被迫删除了 Github 上的源码。这意味着 ss 以后不会得到更新，其流量特征也许会被不断进化的 GFW 识别并封锁。故使用 obfsproxy 进行二次混淆，降低被识别的风险。
 &emsp;&emsp;以下步骤均在 Debian 7 32 位系统上进行。

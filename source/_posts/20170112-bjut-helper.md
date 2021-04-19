@@ -1,9 +1,9 @@
+---
 title: 北工大野生助手
 date: 2017-01-12 14:10:46
 tags: [北京工业大学, 北工大, 查分, 爬虫]
 category: [小技术, PHP]
-list_number: false
-toc: true
+id: 20170112-bjut-helper
 ---
 北工大查分野生助手。是[王雨峰童鞋](http://www.wangyufeng.org)带头写的一个工大查分小助手。后来申请了星火基金，现在由我和雨峰共同维护。具体说明还在写，先写更新日志。  
 项目地址：[https://github.com/wangyufeng0615/bjuthelper](https://github.com/wangyufeng0615/bjuthelper)  

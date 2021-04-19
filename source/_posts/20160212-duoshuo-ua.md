@@ -1,9 +1,9 @@
+---
 title: 多说 JS CSS 的本地化与站长回复和 UA 信息的添加
 date: 2016-02-12 01:51
 tags: [多说, HTML, CSS, JS, UA, 前端]
 category: [小技术, HTML]
-list_number: false
-toc: true
+id: 20160212-duoshuo-ua
 ---
 多说评论系统被很多中文网站使用。网上有很多添加站长回复标记和浏览器操作系统信息的方法。但大部分均已随着多说 JS 的更新而不再有效或存在兼容性问题。我参考了这些教程并重写了相关代码以改进显示效果。  
 <!-- more -->

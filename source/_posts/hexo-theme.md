@@ -3,8 +3,7 @@ title: Hexo Landscape 主题修改优化
 date: 2015-05-23 23:18:15
 tags: [Hexo, Landscape, 主题, 博客, 前端]
 category: [小技术, HTML]
-list_number: false
-toc: true
+id: hexo-theme
 ---
 &emsp;&emsp;这几天用 Hexo 搭了个静态博客。觉得默认的 Landscape 主题挺好看，但有些地方很奇怪。别人改好的 Landscape-plus 和 Landscape-f 改动太大，用着不爽，就决定自己从头造个轮子修改一下。
 
