@@ -100,14 +100,14 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-plugins:
-  hexo-generator-feed
-  hexo-generator-sitemap
-  hexo-symbols-count-time
-  hexo-toc
-  hexo-renderer-pug
-  hexo-renderer-stylus
-  hexo-generator-search
+# plugins:
+#   hexo-generator-feed
+#   hexo-generator-sitemap
+#   hexo-symbols-count-time
+#   # hexo-toc
+#   hexo-renderer-pug
+#   hexo-renderer-stylus
+#   hexo-generator-search
 
 
 theme: butterfly
@@ -120,9 +120,11 @@ deploy:
 
 # Feed Atom
 feed:
+  enable: true
   type: atom
   path: atom.xml
   limit: 20
+  icon: /images/favicon-32x32.png
 
 # Site Map
 sitemap:
@@ -140,15 +142,15 @@ symbols_count_time:
   suffix: "mins."
 
 # toc
-toc:
-  maxdepth: 3
-  class: toc
-  slugify: transliteration
-  decodeEntities: false
-  anchor:
-    position: after
-    symbol: '#'
-    style: header-anchor
+# toc:
+#   maxdepth: 3
+#   class: toc
+#   slugify: transliteration
+#   decodeEntities: false
+#   anchor:
+#     position: after
+#     symbol: '#'
+#     style: header-anchor
 
 # search
 search:
