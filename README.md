@@ -9,4 +9,8 @@ Check README in data branch
 
 ## To generate post
 
+`make`
+
+if docker needs sudo, run:
+
 `sudo -E make`
