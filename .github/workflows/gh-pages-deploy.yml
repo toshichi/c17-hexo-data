@@ -32,7 +32,7 @@ jobs:
             git push
           fi
       - name: replace secrets in yaml config
-        uses: microsoft/variable-substitution@v1
+        uses: toshichi/variable-substitution@v1.01
         with:
           files: 'data/_config.butterfly.yml'
         env:
