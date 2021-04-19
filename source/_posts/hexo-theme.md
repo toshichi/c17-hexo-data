@@ -1,10 +1,10 @@
+---
 title: Hexo Landscape 主题修改优化
 date: 2015-05-23 23:18:15
 tags: [Hexo, Landscape, 主题, 博客, 前端]
 category: [小技术, HTML]
 list_number: false
 toc: true
-
 ---
 &emsp;&emsp;这几天用 Hexo 搭了个静态博客。觉得默认的 Landscape 主题挺好看，但有些地方很奇怪。别人改好的 Landscape-plus 和 Landscape-f 改动太大，用着不爽，就决定自己从头造个轮子修改一下。
 
@@ -13,7 +13,7 @@ toc: true
 &emsp;&emsp;文章参考来源以链接形式放在各节小标题上。有基于原文完善或修改的地方不再另行注明。
 
 ## 1. [Google jQuery 库的优化](http://kuangqi.me/tricks/hexo-optimizations-for-mainland-china/) ##
- 
+
 `layout\_partial\after-footer.ejs` 17行
 
 ```xml

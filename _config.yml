@@ -4,8 +4,8 @@
 
 # Site
 title: 码渣十七
-subtitle: '一抔码渣的屁话笔记<br>雑魚ーダーの支離滅裂なメモ帳'
-description: '码渣十七 | 雑魚ーダー17 | 一抔码渣的屁话笔记 | 雑魚ーダーの支離滅裂なメモ帳'
+subtitle: '雑魚ーダーの雑魚メモ'
+description: '码渣十七 | 雑魚ーダー17 | 微机操作与维修职业技能 | 雑魚ーダーの雑魚メモ'
 keywords: 码渣十七, Coder17, 雑魚ーダー17
 author: 東城十七
 language: zh-Hans
@@ -49,7 +49,7 @@ highlight:
   enable: true
   line_number: true
   auto_detect: true
-  tab_replace: ''
+  tab_replace: '    '
   wrap: true
   hljs: false
 prismjs:
@@ -70,8 +70,6 @@ index_generator:
 # Category & Tag
 default_category: uncategorized
 category_map:
-  码渣: coding
-  胡扯: life
 
 tag_map:
 
@@ -95,7 +93,7 @@ pagination_dir: page
 
 # Include / Exclude file(s)
 ## include:/exclude: options only apply to the 'source/' folder
-include: .images
+include:
 exclude:
 ignore:
 
@@ -108,7 +106,8 @@ plugins:
   hexo-symbols-count-time
   hexo-toc
 
-theme: coder17
+theme: butterfly
+# theme: coder17
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
