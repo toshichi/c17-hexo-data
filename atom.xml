@@ -76,7 +76,7 @@
   </entry>
   
   <entry>
-    <title>一个微博小游戏的 hack 历程</title>
+    <title>把微博找狗游戏刷到溢出</title>
     <link href="https://www.coder17.com/posts/20160416-weibo-doge/"/>
     <id>https://www.coder17.com/posts/20160416-weibo-doge/</id>
     <published>2016-04-16T12:10:00.000Z</published>
@@ -98,9 +98,9 @@
     
     <category term="HTML" scheme="https://www.coder17.com/tags/HTML/"/>
     
-    <category term="JavaScript" scheme="https://www.coder17.com/tags/JavaScript/"/>
-    
     <category term="微博" scheme="https://www.coder17.com/tags/%E5%BE%AE%E5%8D%9A/"/>
+    
+    <category term="JavaScript" scheme="https://www.coder17.com/tags/JavaScript/"/>
     
   </entry>
   
@@ -198,6 +198,34 @@
     <category term="CSS" scheme="https://www.coder17.com/tags/CSS/"/>
     
     <category term="前端" scheme="https://www.coder17.com/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>格式化 JSON 的 Chrome 插件</title>
+    <link href="https://www.coder17.com/posts/json-plugin/"/>
+    <id>https://www.coder17.com/posts/json-plugin/</id>
+    <published>2016-01-02T15:00:00.000Z</published>
+    <updated>2016-01-02T15:00:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%A0%BC%E5%BC%8F%E5%8C%96%20JSON%20%E7%9A%84%20Chrome%20%E6%8F%92%E4%BB%B6/0.png" alt="img"></p><p>安利一个格式化显示 JSON 的 Chrome 插件，JSONView：<a href="http://jsonview.com/">http://jsonview.com/</a></p><p>这货不光有 Chrome 插件，还有 Firefox 的。</p><p>使用前：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%A0%BC%E5%BC%8F%E5%8C%96%20JSON%20%E7%9A%84%20Chrome%20%E6%8F%92%E4%BB%B6/image-20210421032053698.png" alt="image-20210421032053698"></p><p>使用后：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%A0%BC%E5%BC%8F%E5%8C%96%20JSON%20%E7%9A%84%20Chrome%20%E6%8F%92%E4%BB%B6/image-20210421032128503.png" alt="image-20210421032128503"></p><p>是不是一口气上五楼都不费劲了</p><p>Chrome 插件链接：</p><p><a href="https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc">https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src= &quot;/images/loading.gif&quot; data-lazy-src=&quot;/blogimg/%E6%A0%BC%E5%BC%8F%E5%8C%96%20JSON%20%E7%9A%84%20Chrome%20%E6%8F%92%E4%BB%B6/0.pn</summary>
+      
+    
+    
+    
+    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
+    
+    
+    <category term="JSON" scheme="https://www.coder17.com/tags/JSON/"/>
+    
+    <category term="Chrome 插件" scheme="https://www.coder17.com/tags/Chrome-%E6%8F%92%E4%BB%B6/"/>
+    
+    <category term="格式化" scheme="https://www.coder17.com/tags/%E6%A0%BC%E5%BC%8F%E5%8C%96/"/>
     
   </entry>
   

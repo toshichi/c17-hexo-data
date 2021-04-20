@@ -72,6 +72,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/json-plugin/</loc>
+    
+    <lastmod>2016-01-02</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/20151213-masks/</loc>
     
     <lastmod>2015-12-12</lastmod>
@@ -291,20 +298,6 @@
   </url>
   
   <url>
-    <loc>https://www.coder17.com/tags/JavaScript/</loc>
-    <lastmod>2021-04-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/tags/%E5%BE%AE%E5%8D%9A/</loc>
-    <lastmod>2021-04-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.coder17.com/tags/Android/</loc>
     <lastmod>2021-04-20</lastmod>
     <changefreq>daily</changefreq>
@@ -417,7 +410,42 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/%E5%BE%AE%E5%8D%9A/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/API/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/JavaScript/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/JSON/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Chrome-%E6%8F%92%E4%BB%B6/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E6%A0%BC%E5%BC%8F%E5%8C%96/</loc>
     <lastmod>2021-04-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

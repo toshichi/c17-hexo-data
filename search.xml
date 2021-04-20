@@ -64,7 +64,7 @@
     
     
     <entry>
-      <title>一个微博小游戏的 hack 历程</title>
+      <title>把微博找狗游戏刷到溢出</title>
       <link href="posts/20160416-weibo-doge/"/>
       <url>posts/20160416-weibo-doge/</url>
       
@@ -82,9 +82,9 @@
             
             <tag> HTML </tag>
             
-            <tag> JavaScript </tag>
-            
             <tag> 微博 </tag>
+            
+            <tag> JavaScript </tag>
             
         </tags>
       
@@ -182,6 +182,35 @@
             <tag> CSS </tag>
             
             <tag> 前端 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>格式化 JSON 的 Chrome 插件</title>
+      <link href="posts/json-plugin/"/>
+      <url>posts/json-plugin/</url>
+      
+        <content type="html"><![CDATA[<p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%A0%BC%E5%BC%8F%E5%8C%96%20JSON%20%E7%9A%84%20Chrome%20%E6%8F%92%E4%BB%B6/0.png" alt="img"></p><p>安利一个格式化显示 JSON 的 Chrome 插件，JSONView：<a href="http://jsonview.com/">http://jsonview.com/</a></p><p>这货不光有 Chrome 插件，还有 Firefox 的。</p><p>使用前：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%A0%BC%E5%BC%8F%E5%8C%96%20JSON%20%E7%9A%84%20Chrome%20%E6%8F%92%E4%BB%B6/image-20210421032053698.png" alt="image-20210421032053698"></p><p>使用后：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%A0%BC%E5%BC%8F%E5%8C%96%20JSON%20%E7%9A%84%20Chrome%20%E6%8F%92%E4%BB%B6/image-20210421032128503.png" alt="image-20210421032128503"></p><p>是不是一口气上五楼都不费劲了</p><p>Chrome 插件链接：</p><p><a href="https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc">https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JSON </tag>
+            
+            <tag> Chrome 插件 </tag>
+            
+            <tag> 格式化 </tag>
             
         </tags>
       
