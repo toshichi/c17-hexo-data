@@ -1,7 +1,7 @@
 # This script works at hexo root folder
 md_path="source/_posts/"
-img_old_path="](.images\/"
-img_new_path="](\/blogimg\/"
+img_old_path=".images\/"
+img_new_path="\/blogimg\/"
 
 # process all md files
 for md in $md_path*.md ; do
@@ -10,7 +10,9 @@ for md in $md_path*.md ; do
         echo "Processing ${filename}..."
         filename_no_ext="${filename%.*}"
         # replace image path prefix in md files
-        sed -i "s/${img_old_path}/${img_new_path}/g" "${md}"
+        sed -i "s/](${img_old_path}/](${img_new_path}/g" "${md}"
+        sed -i "s/top_img: ${img_old_path}/top_img: ${img_new_path}/g" "${md}"
+        sed -i "s/cover: ${img_old_path}/cover: ${img_new_path}/g" "${md}"
 
     fi
 done
