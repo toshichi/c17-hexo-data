@@ -49,7 +49,7 @@ social:
   fa fa-envelope: mailto:chen17@coder17.com || E-Mail
   fab fa-weibo: https://weibo.com/TojoSaiki || Weibo
   fab fa-twitter: https://twitter.com/TojoToshichi || Twitter
-  fas fa-rss: /atom.xml || RSS
+  fab fa-weixin: /images/wechat.jpg || 微信公众号
 
 # search (搜索)
 # --------------------------------------
@@ -205,7 +205,7 @@ reward:
   QR_code:
     - img: /images/ko-fi.png
       link: https://ko-fi.com/coder17
-      text: Buy me a coffee
+      text: Click ↑ to buy me a coffee
     # - img: /img/alipay.jpg
     #   link:
     #   text: alipay
@@ -232,7 +232,7 @@ photofigcaption: false
 # 1: The 'next post' will link to old post
 # 2: The 'next post' will link to new post
 # false: disable pagination
-post_pagination: false
+post_pagination: 1
 
 # anchor
 # when you scroll in post, the URL will update according to header id.
