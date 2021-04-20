@@ -2,10 +2,9 @@
 title: 三星 Galaxy S6 的 SystemUI 修改与功能添加
 date: 2015-07-10 14:04:20
 tags: [Android, S6, SystemUI, 反编译]
-category: [小技术, Android]
-list_number: false
+category: Hacking
 id: 20150710-sgs6-mod
-toc: true
+cover: false
 ---
 
 5.0系统下 xposed 框架不稳定且对三星 TouchWiz 支持不佳，故手动反编译并修改 SystemUI 添加部分常用功能。
@@ -15,27 +14,28 @@ toc: true
 
 
 
-## 1. 电量数字大小修改 ##
+## 1. 电量数字大小修改
+
 默认电量百分比的数字字号太大了，占用过多空间。  
 `SystemUI\res\values\dimens.xml` 971行  
 
-```xml
+``` xml
 <dimen name="battery_text_marginStart">0.0dip</dimen>
 <dimen name="battery_text_size">9.0dip</dimen>
 
 ```
-<!-- more -->
-
-
-## 2.移动网络断开时不显示G/E/3G/4G ##
+## 2.移动网络断开时不显示G/E/3G/4G
 
 修改 `/System/build.prop`
-```shell
+
+``` shell
 ro.product.name=zerofltezc
 ro.product.device=zerofltechn
 ```
+
 改为
-```shell
+
+``` shell
 ro.product.name=zeroflte
 ro.product.device=zeroflte
 ```
@@ -48,10 +48,11 @@ ro.product.device=zeroflte
 改动后替换 png 资源防止文字重叠。覆盖即可。  
 png图标包：http://pan.baidu.com/s/1i3F2YiD
 
-##3. 隐藏下拉的 S 搜索、快速连接 ##
+## 3. 隐藏下拉的 S 搜索、快速连接
 
 `SystemUI.apk\smali\com\android\systemui\statusbar\phone\PhoneStatusBar.smali` 找到并修改如下内容
-```smali
+
+``` smali
 .method public showHideQConnectLayout()V
     .locals 13
 
@@ -79,36 +80,40 @@ png图标包：http://pan.baidu.com/s/1i3F2YiD
 ```
 
 
-##4. 隐藏状态栏 卡1 卡2 图标 ##
+## 4. 隐藏状态栏 卡1 卡2 图标
 
 `systemui\layout\msim_signal_cluster_view.xml`
-```xml
+``` xml
 <ImageView android:id="@id/sim_icon_chn" android:layout_width="0px" android:layout_marginRight="0dip" />
 ```
 
-##5. 添加铃声、修改低电量、截屏等UI声音、禁用音量调节声##
+## 5. 添加铃声、修改低电量、截屏等UI声音、禁用音量调节声
 
-铃声包：http://pan.baidu.com/s/1eQfHqAQ  
+铃声包：http://pan.baidu.com/s/1eQfHqAQ 
 解压替换`/System/Media/`
 
-##6. 相机声音开关、浏览器谷歌搜索 ##
-`/System/csc/others.xml`  
-添加 `ShutterSoundMenu`项为 `True`  
-谷歌搜索记不住了，看着英文改就好，很简单的。  
-或使用 `CSC Feature Expert`  
+## 6. 相机声音开关、浏览器谷歌搜索
+
+`/System/csc/others.xml` 
+添加 `ShutterSoundMenu`项为 `True` 
+谷歌搜索记不住了，看着英文改就好，很简单的。 
+或使用 `CSC Feature Expert` 
 地址：http://pan.baidu.com/s/1jGrewUa 密码：m5ui
 
-##7. 状态栏网速 ##
-参考这个教程 http://forum.xda-developers.com/android/general/mod-status-bar-network-traffic-separate-t3024878  
+## 7. 状态栏网速
 
-首先 deodex `SystemUI` 和 `SecSettings` 两个系统 apk。  
+参考这个教程 http://forum.xda-developers.com/android/general/mod-status-bar-network-traffic-separate-t3024878 
+
+首先 deodex `SystemUI` 和 `SecSettings` 两个系统 apk。 
 下载 http://pan.baidu.com/s/1dDpSC1N 这里的文件包。
 
-### 7.1 SystemUI ###
-首先将压缩包里的 smali 文件和 png 图放到反编译后相应的路径下。  
-打开压缩包里的 values 文件夹，将其中 xml 文件的内容添加到反编译后相应文件中。  
-打开 `layout/status_bar.xml` 文件添加以下内容：  
-```xml
+### 7.1 SystemUI
+
+首先将压缩包里的 smali 文件和 png 图放到反编译后相应的路径下。 
+打开压缩包里的 values 文件夹，将其中 xml 文件的内容添加到反编译后相应文件中。 
+打开 `layout/status_bar.xml` 文件添加以下内容： 
+
+``` xml
 <com.android.systemui.statusbar.policy.NetworkTraffic android:id="@id/networkTraffic" android:layout_width="wrap_content" android:layout_height="fill_parent" android:singleLine="false" />
 ```
 
@@ -122,10 +127,11 @@ png图标包：http://pan.baidu.com/s/1i3F2YiD
 0x7f020428    <public type="drawable" name="stat_sys_network_traffic_down"
 ```
 
-完成后编译之，替换 resources 文件，不多说。
+完成后编译之，替换 resources 文件。
 
-###7.2 SecSettings ###
-基本步骤同上，再次反编译后替换如下 smali 中相应 ID：  
+### 7.2 SecSettings
+
+基本步骤同上，再次反编译后替换如下 smali 中相应 ID： 
 `NetworkTraffic.smali`
 
 ```
@@ -143,6 +149,7 @@ png图标包：http://pan.baidu.com/s/1i3F2YiD
 ```
 
 `SeekBarPreference.smali`
+
 ```
 0x7f0b0696    <public type="id" name="seekBarPrefBarContainer"
 0x7f040229    <public type="layout" name="seek_bar_preference"
@@ -152,6 +159,7 @@ png图标包：http://pan.baidu.com/s/1i3F2YiD
 ```
 
 `ColorPickerDialog.smali`
+
 ```
 0x7f04022b    <public type="layout" name="dialog_color_picker”
 0x7f091920    <public type="string" name="dialog_color_picker"
@@ -170,13 +178,14 @@ png图标包：http://pan.baidu.com/s/1i3F2YiD
 ```
 
 最后将以下代码添加到 `res/layout`下合适的设置大项中
-```xml
+
+``` xml
 <PreferenceScreen android:title="@string/network_traffic_title" android:key="network_traffic_state " android:summary="@string/network_traffic_summary" android:fragment="com.android.settings.temasek.NetworkTraffic" />
 ```
 
 编译替换，完工。
 
-##8. S助手 长按 home 修改 ##
+## 8. S助手 长按 home 修改
 
 framework-res/value/integers/config_holdHomeButton - 1
 

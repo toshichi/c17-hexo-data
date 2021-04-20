@@ -1,0 +1,122 @@
+---
+title: Favicon 站点图标的各平台适配与移动端优化
+date: 2016-01-26 04:15
+tags: [favicon, HTML, CSS, 前端]
+category: Service
+id: 20160126-favicon
+cover: .images/20160126-favicon/4.png
+---
+
+网站的 favicon 图标在各平台上的显示效果很难保证。而这个图标又是网站识别的重要组成部分。这里详细介绍一下在 Android, iOS 以及 Windows 三大平台上网站图标效果的优化。 
+
+## 1. favicon 图标的格式
+
+早期网站多使用 ico 格式，该格式允许一个文件里同时包含多个分辨率版本的图标。缺点是显示时必须拉取整个文件，若嵌入的图标较大则会导致不必要的带宽开销。 
+
+而如今更流行的是嵌入多个 png 格式图标并作出分别说明，根据需要拉取合适的图标即可。这样的缺点是需要写入很多行的 meta 标签。 
+
+## 2. favicon 图标的大小
+
+这就是一个大坑了。 
+桌面端浏览器中，图标为 16×16；添加到 Windows 任务栏的时候，需要 32×32 以及 48×48 大小。 
+而 Windows 8 以上的磁贴界面中，我们还需要 70×70, 144×144, 150×150, 310×150, 310×310 大小的图标，以及指定的背景颜色。 
+而在移动端就更加令人呵呵呵了。早期非 Retina 屏幕的 iOS 设备中只需要 57×57，而 iPad 和 Retina 屏幕出现后，要想完成强迫症的完美适配，你需要8种尺寸的图标： 
+
+Device|Screen|iOS ver|Size
+---|---|---|---
+iPhone|Classic|6-|57×57
+ | |7+|60×60
+ |Retina|6-|114×114
+| |7+|120*120
+iPad|Classic|6-|72×72
+ | |7+|76×76
+ |Retina|6-|144×144
+ | |7+|152×152
+
+诶嘿嘿，是不是很酸爽啊胖友？这才哪到哪啊。 
+
+还有 Android / Chrome 呢=。= 
+
+根据屏幕分辨率不同，要想完美适配 Android 系统的添加到桌面功能，你还需要 36×36, 48×48, 72×72, 96×96, 144×144, 192×192 的图标。以及在移动版 Chrome 中还有一个新加入的标签来指定多任务视图的标题颜色。 
+
+你可能发现有很多尺寸在不同平台上有重复的嘛，然后开始怀疑我在吓唬人。好吧，虽然尺寸是一样的，然而如果你在 Android 平台上看到一个 iOS 风格的圆角矩形图标下面写着 HKEY_C17，你想不想分分钟砍死我啊诶嘿嘿？ 
+
+所以我们需要为不同的平台准备不同的基础图标。 
+啊还有 Safari 的单色图标我还没说呢。 
+
+做一个前端是不是棒棒哒？诶嘿嘿嘿嘿爱我你怕了么（逃 
+
+![](.images/20160126-favicon/1.png) 
+
+## 3. 人民的大救星：[RealFaviconGenerator](http://realfavicongenerator.net/)
+
+前端的朋友们还是有救的，这个萌萌哒平台可以生成我们需要的所有东西。 
+首先打开 http://realfavicongenerator.net/ 会让你上传高清基础图标，最好是270像素以上。 
+上传并生成后，可以单独修改各平台的显示参数或单独上传图标。这里推荐做一个透明背景带阴影的 Android 版、一个自带白色背景和阴影的 iOS 版，和一个无阴影无背景还把文字镂空了的 Safari 版。 
+![](.images/20160126-favicon/2.png) 
+
+iOS 效果如图 
+
+![](.images/20160126-favicon/3.png) 
+
+Android 效果如图 
+
+![](.images/20160126-favicon/4.png) 
+
+单独设置镂空文字的 Safari 版本后如图，避免色块里的文字无法显示。 
+
+![](.images/20160126-favicon/5.png) 
+
+镂空并单色化的 Windows 磁贴效果 
+然后在最下面填入你的图标需要放置的相对路径，就可以生成图标包和对应的 HTML 代码辣！ 
+
+![](.images/20160126-favicon/6.png) 
+
+单击下载图标包，来让我们看看都放了啥在里面： 
+
+![](.images/20160126-favicon/7.png) 
+
+29个文件！天了噜！少掉了多少头发啊！ 
+然后复制 HTML 代码插到你的 head 里面就行辣！ 
+我的代码如下： 
+
+``` html
+<link rel="apple-touch-icon" sizes="57x57" href="/css/images/apple-touch-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/css/images/apple-touch-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/css/images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/css/images/apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/css/images/apple-touch-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/css/images/apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/css/images/apple-touch-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/css/images/apple-touch-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/css/images/apple-touch-icon-180x180.png">
+<link rel="icon" type="image/png" href="/css/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/css/images/android-chrome-192x192.png" sizes="192x192">
+<link rel="icon" type="image/png" href="/css/images/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/css/images/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/css/images/manifest.json">
+<link rel="mask-icon" href="/css/images/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/css/images/favicon.ico">
+<meta name="msapplication-TileColor" content="#2d89ef">
+<meta name="msapplication-TileImage" content="/css/images/mstile-144x144.png">
+<meta name="msapplication-config" content="/css/images/browserconfig.xml">
+<meta name="theme-color" content="#330066">
+```
+
+Android 效果如图： 
+
+![](.images/20160126-favicon/8.png) 
+
+![](.images/20160126-favicon/9.png) 
+
+iOS 因为 Pad 放在客厅我懒得拿了就不截图了
+
+全部部署完成后，可以单击下面的 check your favicon 测试一下部署是否成功。 
+感谢 Real Favicon Generator，如果可能的话可以点击下面的链接捐助他们！ 
+http://realfavicongenerator.net/donate 
+
+
+<p align = right>
+by Sykie Chen
+2016.1.26
+</p>

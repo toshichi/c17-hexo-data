@@ -2,40 +2,55 @@
 title: 多说 JS CSS 的本地化与站长回复和 UA 信息的添加
 date: 2016-02-12 01:51
 tags: [多说, HTML, CSS, JS, UA, 前端]
-category: [小技术, HTML]
+category: Hacking
 id: 20160212-duoshuo-ua
+cover: .images/20160212-duoshuo-ua/1.png
 ---
-多说评论系统被很多中文网站使用。网上有很多添加站长回复标记和浏览器操作系统信息的方法。但大部分均已随着多说 JS 的更新而不再有效或存在兼容性问题。我参考了这些教程并重写了相关代码以改进显示效果。  
-<!-- more -->
-先上图：  
-![](/blogimg/20160212-duoshuo-ua/1.png)  
-可以解析 IE/Egde, Chrome, Safari, Firefox, Opera 等浏览器以及常见的几种国内壳浏览器。微博微信内置浏览器也可解析。  
-系统方面除了做了 iPhone/iPad 区分外，还加入了对1%的WP支持=。=  
-已有的教程多修改为带圆角矩形背景的文字， ~~难看的一笔~~ 不是十分的优雅。因此我改为了无背景，彩色加粗文字。  
-以及在无法识别的时候会显示 ~~奇怪♂的浏览器~~ 和 ~~奇怪♂的操作系统~~ 字样 ~~增加情趣~~ 提示用户。  
-  
-##1. 多说 JS 和 CSS 的本地化  
-多说引用的 JS 脚本地址为 `http://static.duoshuo.com/embed.js`，搞下来，改个名字或者不改也行。我这里改为 `ds_embed.js` 并放置到主题目录 `/source/js/` 中。  
-多说的 CSS 分为两部分，其一为通用部分，即多说后台设置的“主题”所包含的。这部分无需本地化。其二为多说后台“自定义CSS”的部分。这部分严格来说也无需本地化，但自己写的代码还是存成自己的文件比较稳妥，也便于本地维护，放在后台谁知道它哪天抽了就没了。  
-将多说后台“自定义CSS”中已有的内容剪切，写入到主题目录 `/source/css/duoshuo.css` 中。  
+
+多说评论系统被很多中文网站使用。网上有很多添加站长回复标记和浏览器操作系统信息的方法。但大部分均已随着多说 JS 的更新而不再有效或存在兼容性问题。我参考了这些教程并重写了相关代码以改进显示效果。 
+
+先上图： 
+
+![](.images/20160212-duoshuo-ua/1.png) 
+
+可以解析 IE/Egde, Chrome, Safari, Firefox, Opera 等浏览器以及常见的几种国内壳浏览器。微博微信内置浏览器也可解析。 
+系统方面除了做了 iPhone/iPad 区分外，还加入了对1%的WP支持=。= 
+已有的教程多修改为带圆角矩形背景的文字， ~~难看的一笔~~ 不是十分的优雅。因此我改为了无背景，彩色加粗文字。 
+以及在无法识别的时候会显示 ~~奇怪♂的浏览器~~ 和 ~~奇怪♂的操作系统~~ 字样 ~~增加情趣~~ 提示用户。 
+
+## 1. 多说 JS 和 CSS 的本地化 
+
+多说引用的 JS 脚本地址为 `http://static.duoshuo.com/embed.js`，搞下来，改个名字或者不改也行。我这里改为 `ds_embed.js` 并放置到主题目录 `/source/js/` 中。 
+
+多说的 CSS 分为两部分，其一为通用部分，即多说后台设置的“主题”所包含的。这部分无需本地化。其二为多说后台“自定义CSS”的部分。这部分严格来说也无需本地化，但自己写的代码还是存成自己的文件比较稳妥，也便于本地维护，放在后台谁知道它哪天抽了就没了。 
+
+将多说后台“自定义CSS”中已有的内容剪切，写入到主题目录 `/source/css/duoshuo.css` 中。 
+
 然后修改`多说公共JS代码`，即我在 [Hexo Landscape 主题修改优化](http://www.devchen.com/blog/coding/HTML/hexo-theme/) 一文中插入到 `layout\_partial\after-footer.ejs` 文件中的部分代码。  
 原来的
-```javascript
+
+``` javascript
 ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
 ```
+
 修改为
-```javascript
+
+``` javascript
 ds.src = '/js/ds_embed.js';
 ```
+
 然后在 `layout\_partial\head.ejs` 中合适的位置插入 css 引用：
-```html
+
+``` html
 <link href="/css/duoshuo.css" rel="stylesheet" type="text/css">
 ```
-更新网站，若评论框正常显示则本地化成功。  
+更新网站，若评论框正常显示则本地化成功。 
 
-##2. 添加 CSS 样式
+## 2. 添加 CSS 样式
+
 在 `duoshuo.css` 中插入以下代码：
-```css
+
+``` css
 /* duoshuo UA marks */
 span.ua{
 	margin: 0 3px!important;
@@ -119,13 +134,18 @@ span.ua{
 	
 }
 ```
-代码用途在注释中已有说明，不再赘述。最下面两块 `#ds-reset` 开头的样式会覆盖默认主题中的同名样式，以修改在主题中定义的用户名颜色，而不必本地化主题 CSS。  
 
-##3. 修改 ds_embed.js
-这一步非常重要，修改不慎就会导致整个评论框无法显示。而且这部分内容也与当前的多说 js 版本相关联。本文中提到的代码基于 2016-02-12 版本的 embed.js，如果今后多说修改了相关代码可能失效，到时我应该会更新。  
+代码用途在注释中已有说明，不再赘述。最下面两块 `#ds-reset` 开头的样式会覆盖默认主题中的同名样式，以修改在主题中定义的用户名颜色，而不必本地化主题 CSS。 
+
+## 3. 修改 ds_embed.js
+
+这一步非常重要，修改不慎就会导致整个评论框无法显示。而且这部分内容也与当前的多说 js 版本相关联。本文中提到的代码基于 2016-02-12 版本的 embed.js，如果今后多说修改了相关代码可能失效，到时我应该会更新。 
+
 ### 3.1 添加新函数
-首先在文件开头处添加三个新的函数：  
-```javascript
+
+首先在文件开头处添加三个新的函数： 
+
+``` javascript
 // admin reply
 function sskadmin(e) {
 	var ssk = '';
@@ -236,39 +256,49 @@ function os(e) {
 	return os+"</span>" ;
 }
 ```
-其中第一个函数中的 `11838425` 是我的多说 user ID，在多说后台查看。  
-浏览器解析的部分我没有加入太多的国产壳浏览器解析，我觉得访问这个网站的人应该不会 low 到用大数字之类的奇怪浏览器吧。  
+
+其中第一个函数中的 `11838425` 是我的多说 user ID，在多说后台查看。 
+浏览器解析的部分我没有加入太多的国产壳浏览器解析，我觉得访问这个网站的人应该不会 low 到用大数字之类的奇怪浏览器吧。 
+
 ### 3.2 修改输出格式
-查找  
-`r.url?(t+='<a class="ds-user-name ds-highlight"` ...  
-这部分代码  
-在 class 中插入一段，变成：  
-`r.url?(t+='<a class="ds-user-name'+sskadmin(s.author)+' ds-highlight" data-qqt-account="'+(r.` ...  
-这步是添加了站长回复的标记  
-后边不远处有一段  
-`t+=' data-qqt-account="'+(r.qqt_account||"")+'">'+u(r.name)+"</span>"),`  
-在这后面插入以下代码：  
-```javascript
+
+查找 
+`r.url?(t+='<a class="ds-user-name ds-highlight"` ... 
+这部分代码 
+在 class 中插入一段，变成： 
+
+`r.url?(t+='<a class="ds-user-name'+sskadmin(s.author)+' ds-highlight" data-qqt-account="'+(r.` ... 
+
+这步是添加了站长回复的标记 
+后边不远处有一段 
+
+`t+=' data-qqt-account="'+(r.qqt_account||"")+'">'+u(r.name)+"</span>"),` 
+
+在这后面插入以下代码： 
+
+``` javascript
 // UA parse
 t+='<span class="ua">' + ua(s.agent) +'</span><span class="ua">'+ os(s.agent) + '</span>',
 ```
-这一步是添加了 UA 信息显示  
-更新网站，查看评论框效果，如果评论框不显示则说明 JS 写得有问题，可能的原因有：  
-1. 多说 JS 版本更新了，部分对象名改变；  
-2. 你复制错了。(\*/ω＼\*)  
+
+这一步是添加了 UA 信息显示 
+
+更新网站，查看评论框效果，如果评论框不显示则说明 JS 写得有问题，可能的原因有： 
+1. 多说 JS 版本更新了，部分对象名改变； 
+2. 你复制错了。(\*/ω＼\*) 
 
 
-  
-修改后的完整代码在 GitHub: https://github.com/SykieChen/hexo-theme-hic17/blob/81343b17064034d09d1c51d6e44829dcbb57a5eb/source/js/ds_embed.js  
-  
-本文的所有修改均已合并到 HiC17 Hexo主题中。地址： https://github.com/SykieChen/hexo-theme-hic17  
-  
+
+修改后的完整代码在 GitHub: https://github.com/SykieChen/hexo-theme-hic17/blob/81343b17064034d09d1c51d6e44829dcbb57a5eb/source/js/ds_embed.js 
+
+本文的所有修改均已合并到 HiC17 Hexo主题中。地址： https://github.com/SykieChen/hexo-theme-hic17 
+
 ---
-  
-参考了：  
-http://myhloli.com/duoshuo-ua-and-admin-tab.html  
-http://ssk.91txh.com/209  
-https://segmentfault.com/a/1190000002707162  
+
+参考了： 
+http://myhloli.com/duoshuo-ua-and-admin-tab.html 
+http://ssk.91txh.com/209 
+https://segmentfault.com/a/1190000002707162 
 
 ---
 
