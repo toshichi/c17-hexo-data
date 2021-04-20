@@ -2,7 +2,7 @@
 title: Shadowsocks + obfsproxy 混淆翻墙的实现
 date: 2015-08-25 02:58:03
 tags: [Linux, VPS, 科学上网]
-category: Service
+category: Services
 id: 20150825-shadowsocks-obfs
 cover: false
 ---

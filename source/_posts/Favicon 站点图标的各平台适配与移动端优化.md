@@ -2,7 +2,7 @@
 title: Favicon 站点图标的各平台适配与移动端优化
 date: 2016-01-26 04:15
 tags: [favicon, HTML, CSS, 前端]
-category: Service
+category: Services
 id: 20160126-favicon
 cover: .images/20160126-favicon/4.png
 ---

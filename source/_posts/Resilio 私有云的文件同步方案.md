@@ -2,7 +2,7 @@
 title: Resilio 私有云的文件同步方案
 date: 2016-12-17 13:44:53
 tags: [Resilio, 私有云, 同步]
-category: Service
+category: Services
 id: 20161217-resilio
 cover: .images/20161217-resilio/2016-12-17-15-03-34.jpg
 ---
