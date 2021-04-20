@@ -13,7 +13,7 @@
       
       <categories>
           
-          <category> Service </category>
+          <category> Services </category>
           
       </categories>
       
@@ -44,7 +44,7 @@
       
       <categories>
           
-          <category> Service </category>
+          <category> Services </category>
           
       </categories>
       
@@ -168,7 +168,7 @@
       
       <categories>
           
-          <category> Service </category>
+          <category> Services </category>
           
       </categories>
       
@@ -213,6 +213,37 @@
             <tag> 面罩 </tag>
             
             <tag> 空气质量 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Mifare 1k S50 卡的简单探讨与破解</title>
+      <link href="posts/20151019-nfc-mod/"/>
+      <url>posts/20151019-nfc-mod/</url>
+      
+        <content type="html"><![CDATA[<p><strong>免责声明：本文仅供有能力的读者进行技术研究与探讨，本人在试验成功后已将卡片内数据改回。因阅读此文章而产生的一切后果与本人无关，一切责任由您自己承担。</strong></p><p><strong>警告：私自篡改 IC 卡内信息可能触犯法律，由于您自行改动您的卡片内的数据而引起的一切后果与本文作者无关。勿谓言之不预也。</strong></p><h2 id="0-背景"><a href="#0-背景" class="headerlink" title="0. 背景"></a>0. 背景</h2><p>学校公共洗衣机是用的是海尔的读卡洗衣机，与之配套的洗衣卡收费五十元，其中押金十元，内含十次洗衣次数，每次四元。</p><h2 id="1-原理"><a href="#1-原理" class="headerlink" title="1. 原理"></a>1. 原理</h2><p>尝试用带 NFC 的手机（Galaxy S6）搭配 <a href="https://play.google.com/store/apps/details?id=de.syss.MifareClassicTool">Mifare Classic Tool</a> （链接为 Google Play，墙内可以使用 <a href="http://apkleecher.com/">Apk Leecher</a> 下载 Play 上的安装包） 读取洗衣卡发现其为 Mifare 1k 卡片。此卡片的加密早在2008年就被破解，只要有一个扇区未加密就可破解出其它所有扇区的密钥。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/1.png"></p><p>以下节选自 <a href="http://read.pudn.com/downloads102/doc/420451/M1%E5%8D%A1%E6%8A%80%E6%9C%AF%E6%89%8B%E5%86%8C[1].doc.doc">M1 卡技术手册</a> ：</p><ol><li>M1卡分为16个扇区，每个扇区由4块（块0、块1、块2、块3）组成，（我们也将16个扇区的64个块按绝对地址编号为0~63，存贮结构如下图所示：</li></ol><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/2.png"></p><ol start="2"><li>第0扇区的块0（即绝对地址0块），它用于存放厂商代码，已经固化，不可更改。</li><li>每个扇区的块0、块1、块2为<strong>数据块</strong>，可用于存贮数据。</li></ol><p><strong>数据块</strong>可作两种应用：</p><pre><code>- 用作一般的数据保存，可以进行**读、写**操作。- 用作数据值，可以进行**初始化值、加值、减值、读值**操作。</code></pre><ol start="4"><li>每个扇区的块3为<strong>控制块</strong>，包括了密码A、存取控制、密码B。具体结构如下：</li></ol><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/3.png"></p><ol start="5"><li>每个扇区的密码和存取控制都是独立的，可以根据实际需要设定各自的密码及存取控制。存取控制为4个字节，共32位，扇区中的每个块（包括数据块和控制块）的存取条件是由密码和存取控制共同决定的。<br>……</li></ol><h2 id="2-操作"><a href="#2-操作" class="headerlink" title="2. 操作"></a>2. 操作</h2><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/4.png"></p><p>如图，本卡中，所有区块的存取控制均为 FF 07 80 69 ，此值为 MF1 卡的出厂预设值，不必对照表格一步步解读，直接可以查得最后两位 69 无意义，前三位 FF 07 80 表示 0-2 三个块只要验证密码A或密码B即可读写。块3权限如下图：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/5.png"></p><p>即：只有验证密码A正确了，才能做以下操作：<br>· 修改密码A；<br>· 修改控制字；<br>· 修改密码B，读出密码B。</p><p>可以看出，卡中只有第5扇区第1块中有数据，且为循环数据，猜测剩余次数存在此段数据中。除5扇区外其他扇区的密码A密码B均为 <code>FFFFFFFFFFFF</code>，第5扇区密码A未知，密码B为 <code>FFFFFFFFFFFF</code>。猜测为防止直接复制卡而修改了密码A，因此我采用直接复制整张卡的方法并不能读出正确的5扇区密码A。读卡机可能只使用密码A与卡通信，故复制卡试验时读卡机报错。<br>前文提到该卡已被破解，使用电脑连接读卡器可以方便地暴力猜解或通过验证漏洞破解密码A。但读卡器太特么贵了，并不能买得起。所以我们就不复制卡了。<br>然而虽然因密码A未知而不能复制，在密码B为默认密码的条件下可以直接用手机 NFC 修改5扇区1块的数据，无需复制卡片。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/6.png"></p><p>在卡机上正常刷卡一次后再次读取数据并对比，可见每个循环节内只有一个字节被修改，确定这个字节代表的就是剩余次数。<br>经过比对得到如下已知的对应关系。其中有数据字串的行为实际读出，其他的行为推测得出。</p><table><thead><tr><th>剩余次数</th><th>数据字串</th><th>关键字节</th><th>前4位</th><th>后4位</th></tr></thead><tbody><tr><td>10</td><td>F05A11EE00</td><td>5A</td><td>5</td><td>A</td></tr><tr><td>9</td><td>F06911EE00</td><td>69</td><td>6</td><td>9</td></tr><tr><td>8</td><td></td><td>78</td><td>7</td><td>8</td></tr><tr><td>7</td><td></td><td>87</td><td>8</td><td>7</td></tr><tr><td>6</td><td>F09611EE00</td><td>96</td><td>9</td><td>6</td></tr><tr><td>5</td><td></td><td>A5</td><td>A</td><td>5</td></tr><tr><td>4</td><td>F0B411EE00</td><td>B4</td><td>B</td><td>4</td></tr><tr><td>3</td><td>F0C311EE00</td><td>C3</td><td>C</td><td>3</td></tr><tr><td>2</td><td></td><td>D2</td><td>D</td><td>2</td></tr><tr><td>1</td><td></td><td>E1</td><td>E</td><td>1</td></tr></tbody></table><p>规律很简单。直接修改此字节即可完成洗衣卡次数的修改。</p><h2 id="3-验证与收尾"><a href="#3-验证与收尾" class="headerlink" title="3. 验证与收尾"></a>3. 验证与收尾</h2><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/7.png"></p><p>用 Mifare Classic Tool 写入数据，在卡机上测试成功显示十次。成功。<br><del>没有测试10以上的次数，因为新卡买回来就是十次。然而理论上应该最多可以修改为15次。有空再测试。</del><br>因为 <del>闲得蛋疼</del> 追求极致，我斗胆测试了 <code>0F</code> ，居然成功显示了15次。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/8.png"></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/9.png"></p><p>然后就脑洞大开，最前面的 <code>F0</code> 会不会也是数据位呢？<br>于是测试了 <code>E10F</code> 。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/10.png"></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/11.png"></p><p>哈哈哈哈居然真的显示31次。<br>我有一种要玩坏的预感。理论上限应该是255次吧，然而洗衣机上只有三位数码管，最多只能显示到99.0。好吧那就试试99.0。<br>把99转换成十六进制是63，所以写入 <code>96C3</code> 。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/12.png"></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20151019-nfc-mod/13.png"></p><p>作死成功，这实在是太E可赛艇了。θ..θ</p><p>将数据修改回去，避免产生法律纠纷。</p><p>此次修改严格来说并没有什么技术含量，这个洗衣卡硬件本身已经不安全，又使用弱口令，破解不费吹灰之力。然而洗衣服并不要多贵，破解它所获取的仅仅是 Mifare 卡片相关的知识。</p><p>此外，这种卡片是离线卡片，并没有服务器存储余额，因此可以破解。而公交卡、校园卡等卡片使用时会在线验证，与服务器上的余额数据比对，因此即使数据能读取修改，也无法真正修改余额，除非连人家的服务器一块儿黑了。</p><p>最后再次声明，本文仅用于技术学习与探讨。您阅读本文后进行的一切操作及其引起的后果与本文作者无关，本人不承担任何责任。</p><p align = right>by Sykie Chen2015.10.192015.10.23 mod</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NFC </tag>
+            
+            <tag> Mifare </tag>
+            
+            <tag> RFID </tag>
+            
+            <tag> IC卡 </tag>
             
         </tags>
       
@@ -288,7 +319,7 @@
       
       <categories>
           
-          <category> Service </category>
+          <category> Services </category>
           
       </categories>
       

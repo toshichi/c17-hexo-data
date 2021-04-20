@@ -79,6 +79,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/20151019-nfc-mod/</loc>
+    
+    <lastmod>2015-10-23</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/20151002-Y580-bios/</loc>
     
     <lastmod>2015-10-02</lastmod>
@@ -187,6 +194,34 @@
   
   <url>
     <loc>https://www.coder17.com/tags/%E5%89%8D%E7%AB%AF/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/NFC/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Mifare/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/RFID/</loc>
+    <lastmod>2021-04-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/IC%E5%8D%A1/</loc>
     <lastmod>2021-04-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -447,7 +482,7 @@
   </url>
   
   <url>
-    <loc>https://www.coder17.com/categories/Service/</loc>
+    <loc>https://www.coder17.com/categories/Services/</loc>
     <lastmod>2021-04-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -462,13 +497,6 @@
   
   <url>
     <loc>https://www.coder17.com/categories/Life/</loc>
-    <lastmod>2021-04-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/categories/Services/</loc>
     <lastmod>2021-04-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
