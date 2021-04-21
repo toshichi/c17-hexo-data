@@ -30,6 +30,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/trans-proxy-splatoon2/</loc>
+    
+    <lastmod>2018-08-01</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/hdd-move-system/</loc>
     
     <lastmod>2018-05-09</lastmod>
@@ -635,6 +642,27 @@
   
   <url>
     <loc>https://www.coder17.com/tags/%E5%8D%9A%E5%AE%A2/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Splatoon2/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E5%8A%A0%E9%80%9F/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
