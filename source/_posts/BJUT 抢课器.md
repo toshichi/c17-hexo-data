@@ -1,11 +1,22 @@
 ---
 title: BJUT 抢课器
 date: 2016-12-23
+updated: 2017-06-08
 tags: [北京工业大学, 北工大, 抢课, Python]
 category: Hacking
 id: bjut-course-rusher
 cover: .images/BJUT%20%E6%8A%A2%E8%AF%BE%E5%99%A8/image-20210421174804131.png
 ---
+
+\- 为什么别人都能抢到课，我抢不到？
+\- 那别人买彩票还中奖呢。
+
+更新了一下，现在支持生僻字姓名了。
+智障 Windows cmd 万年 GBK 编码，我也很为难啊。
+
+反正我今年不缺课啦
+
+-----
 
 ## 警告 
 
