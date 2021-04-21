@@ -30,6 +30,20 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/bjunicom-201/</loc>
+    
+    <lastmod>2017-08-25</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/bjut-course-rusher/</loc>
+    
+    <lastmod>2017-06-07</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/20170112-bjut-helper/</loc>
     
     <lastmod>2017-01-12</lastmod>
@@ -37,7 +51,7 @@
   </url>
   
   <url>
-    <loc>https://www.coder17.com/posts/bjut-course-rusher/</loc>
+    <loc>https://www.coder17.com/posts/ss-iptables/</loc>
     
     <lastmod>2016-12-22</lastmod>
     
@@ -544,6 +558,34 @@
   
   <url>
     <loc>https://www.coder17.com/tags/BIOS/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E8%81%94%E9%80%9A/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/201/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Shadowsocks/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/iptables/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

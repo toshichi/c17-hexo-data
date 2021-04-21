@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>联通宽带更新后登陆指南</title>
+      <link href="posts/bjunicom-201/"/>
+      <url>posts/bjunicom-201/</url>
+      
+        <content type="html"><![CDATA[<p>北京联通的校园201宽带一直限制登陆数。以前我们使用用户名添加 @wo201 ，密码添加 /001 字符的方式直接路由器拨号。但七月中旬一次更新之后该方法失效，加密方式改变。</p><p>最近不少人回学校了问我怎么拨号，写个教程比较方便。</p><p><strong>先介绍一下新的 pppoe 加密方式</strong></p><p>参考了 <a href="https://fanzheng.org/archives/17#7">FanZheng’s blog</a> ：</p><p>只是想知道怎么上网的可以跳过这段。</p><blockquote><ul><li>真实账号=账号+<code>@wo201</code>（这个跟原来的没有变化）</li><li>真实密码=动态pin码+密码</li></ul><p>而这个动态pin码，是访问<a href="http://114.247.41.50:9343/aaa/get/pin?user=%E8%B4%A6%E5%8F%B7%E8%BF%99%E4%B8%AA%E5%9C%B0%E5%9D%80%E8%BF%94%E5%9B%9E%E7%9A%84json%E6%95%B0%E6%8D%AE%E4%B8%AD%E7%9A%84pin%E5%AD%97%E6%AE%B5%E3%80%82%E5%AE%83%E6%98%AF%E4%B8%AA6%E4%BD%8D%E6%95%B0%E5%AD%97%EF%BC%8C%E5%A4%A7%E7%BA%A610%E7%A7%92%E4%BC%9A%E6%9B%B4%E6%96%B0%E4%B8%80%E6%AC%A1%E3%80%82">http://114.247.41.50:9343/aaa/get/pin?user=账号这个地址返回的json数据中的pin字段。它是个6位数字，大约10秒会更新一次。</a></p><p>也就是说，在这种加密方式下，想要使用PPPoE拨号，就得在10秒内完成获取pin码、填写密码和进行拨号的步骤，对于路由器来说，还是有点麻烦的。最关键的是每次拨号都要改一下密码，因此操作频率就取决于路由器是否断电以及联通设置的一次拨号的最长连接时间了。</p></blockquote><p>那个返回动态验证码的页面，传入的账号即使是随机数字也能返回，说明是服务器端的一个算法动态生成的。</p><p><strong>再介绍一下现在可行的拨号方式</strong></p><ol><li><p>如果想继续使用路由器自动 pppoe 拨号，需要刷了 op 等智能系统的路由器，写脚本获取动态密码。技术上没有难度，过程上比较繁琐。此处略过。</p></li><li><p>如果想使用官方推荐的方式拨号，即拨号后只能本机上网。可以将路由器 DHCP 关掉，LAN 口插猫，当作交换机使用，并在电脑上下载新的官方客户端直接拨号。</p></li><li><p><strong>如果想继续分享使用宽带，但不会方法1</strong>，使用原来的网页入口登录即可。这也是我比较推荐的简易方法。</p></li></ol><p>首先将路由器获取地址方式改为动态 IP，关闭路由器拨号，打开 DHCP，路由器 WAN 口接猫。</p><p>然后使用手机连接路由器，随便打开一个网页，弹出如图界面。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%81%94%E9%80%9A%E5%AE%BD%E5%B8%A6%E6%9B%B4%E6%96%B0%E5%90%8E%E7%99%BB%E9%99%86%E6%8C%87%E5%8D%97/image-20210421180235517.png" alt="image-20210421180235517"></p><p>输入你的宽带用户名密码登录。登录后路由器下其他设备也可上网。断网后需重新登录。</p><p>如果没有手机，使用 Chrome 浏览器，按 F12 打开开发者模式。按图中按钮打开移动端模拟。然后随便打开一个网页，会弹出和上图相同的手机登录页，照前操作即可。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%81%94%E9%80%9A%E5%AE%BD%E5%B8%A6%E6%9B%B4%E6%96%B0%E5%90%8E%E7%99%BB%E9%99%86%E6%8C%87%E5%8D%97/image-20210421180303582.png" alt="image-20210421180303582"></p><p>如果想自动拨号，使用 curl 或者用 python 等语言模拟网页登录发包即可。包的内容很简单，使用 Fiddler 抓包即可查看，也可以用 Chrome 开发者模式直接抓包。会写的都会抓，我就不废话了。</p><p>最后，垄断校园宽带限制终端数的运营商都去吔屎啦。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%81%94%E9%80%9A%E5%AE%BD%E5%B8%A6%E6%9B%B4%E6%96%B0%E5%90%8E%E7%99%BB%E9%99%86%E6%8C%87%E5%8D%97/image-20210421180604118.png" alt="image-20210421180604118"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 北京工业大学 </tag>
+            
+            <tag> 北工大 </tag>
+            
+            <tag> 联通 </tag>
+            
+            <tag> 201 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>北工大野生助手</title>
       <link href="posts/20170112-bjut-helper/"/>
       <url>posts/20170112-bjut-helper/</url>
@@ -41,7 +72,7 @@
       <link href="posts/bjut-course-rusher/"/>
       <url>posts/bjut-course-rusher/</url>
       
-        <content type="html"><![CDATA[<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><ol><li>本程序并没有什么卵用，只能捡漏，不要觉得是我把你的课抢走了。 </li><li>本程序随时可能报错卡死退出，可能导致您的电脑起火爆炸，请务必不要在无人看管时使用本程序。 </li><li>本程序导致的一切后果，作者都不承担。 </li></ol><h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><p>修复了姓名中含有 GBK 以外字符时崩溃的问题。<br>重构了所有代码，现在本程序对用户友好了一些。<br>未在高并发期间测试过，不保证服务器不正常时的运行结果。<br>高峰期间如果无法登录，尝试修改重试次数与 base_url ，使用 IP 地址替代域名可以规避 DNS 解析失败风险。 </p><h3 id="用法："><a href="#用法：" class="headerlink" title="用法："></a>用法：</h3><ol><li>在 userinfo.py 中填入学号密码 </li><li>在 course.py 中填入要选的课全名，和它在搜索结果中的位置序号，用于定位重名课程。 </li></ol><h3 id="风险："><a href="#风险：" class="headerlink" title="风险："></a>风险：</h3><ol><li>概率很低的情况下，如果重名课程的排序发生变化，会选错。 </li><li>存在完全选错课的可能性。请在退课截止前停止程序并检查是否选了不需要的课。 </li></ol><p>适用于正方教务系统<br>暴力抢课，不讲道理。<br>具体修改方式见代码注释。   </p><p><del>本程序对用户不友好，使用前需要先改代码。</del></p><p>吔屎啦正方！ </p><p><a href="https://github.com/toshichi/BJUT-Course-Rusher">https://github.com/toshichi/BJUT-Course-Rusher</a></p>]]></content>
+        <content type="html"><![CDATA[<p>- 为什么别人都能抢到课，我抢不到？<br>- 那别人买彩票还中奖呢。</p><p>更新了一下，现在支持生僻字姓名了。<br>智障 Windows cmd 万年 GBK 编码，我也很为难啊。</p><p>反正我今年不缺课啦</p><hr><h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><ol><li>本程序并没有什么卵用，只能捡漏，不要觉得是我把你的课抢走了。 </li><li>本程序随时可能报错卡死退出，可能导致您的电脑起火爆炸，请务必不要在无人看管时使用本程序。 </li><li>本程序导致的一切后果，作者都不承担。 </li></ol><h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><p>修复了姓名中含有 GBK 以外字符时崩溃的问题。<br>重构了所有代码，现在本程序对用户友好了一些。<br>未在高并发期间测试过，不保证服务器不正常时的运行结果。<br>高峰期间如果无法登录，尝试修改重试次数与 base_url ，使用 IP 地址替代域名可以规避 DNS 解析失败风险。 </p><h3 id="用法："><a href="#用法：" class="headerlink" title="用法："></a>用法：</h3><ol><li>在 userinfo.py 中填入学号密码 </li><li>在 course.py 中填入要选的课全名，和它在搜索结果中的位置序号，用于定位重名课程。 </li></ol><h3 id="风险："><a href="#风险：" class="headerlink" title="风险："></a>风险：</h3><ol><li>概率很低的情况下，如果重名课程的排序发生变化，会选错。 </li><li>存在完全选错课的可能性。请在退课截止前停止程序并检查是否选了不需要的课。 </li></ol><p>适用于正方教务系统<br>暴力抢课，不讲道理。<br>具体修改方式见代码注释。   </p><p><del>本程序对用户不友好，使用前需要先改代码。</del></p><p>吔屎啦正方！ </p><p><a href="https://github.com/toshichi/BJUT-Course-Rusher">https://github.com/toshichi/BJUT-Course-Rusher</a></p>]]></content>
       
       
       <categories>
@@ -60,6 +91,37 @@
             <tag> 抢课 </tag>
             
             <tag> Python </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>配置 Shadowsocks 服务时 iptables 中的一处坑</title>
+      <link href="posts/ss-iptables/"/>
+      <url>posts/ss-iptables/</url>
+      
+        <content type="html"><![CDATA[<p>前几天把 ss 服务器从 ConoHa 迁移到 Linode 的东京2节点，丢包情况有所改善。</p><p>迁移后为了安全我重新配置了防火墙，只允许需要的端口通过。但在配置 ss 梯子服务时遇到了坑。在放行 ss 端口的情况下，ss 的手机客户端发生无法解析地址的情况，关掉防火墙则服务恢复正常，电脑端也一切正常。</p><p>iptables 配置如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">*filter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line">-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">-A INPUT -p icmp -j ACCEPT</span><br><span class="line">-A OUTPUT -p icmp -j ACCEPT</span><br><span class="line">-A INPUT -i lo -j ACCEPT</span><br><span class="line">-A OUTPUT -o lo -j ACCEPT</span><br><span class="line"></span><br><span class="line"># DNS</span><br><span class="line">-A OUTPUT -p udp --dport 53 -j ACCEPT</span><br><span class="line">-A INPUT -p udp --sport 53 -j ACCEPT</span><br><span class="line"></span><br><span class="line"># SSH is 23333</span><br><span class="line">-A INPUT -p tcp -m multiport --dports 22,23333 -j ACCEPT</span><br><span class="line">-A OUTPUT -p tcp -m multiport --sports 22,23333 -j ACCEPT</span><br><span class="line"></span><br><span class="line"># http client</span><br><span class="line">-A INPUT -p tcp -m multiport --sports 80,443 -j ACCEPT</span><br><span class="line">-A OUTPUT -p tcp -m multiport --dports 80,443 -j ACCEPT</span><br><span class="line"></span><br><span class="line"># http server</span><br><span class="line">-A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT</span><br><span class="line">-A OUTPUT -p tcp -m multiport --sports 80,443 -j ACCEPT</span><br><span class="line"></span><br><span class="line"># shadowxxx</span><br><span class="line">-A INPUT -p tcp -m multiport --dports 6666,7777 -j ACCEPT</span><br><span class="line">-A INPUT -p udp -m multiport --dports 6666,7777 -j ACCEPT</span><br><span class="line">-A OUTPUT -p tcp -m multiport --sports 6666,7777 -j ACCEPT</span><br><span class="line">-A OUTPUT -p udp -m multiport --sports 6666,7777 -j ACCEPT</span><br><span class="line"></span><br><span class="line"># kcptun</span><br><span class="line">-A INPUT -p udp --dport 6677 -j ACCEPT</span><br><span class="line">-A OUTPUT -p udp --sport 6677 -j ACCEPT</span><br><span class="line">-A INPUT -p tcp --dport 6677 -j ACCEPT</span><br><span class="line">-A OUTPUT -p tcp --sport 6677 -j ACCEPT</span><br><span class="line"></span><br><span class="line"># drop</span><br><span class="line">-P INPUT DROP</span><br><span class="line">-P OUTPUT DROP</span><br><span class="line">-P FORWARD ACCEPT</span><br><span class="line"></span><br><span class="line">COMMIT</span><br></pre></td></tr></table></figure><p>我百思不得其解，分析了各种可能性，最后只能开启日志找问题。</p><p>修改 /etc/rsyslog.conf ，添加一行：</p><p><code>kern.*   /var/log/iptables.log</code></p><p>将内核日志重定向到 iptables.log 方便查看。</p><p>在 iptables 文件中最后的 drop 前添加了 -A OUTPUT -j LOG，把所有被 drop 的数据包记录下来。</p><p>然后用 <code>tailf /var/log/iptables.log</code> 滚动输出日志。</p><p>日志输出如图：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%20Shadowsocks%20%20%E6%9C%8D%E5%8A%A1%E6%97%B6%20iptables%20%E4%B8%AD%E7%9A%84%E4%B8%80%E5%A4%84%E5%9D%91/image-20210421175608972.png" alt="image-20210421175608972"></p><p>可以看到有大量的53端口 DNS 查询被丢弃，但我已经在 iptables 中放行了 dns 查询啊？为什么呢？？？</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%20Shadowsocks%20%20%E6%9C%8D%E5%8A%A1%E6%97%B6%20iptables%20%E4%B8%AD%E7%9A%84%E4%B8%80%E5%A4%84%E5%9D%91/image-20210421175636741.png" alt="image-20210421175636741"></p><p>瞪了屏幕两分钟后发现这些查询都是 tcp 协议的，而我只放行了 udp 的 DNS包。</p><p>普通的 DNS 都是 udp 传输的，而手机端的 ss 似乎默认使用了 tcp 方式的 DNS 查询，导致数据包被丢弃。</p><p>在 iptables 中允许53端口 tcp 包后问题解决。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> 科学上网 </tag>
+            
+            <tag> Shadowsocks </tag>
+            
+            <tag> iptables </tag>
             
         </tags>
       
