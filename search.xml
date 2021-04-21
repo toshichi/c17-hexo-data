@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>下载 m3u8 推流</title>
+      <link href="posts/m3u8-stream-download/"/>
+      <url>posts/m3u8-stream-download/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>在浏览器 Network 中查找 m3u8</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221204910267.png" alt="image-20210221204910267"></p></li><li><p>如果是上图所示嵌套，逐级打开对应 m3u8 文件，直到出现 ts 文件列表和密钥</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221205009425.png" alt="image-20210221205009425"></p></li><li><p>如果要先下载再合并，则观察 ts 文件 url 规律，使用 curl 批量下载文件</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://what-ever-[<span class="number">1</span>-<span class="number">999</span>].ts</span><br></pre></td></tr></table></figure></li><li><p>将 m3u8 文件下载到同一目录，并替换删除其中 url 前缀</p></li><li><p>按照 URI 参数值下载 m3u8 文件中的密钥 key 文件，应为16字节长度。同时改写 m3u8 文件中 key 路径使其指向此文件</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221205501863.png" alt="image-20210221205501863"></p></li><li><p>使用 ffmpeg 批量解密合并 ts 文件即可获得 mp4 视频</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -loglevel error -allowed_extensions ALL -i prog-index.m3u8 -c <span class="built_in">copy</span> &quot;output.mkv&quot;</span><br></pre></td></tr></table></figure></li><li><p>如果要直接下载，则不需要下载 ts 文件，直接用 ffmpeg 解密 m3u8 文件</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -loglevel error -protocol_whitelist file,http,https,tcp,tls,crypto -allowed_extensions ALL -i prog-index.m3u8 -c <span class="built_in">copy</span> &quot;output.mkv&quot;</span><br></pre></td></tr></table></figure></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> m3u8 </tag>
+            
+            <tag> 推流 </tag>
+            
+            <tag> 下载 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Windows 10 USB 图标改变解决</title>
       <link href="posts/windows-10-usb-icon-fix/"/>
       <url>posts/windows-10-usb-icon-fix/</url>
@@ -193,35 +222,6 @@
             <tag> 启动项 </tag>
             
             <tag> autorun </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>下载 m3u8 推流</title>
-      <link href="posts/m3u8-stream-download/"/>
-      <url>posts/m3u8-stream-download/</url>
-      
-        <content type="html"><![CDATA[<ol><li><p>在浏览器 Network 中查找 m3u8</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221204910267.png" alt="image-20210221204910267"></p></li><li><p>如果是上图所示嵌套，逐级打开对应 m3u8 文件，直到出现 ts 文件列表和密钥</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221205009425.png" alt="image-20210221205009425"></p></li><li><p>如果要先下载再合并，则观察 ts 文件 url 规律，使用 curl 批量下载文件</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://what-ever-[<span class="number">1</span>-<span class="number">999</span>].ts</span><br></pre></td></tr></table></figure></li><li><p>将 m3u8 文件下载到同一目录，并替换删除其中 url 前缀</p></li><li><p>按照 URI 参数值下载 m3u8 文件中的密钥 key 文件，应为16字节长度。同时改写 m3u8 文件中 key 路径使其指向此文件</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221205501863.png" alt="image-20210221205501863"></p></li><li><p>使用 ffmpeg 批量解密合并 ts 文件即可获得 mp4 视频</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -loglevel error -allowed_extensions ALL -i prog-index.m3u8 -c <span class="built_in">copy</span> &quot;output.mkv&quot;</span><br></pre></td></tr></table></figure></li><li><p>如果要直接下载，则不需要下载 ts 文件，直接用 ffmpeg 解密 m3u8 文件</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -loglevel error -protocol_whitelist file,http,https,tcp,tls,crypto -allowed_extensions ALL -i prog-index.m3u8 -c <span class="built_in">copy</span> &quot;output.mkv&quot;</span><br></pre></td></tr></table></figure></li></ol>]]></content>
-      
-      
-      <categories>
-          
-          <category> Hacking </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> m3u8 </tag>
-            
-            <tag> 推流 </tag>
-            
-            <tag> 下载 </tag>
             
         </tags>
       
