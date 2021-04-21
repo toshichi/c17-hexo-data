@@ -128,6 +128,32 @@
   </entry>
   
   <entry>
+    <title>Grav 主题 Granty 5 Helium 部分修复与改造[弃坑]</title>
+    <link href="https://www.coder17.com/posts/grav-helium-mod/"/>
+    <id>https://www.coder17.com/posts/grav-helium-mod/</id>
+    <published>2020-05-17T10:43:00.000Z</published>
+    <updated>2020-05-17T10:43:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-Header-Owl-Carousel-副标题-Tablet-宽度下错位溢出问题"><a href="#1-Header-Owl-Carousel-副标题-Tablet-宽度下错位溢出问题" class="headerlink" title="1. Header Owl Carousel 副标题 Tablet 宽度下错位溢出问题"></a>1. Header Owl Carousel 副标题 Tablet 宽度下错位溢出问题</h2><p><code>user\data\gantry5\themes\g5_helium\scss\custom.scss</code></p><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fix header subtitle overflow in tablet view</span></span><br><span class="line"><span class="comment">// user\themes\g5_helium\scss\helium\particles\_owlcarousel.scss:378</span></span><br><span class="line"><span class="keyword">@media</span> <span class="keyword">only</span> all <span class="keyword">and</span> (<span class="attribute">max-width</span>: <span class="number">59.99rem</span>) <span class="keyword">and</span> (<span class="attribute">min-width</span>: <span class="number">48rem</span>)&#123;</span><br><span class="line">    <span class="selector-class">.g-owlcarousel</span> <span class="selector-class">.g-owlcarousel-item-wrapper</span> <span class="selector-class">.g-owlcarousel-item-content-container</span> <span class="selector-class">.g-owlcarousel-item-content-wrapper</span> <span class="selector-class">.g-owlcarousel-item-content</span> &#123;</span><br><span class="line">        <span class="attribute">padding-top</span>: <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="2-Mobile-宽度下菜单栏和-logo-位置错位问题"><a href="#2-Mobile-宽度下菜单栏和-logo-位置错位问题" class="headerlink" title="2. Mobile 宽度下菜单栏和 logo 位置错位问题"></a>2. Mobile 宽度下菜单栏和 logo 位置错位问题</h2><p>导航栏空白太大，将 Navigation 的部分设置 nomarginall 和 nopaddingall 后引起移动端错位，在此修正。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Grav%20%E4%B8%BB%E9%A2%98%20Granty%205%20Helium%20%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%94%B9%E9%80%A0/image-20200517194323886.png" alt="image-20200517194323886"></p><p><code>user\data\gantry5\themes\g5_helium\scss\custom.scss</code></p><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fix menu icon position on mobile view</span></span><br><span class="line"><span class="comment">// user\themes\g5_helium\scss\helium\sections\_offcanvas.scss:45</span></span><br><span class="line"><span class="selector-class">.g-offcanvas-toggle</span>&#123;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">0.7rem</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// gix logo position on mobile view</span><br><span class="line">// user\themes\g5_helium\scss\helium\particles\_logo.scss:<span class="number">25</span></span><br><span class="line">@media only all and (max-width: <span class="number">47.99rem</span>)&#123;</span><br><span class="line">    .g-logo &#123;</span><br><span class="line">        margin: <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="3-导航栏滚动固定"><a href="#3-导航栏滚动固定" class="headerlink" title="3. 导航栏滚动固定"></a>3. 导航栏滚动固定</h2><p>使用 <a href="https://www.inspiretheme.com/blog/freebies/42-fixed-sticky-header-atoms-for-gantry-5-freebies">Fixed_Sticky Header Atoms for Gantry 5 (FREEBIES)</a> 实现</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;1-Header-Owl-Carousel-副标题-Tablet-宽度下错位溢出问题&quot;&gt;&lt;a href=&quot;#1-Header-Owl-Carousel-副标题-Tablet-宽度下错位溢出问题&quot; class=&quot;headerlink&quot; title=&quot;1. Heade</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Grav" scheme="https://www.coder17.com/tags/Grav/"/>
+    
+    <category term="Helium" scheme="https://www.coder17.com/tags/Helium/"/>
+    
+  </entry>
+  
+  <entry>
     <title>华硕路由修改区域</title>
     <link href="https://www.coder17.com/posts/asus-region-mod/"/>
     <id>https://www.coder17.com/posts/asus-region-mod/</id>
@@ -355,6 +381,34 @@
   </entry>
   
   <entry>
+    <title>Certbot cloudflare 泛域名证书配置</title>
+    <link href="https://www.coder17.com/posts/certbot-cloudflare-wildcard/"/>
+    <id>https://www.coder17.com/posts/certbot-cloudflare-wildcard/</id>
+    <published>2019-12-15T19:30:00.000Z</published>
+    <updated>2019-12-15T19:30:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install software-properties-common</span><br><span class="line">sudo add-apt-repository universe</span><br><span class="line">sudo add-apt-repository ppa:certbot/certbot</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install -y certbot python3-certbot-dns-cloudflare</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2.  配置"></a>2.  配置</h2><blockquote><p>  Use of this plugin requires a configuration file containing Cloudflare API credentials, obtained from your Cloudflare account page.</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/letsencrypt/cloudflare.ini</span><br></pre></td></tr></table></figure><p>  Example credentials file:</p>  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Cloudflare API credentials used by Certbot</span></span><br><span class="line"><span class="attr">dns_cloudflare_email</span> = cloudflare@example.com</span><br><span class="line"><span class="attr">dns_cloudflare_api_key</span> = <span class="number">0123456789</span>abcdef0123456789abcdef01234567</span><br></pre></td></tr></table></figure><p>  The path to this file can be provided interactively or using the –dns-cloudflare-credentials command-line argument. Certbot records the path to this file for use during renewal, but does not store the file’s contents.</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 600 /etc/letsencrypt/cloudflare.ini</span><br></pre></td></tr></table></figure></blockquote><h2 id="3-获取"><a href="#3-获取" class="headerlink" title="3. 获取"></a>3. 获取</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot -a dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -i nginx -d <span class="string">&quot;*.coder17.com&quot;</span> -d coder17.com</span><br></pre></td></tr></table></figure><p>注意不能完全信任其对 nginx 的修改</p><p>如果不需要自动修改 nginx 则：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot certonly -a dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -d <span class="string">&quot;home.coder17.com&quot;</span> -d <span class="string">&quot;frph.coder17.com&quot;</span> -d <span class="string">&quot;*.frph.coder17.com&quot;</span> -d <span class="string">&quot;*.home.coder17.com&quot;</span></span><br></pre></td></tr></table></figure><h2 id="4-更新测试"><a href="#4-更新测试" class="headerlink" title="4. 更新测试"></a>4. 更新测试</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot renew --dry-run</span><br></pre></td></tr></table></figure><h2 id="5-部署自动更新"><a href="#5-部署自动更新" class="headerlink" title="5. 部署自动更新"></a>5. 部署自动更新</h2><p>默认情况下会自动添加自动更新，每天两次。<br>使用 <code>sudo systemctl list-timers</code> 查看，配置文件位于 <code>/etc/systemctl/system/timers.target.wants/certbot.timer</code></p><p>如果运行有问题，使用下面命令创建 crontab 任务，每两个月一次。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo crontab -e</span><br><span class="line"></span><br><span class="line">0 0 1 */2 * /usr/bin/certbot renew &gt;&gt; <span class="string">&quot;/var/log/certbot_<span class="subst">$(date +<span class="string">&quot;\%Y-\%m-\%d&quot;</span>)</span>.log&quot;</span> 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">sudo service cron restart</span><br></pre></td></tr></table></figure><h2 id="6-转换证书格式"><a href="#6-转换证书格式" class="headerlink" title="6. 转换证书格式"></a>6. 转换证书格式</h2><p>默认申请的是 pem 格式证书，位于 <code>/etc/letsencrypt/live</code> 中，需要转换为 Windows 使用的 pfx 格式时，使用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="built_in">export</span> -out certificate.pfx -inkey privkey.pem -<span class="keyword">in</span> cert.pem -certfile chain.pem -passout pass:</span><br></pre></td></tr></table></figure><h2 id="7-复制"><a href="#7-复制" class="headerlink" title="7. 复制"></a>7. 复制</h2><p>因为 live 目录中为软连接，复制时需要使用 <code>-L</code> 参数，如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -Lr /etc/letsencrypt/live /mnt/hgfs/certs</span><br></pre></td></tr></table></figure><p>Refer: <a href="https://certbot-dns-cloudflare.readthedocs.io/en/stable/">https://certbot-dns-cloudflare.readthedocs.io/en/stable/</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;1-安装&quot;&gt;&lt;a href=&quot;#1-安装&quot; class=&quot;headerlink&quot; title=&quot;1. 安装&quot;&gt;&lt;/a&gt;1. 安装&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;p</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Certbot" scheme="https://www.coder17.com/tags/Certbot/"/>
+    
+    <category term="cloudflare" scheme="https://www.coder17.com/tags/cloudflare/"/>
+    
+    <category term="泛域名证书" scheme="https://www.coder17.com/tags/%E6%B3%9B%E5%9F%9F%E5%90%8D%E8%AF%81%E4%B9%A6/"/>
+    
+  </entry>
+  
+  <entry>
     <title>安装 mosh 与 byobu</title>
     <link href="https://www.coder17.com/posts/install-mosh-byobu/"/>
     <id>https://www.coder17.com/posts/install-mosh-byobu/</id>
@@ -530,63 +584,6 @@
     <category term="VMware" scheme="https://www.coder17.com/tags/VMware/"/>
     
     <category term="共享文件夹" scheme="https://www.coder17.com/tags/%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux 显示 git 分支名</title>
-    <link href="https://www.coder17.com/posts/linux-git-branch-name/"/>
-    <id>https://www.coder17.com/posts/linux-git-branch-name/</id>
-    <published>2019-05-21T19:16:00.000Z</published>
-    <updated>2019-05-21T19:16:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<ol><li><p>Download <a href="https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh">this</a></p></li><li><p>Copy to <code>~/.git-prompt.sh</code>, or wget it.</p></li><li><p><code>.bashrc</code></p></li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">source</span> ~/.git-prompt.sh</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PS1=<span class="string">&#x27;\[\e]0;\u@\h: \w\a\]$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1)\[\033[00m\]\$ &#x27;</span></span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Download &lt;a href=&quot;https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh&quot;&gt;this&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;C</summary>
-      
-    
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
-    
-    <category term="git" scheme="https://www.coder17.com/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>ss-tunnel 转发 dns</title>
-    <link href="https://www.coder17.com/posts/ss-tunnel-dns/"/>
-    <id>https://www.coder17.com/posts/ss-tunnel-dns/</id>
-    <published>2019-05-19T11:35:00.000Z</published>
-    <updated>2019-05-19T11:35:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup sudo /usr/<span class="built_in">local</span>/bin/ss-tunnel -c /etc/shadowsocks-libev/config.json -l 53 -v -b 127.0.0.1 -L 8.8.8.8:53 -u &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas</summary>
-      
-    
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
-    
-    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
-    
-    <category term="ss-tunnel" scheme="https://www.coder17.com/tags/ss-tunnel/"/>
     
   </entry>
   
