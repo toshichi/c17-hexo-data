@@ -4,7 +4,7 @@ date: 2019-05-19 18:30
 tags: [Linux, ssh, 端口]
 category: Linux
 id: config-sshd
-cover: flase
+cover: false
 ---
 
 ## 保存 ssh-key
