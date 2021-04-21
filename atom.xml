@@ -6,7 +6,7 @@
   <link href="https://www.coder17.com/atom.xml" rel="self"/>
   
   <link href="https://www.coder17.com/"/>
-  <updated>2017-08-25T15:00:00.000Z</updated>
+  <updated>2018-05-09T15:00:00.000Z</updated>
   <id>https://www.coder17.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>系统从大硬盘无损迁移到小硬盘的方法备忘</title>
+    <link href="https://www.coder17.com/posts/hdd-move-system/"/>
+    <id>https://www.coder17.com/posts/hdd-move-system/</id>
+    <published>2018-05-09T15:00:00.000Z</published>
+    <updated>2018-05-09T15:00:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>（好久没写东西，博客也一直没时间迁移，实在是很丢人，谢谢大家还没取关。）</p><p>一般来讲迁移硬盘数据都是小硬盘到大硬盘，很多硬盘对拷软件也只支持源盘小于目标盘的数据迁移。有的支持从大到小迁移的软件也是按文件复制。对于一些隐藏分区或者特殊格式的分区来说，这种复制方式可能丢失数据。我研究了半天摸索了以下方法，作个备忘与参考。</p><p>思路是：<br>新建一个 vhdx 虚拟硬盘→大盘拷进虚拟盘→虚拟盘缩容→虚拟盘拷进小硬盘</p><p>关键节点在于虚拟盘缩容，这样可以保证每一步对拷都是逻辑上的小盘到大盘。注意大盘上的实际数据量不能超过小盘容量。</p><p>这个思路很绕，我暂时没有想出更好的方式。如果有更好的思路或者工具请一定不吝赐教。</p><h2 id="1-新建虚拟盘"><a href="#1-新建虚拟盘" class="headerlink" title="1 新建虚拟盘"></a>1 新建虚拟盘</h2><p>这个很简单，Windows 的磁盘管理就可以。注意新建 vhdx 格式的，否则后面缩容的时候还要花时间转换。虚拟盘最大容量要大于大盘一点，选择动态容量即可。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/0.gif" alt="image-0"></p><h2 id="2-大盘拷进虚拟盘"><a href="#2-大盘拷进虚拟盘" class="headerlink" title="2 大盘拷进虚拟盘"></a>2 大盘拷进虚拟盘</h2><p>在 Windows 的磁盘管理里先把虚拟盘挂载上，一般新建之后会自动挂载。盘符分不分都行。然后随便找个硬盘对拷软件，比如 DiskGenius，把大盘对拷到虚拟盘上。对拷的时候不要选择创建新的硬盘 ID。这一步就不放图了，时间会比较久。</p><h2 id="3-虚拟盘缩容"><a href="#3-虚拟盘缩容" class="headerlink" title="3 虚拟盘缩容"></a>3 虚拟盘缩容</h2><h3 id="3-1-分区调整"><a href="#3-1-分区调整" class="headerlink" title="3.1 分区调整"></a>3.1 分区调整</h3><p>在分区软件里把虚拟盘里的数据分区调整到一起，压缩数据分区到刚好够用，把多出来的空间设置为未分配，使未分配空间全在盘的最后。注意必须保证前面的数据区总容量不超过小盘容量。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181211292.png" alt="image-20210421181211292"></p><h3 id="3-2-虚拟盘容量调整"><a href="#3-2-虚拟盘容量调整" class="headerlink" title="3.2 虚拟盘容量调整"></a>3.2 虚拟盘容量调整</h3><p>首先你要装有 Hyper-V 工具，没有的话到控制面板→添加删除程序→添加删除 Windows 组件里面，把 Hyper-V 相关的都勾上。装好之后要重启。注意，装了 Hyper-V 之后你的 VirtualBox 之类的虚拟机就不能用了，如果要用的话待会儿再卸掉 Hyper-V。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181347514.png" alt="image-20210421181347514"></p><p>装好之后用管理员权限打开 Powershell。在开始菜单输入 Powershell 然后按 Ctrl + Shift + Enter 就是管理员权限。</p><p>执行 ：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Resize-VHD</span> <span class="literal">-Path</span> <span class="string">&quot;E:\sysbk.vhdx&quot;</span> <span class="literal">-ToMinimumSize</span></span><br></pre></td></tr></table></figure><p>注意把 vhdx 的路径换掉。应该很快就完事儿了，然后执行：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Get-VHD</span> <span class="literal">-Path</span> <span class="string">&quot;E:\sysbk.vhdx&quot;</span></span><br></pre></td></tr></table></figure><p>就可以看到虚拟盘容量已经减小到和实际数据量差不多了。这个时候虚拟盘的容量应该是小于目标小盘的容量的，否则后面会失败。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181459770.png" alt="image-20210421181459770"></p><h2 id="4-虚拟盘拷进小硬盘"><a href="#4-虚拟盘拷进小硬盘" class="headerlink" title="4 虚拟盘拷进小硬盘"></a>4 虚拟盘拷进小硬盘</h2><p>很简单的，在磁盘管理里面把缩小之后的 vhdx 挂上，然后在分区软件里对拷到小硬盘上就可以了。</p><p>但是！</p><p>我在这一步遇到了各种疑难杂症。</p><p>首先我的目标盘是一个 nvme 盘，没法通过 USB 挂到其他电脑上对拷，所以只能在本机上从U盘启动 PE 对拷。但这个 PE 是似乎不能挂载 vhd 的，挂载的选项是灰色。</p><p>所幸 DiskGenius 里是可以直接挂虚拟硬盘文件的。然而似乎对 vhdx 兼容性不好，挂载之后始终显示整个盘都是未分配。</p><p>vhd 转 vhdx 是单向的，不能从 vhdx 转为 vhd。我只能新建了一个比缩容后的 vhdx 大一丁点的 vhd，然后在正常的系统内通过磁盘管理挂载了 vhdx，再在  DiskGenius 里从 vhdx 到 vhd 又对拷了一遍。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181543316.png" alt="image-20210421181543316"></p><p>真的需要很长很长的时间，长到等它对拷完成之后我已经快忘了这件事了。<br>然后我就有了一个缩容之后的 vhd 文件。重新启动 PE 之后发现，</p><p>发现这 PE 又能在磁盘管理里挂载 vhd 了！</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181617712.png" alt="image-20210421181617712"></p><p>好气啊。按照常规操作再来一遍，挂载 vhd，对拷。</p><p>拷完之后，由于我们之前把虚拟硬盘的容量设置成小于小硬盘的实际容量了，所以小硬盘尾部会出现未分配空间。根据需要把这部分空间合并到前面的分区中。</p><p>这样就保留了分区结构和分区表等等的同时，从大盘到小盘完成了系统迁移。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;（好久没写东西，博客也一直没时间迁移，实在是很丢人，谢谢大家还没取关。）&lt;/p&gt;
+&lt;p&gt;一般来讲迁移硬盘数据都是小硬盘到大硬盘，很多硬盘对拷软件也只支持源盘小于目标盘的数据迁移。有的支持从大到小迁移的软件也是按文件复制。对于一些隐藏分区或者特殊格式的分区来说，这种复制方式可</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="硬盘" scheme="https://www.coder17.com/tags/%E7%A1%AC%E7%9B%98/"/>
+    
+    <category term="无损迁移" scheme="https://www.coder17.com/tags/%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB/"/>
+    
+  </entry>
   
   <entry>
     <title>联通宽带更新后登陆指南</title>
@@ -587,34 +614,6 @@
     <category term="SystemUI" scheme="https://www.coder17.com/tags/SystemUI/"/>
     
     <category term="反编译" scheme="https://www.coder17.com/tags/%E5%8F%8D%E7%BC%96%E8%AF%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>三星 Galaxy S6 保持 knox 0x0 的 root</title>
-    <link href="https://www.coder17.com/posts/sgs6-root/"/>
-    <id>https://www.coder17.com/posts/sgs6-root/</id>
-    <published>2015-06-11T07:48:25.000Z</published>
-    <updated>2015-06-11T07:48:25.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>新入手三星 S6 公开版，按以往的经验 root 时线刷刷入第三方 rocovery 的过程中会导致 knox 0x1 从而失去保修。而且 S6 的国行有 BL 锁，解锁同样会失去保修。<br>发现 PingPongRoot 可以在不使用线刷动作的前提下获取 root 权限，从而保持 knox 0x0。<br>XDA 原帖地址：<a href="http://forum.xda-developers.com/galaxy-s6/general/root-pingpongroot-s6-root-tool-t3103016">http://forum.xda-developers.com/galaxy-s6/general/root-pingpongroot-s6-root-tool-t3103016</a><br>首先下载原帖的附件 pingpongroot_beta6.apk 并安装。（百度网盘：<a href="http://pan.baidu.com/s/1c0ASLhA%EF%BC%89">http://pan.baidu.com/s/1c0ASLhA）</a><br>安装后启动会提示安装 Super SU，安装后打开 Super SU，不理会报错，然后退出之。重新进入 PingPong Root 点击 Download Data。更新完成后点 Get Root 即可自动完成 root。之后按提示重启手机即获得 root 权限。<br>但此法仍会导致系统设置内的状态变为“定制”，从而导致 OTA 失效。需要更新时用官方的 Smart Switch 线刷更新系统即可。或通过安装 Xposed 框架（官方不支持三星5.0，但可以通过其他办法刷入）再安装 Wanam Xposed 模块修改设备状态为官方。</p><p>在 SM-G9200 大陆公开版 G9200ZCU1AOE4 固件测试通过。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;新入手三星 S6 公开版，按以往的经验 root 时线刷刷入第三方 rocovery 的过程中会导致 knox 0x1 从而失去保修。而且 S6 的国行有 BL 锁，解锁同样会失去保修。&lt;br&gt;发现 PingPongRoot 可以在不使用线刷动作的前提下获取 root 权限</summary>
-      
-    
-    
-    
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
-    
-    
-    <category term="Android" scheme="https://www.coder17.com/tags/Android/"/>
-    
-    <category term="root" scheme="https://www.coder17.com/tags/root/"/>
-    
-    <category term="S6" scheme="https://www.coder17.com/tags/S6/"/>
     
   </entry>
   
