@@ -2,7 +2,7 @@
 title: BJUT 抢课器
 date: 2016-12-23
 updated: 2017-06-08
-tags: [北京工业大学, 北工大, 抢课, Python]
+tags: [北工大, 抢课, Python]
 category: Hacking
 id: bjut-course-rusher
 cover: .images/BJUT%20%E6%8A%A2%E8%AF%BE%E5%99%A8/image-20210421174804131.png
