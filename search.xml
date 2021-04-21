@@ -375,6 +375,35 @@
     
     
     <entry>
+      <title>配置 Ubuntu 18.04 自动更新</title>
+      <link href="posts/ubuntu-1804-autoupdate/"/>
+      <url>posts/ubuntu-1804-autoupdate/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install unattended-upgrades</span><br><span class="line">sudo vim /etc/apt/apt.conf.d/50unattended-upgrades</span><br></pre></td></tr></table></figure><p>去掉 update 一行前的注释，并修改自动清除未用包的设置。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;$&#123;distro_id&#125;:$&#123;distro_codename&#125;-updates&quot;;</span><br><span class="line">...</span><br><span class="line">Unattended-Upgrade::Remove-Unused-Kernel-Packages &quot;true&quot;;</span><br><span class="line">Unattended-Upgrade::Remove-Unused-Dependencies &quot;true&quot;;</span><br></pre></td></tr></table></figure><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%20Ubuntu%2018.04%20%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/image-20191117001230583.png" alt="image-20191117001230583"></p><p>然后修改重启配置：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/apt/apt.conf.d/20auto-upgrades</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APT::Periodic::Update-Package-Lists &quot;1&quot;;</span><br><span class="line">APT::Periodic::Unattended-Upgrade &quot;1&quot;;</span><br></pre></td></tr></table></figure><p>最后测试运行，确认生效：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo unattended-upgrades –dry-run –debug</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> Ubuntu </tag>
+            
+            <tag> 自动更新 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Windows 远程投屏方案</title>
       <link href="posts/remote-control/"/>
       <url>posts/remote-control/</url>
@@ -470,6 +499,35 @@
     
     
     <entry>
+      <title>在 Ubuntu 中 mount VMware 共享文件夹</title>
+      <link href="posts/mount-vmware-shared-folder/"/>
+      <url>posts/mount-vmware-shared-folder/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-安装-VMware-Tools"><a href="#1-安装-VMware-Tools" class="headerlink" title="1. 安装 VMware Tools"></a>1. 安装 VMware Tools</h2><ul><li><p>给虚拟机增加一个光驱</p></li><li><p><code>VM&gt; Install VMware Tools</code></p></li><li><p>手动安装</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /mnt/cdrom</span><br><span class="line">sudo mount /dev/cdrom /mnt/cdrom</span><br><span class="line">tar xzvf /mnt/cdrom/VMwareTools-x.x.x-xxxx.tar.gz -C /tmp/</span><br><span class="line"><span class="built_in">cd</span> /tmp/vmware-tools-distrib/</span><br><span class="line">sudo ./vmware-install.pl -d</span><br><span class="line">sudo reboot</span><br></pre></td></tr></table></figure></li><li><p>可以删掉光驱</p></li></ul><h2 id="2-映射共享文件夹"><a href="#2-映射共享文件夹" class="headerlink" title="2. 映射共享文件夹"></a>2. 映射共享文件夹</h2><ul><li>查看 <code>/mnt/hgfs</code> 目录下是否已有映射的目录</li><li>如果没有，<code>/usr/bin/vmware-config-tools.pl</code></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Ubuntu </tag>
+            
+            <tag> VMware </tag>
+            
+            <tag> 共享文件夹 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Linux 显示 git 分支名</title>
       <link href="posts/linux-git-branch-name/"/>
       <url>posts/linux-git-branch-name/</url>
@@ -518,6 +576,64 @@
             <tag> Shadowsocks </tag>
             
             <tag> ss-tunnel </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>编译安装 ss-libev</title>
+      <link href="posts/compile-ss-libev/"/>
+      <url>posts/compile-ss-libev/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://github.com/madeye/shadowsocks-libev">https://github.com/madeye/shadowsocks-libev</a><br><a href="http://shadowsocks.org/en/download/servers.html">http://shadowsocks.org/en/download/servers.html</a></p><p>Ubuntu 16.04 下无法从源安装，dpkg 编译失败，需要从源码编译</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev libev-dev libudns-dev libsodium-dev libmbedtls-dev libc-ares-dev automake</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocks/shadowsocks-libev.git</span><br><span class="line"><span class="built_in">cd</span> shadowsocks-libev</span><br><span class="line">git submodule update --init</span><br><span class="line">./autogen.sh &amp;&amp; ./configure &amp;&amp; make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure><p>From <a href="http://shadowsocks.org/en/download/servers.html">http://shadowsocks.org/en/download/servers.html</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Shadowsocks </tag>
+            
+            <tag> 编译 </tag>
+            
+            <tag> ss-libev </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>配置 ssh key 登录和改 sshd 端口</title>
+      <link href="posts/config-sshd/"/>
+      <url>posts/config-sshd/</url>
+      
+        <content type="html"><![CDATA[<h2 id="保存-ssh-key"><a href="#保存-ssh-key" class="headerlink" title="保存 ssh-key"></a>保存 ssh-key</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line">chmod 500 .ssh/authorized_keys</span><br></pre></td></tr></table></figure><h2 id="禁用密码登录与改端口"><a href="#禁用密码登录与改端口" class="headerlink" title="禁用密码登录与改端口"></a>禁用密码登录与改端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line"></span><br><span class="line"># 启用密钥验证</span><br><span class="line">RSAAuthentication yes # below 16.0</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 指定公钥数据库文件</span><br><span class="line">AuthorizedKeysFile %h&#x2F;.ssh&#x2F;authorized_keys # below 16.0</span><br><span class="line">AuthorizedKeysFile .ssh&#x2F;authorized_keys # 18.0</span><br><span class="line"></span><br><span class="line">PasswordAuthentication no</span><br><span class="line"></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service sshd restart</span><br></pre></td></tr></table></figure><p>or</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> ssh </tag>
+            
+            <tag> 端口 </tag>
             
         </tags>
       

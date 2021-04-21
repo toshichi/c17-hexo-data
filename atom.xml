@@ -383,6 +383,34 @@
   </entry>
   
   <entry>
+    <title>配置 Ubuntu 18.04 自动更新</title>
+    <link href="https://www.coder17.com/posts/ubuntu-1804-autoupdate/"/>
+    <id>https://www.coder17.com/posts/ubuntu-1804-autoupdate/</id>
+    <published>2019-11-16T15:17:00.000Z</published>
+    <updated>2019-11-16T15:17:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install unattended-upgrades</span><br><span class="line">sudo vim /etc/apt/apt.conf.d/50unattended-upgrades</span><br></pre></td></tr></table></figure><p>去掉 update 一行前的注释，并修改自动清除未用包的设置。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;$&#123;distro_id&#125;:$&#123;distro_codename&#125;-updates&quot;;</span><br><span class="line">...</span><br><span class="line">Unattended-Upgrade::Remove-Unused-Kernel-Packages &quot;true&quot;;</span><br><span class="line">Unattended-Upgrade::Remove-Unused-Dependencies &quot;true&quot;;</span><br></pre></td></tr></table></figure><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%20Ubuntu%2018.04%20%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/image-20191117001230583.png" alt="image-20191117001230583"></p><p>然后修改重启配置：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/apt/apt.conf.d/20auto-upgrades</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APT::Periodic::Update-Package-Lists &quot;1&quot;;</span><br><span class="line">APT::Periodic::Unattended-Upgrade &quot;1&quot;;</span><br></pre></td></tr></table></figure><p>最后测试运行，确认生效：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo unattended-upgrades –dry-run –debug</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
+    
+    <category term="Ubuntu" scheme="https://www.coder17.com/tags/Ubuntu/"/>
+    
+    <category term="自动更新" scheme="https://www.coder17.com/tags/%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Windows 远程投屏方案</title>
     <link href="https://www.coder17.com/posts/remote-control/"/>
     <id>https://www.coder17.com/posts/remote-control/</id>
@@ -477,6 +505,35 @@
   </entry>
   
   <entry>
+    <title>在 Ubuntu 中 mount VMware 共享文件夹</title>
+    <link href="https://www.coder17.com/posts/mount-vmware-shared-folder/"/>
+    <id>https://www.coder17.com/posts/mount-vmware-shared-folder/</id>
+    <published>2019-05-22T12:30:00.000Z</published>
+    <updated>2019-05-22T12:30:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-安装-VMware-Tools"><a href="#1-安装-VMware-Tools" class="headerlink" title="1. 安装 VMware Tools"></a>1. 安装 VMware Tools</h2><ul><li><p>给虚拟机增加一个光驱</p></li><li><p><code>VM&gt; Install VMware Tools</code></p></li><li><p>手动安装</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /mnt/cdrom</span><br><span class="line">sudo mount /dev/cdrom /mnt/cdrom</span><br><span class="line">tar xzvf /mnt/cdrom/VMwareTools-x.x.x-xxxx.tar.gz -C /tmp/</span><br><span class="line"><span class="built_in">cd</span> /tmp/vmware-tools-distrib/</span><br><span class="line">sudo ./vmware-install.pl -d</span><br><span class="line">sudo reboot</span><br></pre></td></tr></table></figure></li><li><p>可以删掉光驱</p></li></ul><h2 id="2-映射共享文件夹"><a href="#2-映射共享文件夹" class="headerlink" title="2. 映射共享文件夹"></a>2. 映射共享文件夹</h2><ul><li>查看 <code>/mnt/hgfs</code> 目录下是否已有映射的目录</li><li>如果没有，<code>/usr/bin/vmware-config-tools.pl</code></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;1-安装-VMware-Tools&quot;&gt;&lt;a href=&quot;#1-安装-VMware-Tools&quot; class=&quot;headerlink&quot; title=&quot;1. 安装 VMware Tools&quot;&gt;&lt;/a&gt;1. 安装 VMware Tools&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
+    
+    
+    <category term="Ubuntu" scheme="https://www.coder17.com/tags/Ubuntu/"/>
+    
+    <category term="VMware" scheme="https://www.coder17.com/tags/VMware/"/>
+    
+    <category term="共享文件夹" scheme="https://www.coder17.com/tags/%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Linux 显示 git 分支名</title>
     <link href="https://www.coder17.com/posts/linux-git-branch-name/"/>
     <id>https://www.coder17.com/posts/linux-git-branch-name/</id>
@@ -530,63 +587,6 @@
     <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
     
     <category term="ss-tunnel" scheme="https://www.coder17.com/tags/ss-tunnel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Proxychains 配置支持多场景和自定义 DNS</title>
-    <link href="https://www.coder17.com/posts/proxychains-dns/"/>
-    <id>https://www.coder17.com/posts/proxychains-dns/</id>
-    <published>2019-05-19T09:20:00.000Z</published>
-    <updated>2019-05-19T09:20:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Proxychains 开启时使用的是写死的公用 DNS 4.2.2.2，并不科学。同时只能支持一个代理或代理链，需要切换使用多个代理时并不方便。</p><p>下面以使用 <code>pc</code> 和 <code>pf</code> 两个命令分别连接两个不同的代理为例:</p><h2 id="链接-ss-的代理"><a href="#链接-ss-的代理" class="headerlink" title="链接 ss 的代理"></a>链接 ss 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxychains.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">socks5  127.0.0.1 1080</span><br></pre></td></tr></table></figure><h2 id="链接-fiddler-的代理"><a href="#链接-fiddler-的代理" class="headerlink" title="链接 fiddler 的代理"></a>链接 fiddler 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxyfiddler.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">http  127.0.0.1 8888</span><br></pre></td></tr></table></figure><h2 id="usage"><a href="#usage" class="headerlink" title="usage"></a>usage</h2><ul><li><code>pc xx</code> : use socks5 proxy 127.0.0.1:4411 to connect to xx</li><li><code>pf xx</code> : use http proxy 127.0.0.1:8888 to connect to xx, usually fiddler</li></ul><h2 id="Proxychains-4-NG"><a href="#Proxychains-4-NG" class="headerlink" title="Proxychains 4 NG"></a>Proxychains 4 NG</h2><p>新版没有以前不能解析域名的问题，直接安装即可。<br>但 Proxychains4 不支持 git，原因不明，会报错，因此使用 ProxychainsNG</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/rofl0r/proxychains-ng.git</span><br><span class="line"><span class="built_in">cd</span> proxychains-ng</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line"><span class="built_in">cd</span> .. &amp;&amp; rm -rf proxychains-ng</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=\<span class="string">&#x27;proxychains4\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=\<span class="string">&#x27;proxychains4 -f /etc/proxyfiddler.conf\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br></pre></td></tr></table></figure><hr><h2 id="以下适用于-Proxychains-3-版本，已过时"><a href="#以下适用于-Proxychains-3-版本，已过时" class="headerlink" title="以下适用于 Proxychains 3 版本，已过时"></a>以下适用于 Proxychains 3 版本，已过时</h2><h3 id="改源码支持指定-dns"><a href="#改源码支持指定-dns" class="headerlink" title="改源码支持指定 dns"></a>改源码支持指定 dns</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="variable">$HOME</span>/.proxychains</span><br><span class="line">sudo vim /usr/lib/proxychains3/proxyresolv</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># This script is called by proxychains to resolve DNS names</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DNS server used to resolve names</span></span><br><span class="line">DNS_SERVER=<span class="variable">$&#123;PROXYRESOLV_DNS:-4.2.2.2&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> = 0 ] ; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot; usage:&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;  proxyresolv &lt;hostname&gt; &quot;</span></span><br><span class="line">    <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> LD_PRELOAD=libproxychains.so.3</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$DNS_SERVER</span> = <span class="string">&quot;none&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    dig <span class="variable">$1</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    dig <span class="variable">$1</span> @<span class="variable">$DNS_SERVER</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=<span class="string">&#x27;ln -sf /etc/proxyfiddler.conf $HOME/.proxychains/proxychains.conf; PROXYRESOLV_DNS=none proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=<span class="string">&#x27;ln -sf /etc/proxychains.conf $HOME/.proxychains/proxychains.conf; proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"></span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line">sudo ln -s ~/.proxychains /root/.proxychains</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Proxychains 开启时使用的是写死的公用 DNS 4.2.2.2，并不科学。同时只能支持一个代理或代理链，需要切换使用多个代理时并不方便。&lt;/p&gt;
-&lt;p&gt;下面以使用 &lt;code&gt;pc&lt;/code&gt; 和 &lt;code&gt;pf&lt;/code&gt; 两个命令分别连接两个不同的代理为</summary>
-      
-    
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
-    
-    <category term="Proxychains" scheme="https://www.coder17.com/tags/Proxychains/"/>
-    
-    <category term="DNS" scheme="https://www.coder17.com/tags/DNS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>安装 zsh</title>
-    <link href="https://www.coder17.com/posts/install-zsh/"/>
-    <id>https://www.coder17.com/posts/install-zsh/</id>
-    <published>2019-05-18T19:16:00.000Z</published>
-    <updated>2020-11-30T14:51:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-zsh"><a href="#1-zsh" class="headerlink" title="1. zsh"></a>1. zsh</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install zsh</span><br></pre></td></tr></table></figure><h2 id="2-oh-my-zsh-and-theme"><a href="#2-oh-my-zsh-and-theme" class="headerlink" title="2. oh my zsh and theme"></a>2. <a href="https://github.com/robbyrussell/oh-my-zsh">oh my zsh</a> and theme</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sh -c &quot;$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;</span><br><span class="line">sudo apt install fonts-powerline</span><br><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZSH_THEME=&quot;agnoster&quot; # (this is one of the fancy ones)</span><br><span class="line"><span class="meta">#</span><span class="bash"> see https://github.com/robbyrussell/oh-my-zsh/wiki/Themes<span class="comment">#agnoster</span></span></span><br></pre></td></tr></table></figure><h2 id="3-WSL-ColorTool"><a href="#3-WSL-ColorTool" class="headerlink" title="3. WSL: ColorTool"></a>3. WSL: <a href="https://github.com/Microsoft/Terminal/tree/master/src/tools/ColorTool">ColorTool</a></h2><h2 id="4-Ctrl-Backspace-and-Ctrl-Delete"><a href="#4-Ctrl-Backspace-and-Ctrl-Delete" class="headerlink" title="4. Ctrl + Backspace and Ctrl + Delete"></a>4. <code>Ctrl + Backspace</code> and <code>Ctrl + Delete</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;bindkey &#x27;^H&#x27; backward-kill-word&quot; &gt;&gt; ~/.zshrc</span><br><span class="line">echo &quot;bindkey &#x27;^[[3;5~&#x27; kill-word&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><p><a href="https://github.com/robbyrussell/oh-my-zsh/issues/7609">Why don’t Ctrl+Backspace and Ctrl+Delete work? · Issue #7609 · robbyrussell/oh-my-zsh · GitHub</a></p><h2 id="6-ll"><a href="#6-ll" class="headerlink" title="6. ll"></a>6. ll</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;alias ll=&#x27;ls -alhF&#x27;&quot; &gt;&gt; ~/.bash_aliases</span><br><span class="line">echo &quot;source \$HOME/.bash_aliases&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="5-Plugins"><a href="#5-Plugins" class="headerlink" title="5. Plugins"></a>5. Plugins</h2><h2 id="5-1-zsh-syntax-highlighting"><a href="#5-1-zsh-syntax-highlighting" class="headerlink" title="5.1 zsh-syntax-highlighting"></a>5.1 <a href="https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md">zsh-syntax-highlighting</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-syntax-highlighting</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure><h2 id="5-2-zsh-autosuggestions"><a href="#5-2-zsh-autosuggestions" class="headerlink" title="5.2 zsh-autosuggestions"></a>5.2 <a href="https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md">zsh-autosuggestions</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/zsh-users/zsh-autosuggestions $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-autosuggestions</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure><h2 id="5-3-zsh-z"><a href="#5-3-zsh-z" class="headerlink" title="5.3 zsh-z"></a>5.3 <a href="https://github.com/agkozak/zsh-z#installation">zsh-z</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/agkozak/zsh-z $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-z</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-z</span><br></pre></td></tr></table></figure><h2 id="5-x-Enable"><a href="#5-x-Enable" class="headerlink" title="5.x Enable"></a>5.x Enable</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">plugins</span>=(</span><br><span class="line">    git</span><br><span class="line">    extract</span><br><span class="line">    z</span><br><span class="line">    zsh-syntax-highlighting</span><br><span class="line">    zsh-autosuggestions</span><br><span class="line">)</span><br></pre></td></tr></table></figure><h2 id="6-WSL-fix-z-precmd-1-nice-5-failed-operation-not-permitted"><a href="#6-WSL-fix-z-precmd-1-nice-5-failed-operation-not-permitted" class="headerlink" title="6. WSL: fix \_z\_precmd:1: nice(5) failed: operation not permitted"></a>6. WSL: fix <code>\_z\_precmd:1: nice(5) failed: operation not permitted</code></h2><blockquote><p>By default, <code>zsh</code> tries to run background jobs at a lower priority, which Windows won’t let it do. A good workaround is to put</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> $(uname -a) <span class="keyword">in</span></span><br><span class="line">*Microsoft*) <span class="built_in">unsetopt</span> BG_NICE ;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure><p>in your <code>.zshrc</code> file. That alters <code>zsh</code>‘s default behavior and fixes the problem entirely, in my experience.</p></blockquote><p><a href="https://github.com/rupa/z/issues/230">_z_precmd:1: nice(5) failed: operation not permitted · Issue #230 · rupa/z · GitHub</a></p><h2 id="7-Hide-local-username-and-host-name"><a href="#7-Hide-local-username-and-host-name" class="headerlink" title="7. Hide local username and host name"></a>7. Hide local username and host name</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;DEFAULT_USER=\&quot;\$USER\&quot;&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="8-Change-host-name-text-color"><a href="#8-Change-host-name-text-color" class="headerlink" title="8. Change  host name text color"></a>8. Change  host name text color</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.oh-my-zsh/themes/agnoster.zsh-theme</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@@ -89,7 +89,7 @@ <span class="function"><span class="title">prompt_end</span></span>() &#123;</span><br><span class="line"> <span class="comment"># Context: user@hostname (who am I and where am I)</span></span><br><span class="line"> <span class="function"><span class="title">prompt_context</span></span>() &#123;</span><br><span class="line">   <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$USER</span>&quot;</span> != <span class="string">&quot;<span class="variable">$DEFAULT_USER</span>&quot;</span> || -n <span class="string">&quot;<span class="variable">$SSH_CLIENT</span>&quot;</span> ]]; <span class="keyword">then</span></span><br><span class="line">-    prompt_segment black default <span class="string">&quot;%(!.%&#123;%F&#123;yellow&#125;%&#125;.)%n@%m&quot;</span></span><br><span class="line">+    prompt_segment cyan white <span class="string">&quot;%(!.%&#123;%F&#123;yellow&#125;%&#125;.)%n@%m&quot;</span></span><br><span class="line">   <span class="keyword">fi</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;1-zsh&quot;&gt;&lt;a href=&quot;#1-zsh&quot; class=&quot;headerlink&quot; title=&quot;1. zsh&quot;&gt;&lt;/a&gt;1. zsh&lt;/h2&gt;&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutte</summary>
-      
-    
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
-    
-    <category term="zsh" scheme="https://www.coder17.com/tags/zsh/"/>
-    
-    <category term="oh my zsh" scheme="https://www.coder17.com/tags/oh-my-zsh/"/>
     
   </entry>
   

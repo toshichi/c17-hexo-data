@@ -128,6 +128,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/ubuntu-1804-autoupdate/</loc>
+    
+    <lastmod>2019-11-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/remote-control/</loc>
     
     <lastmod>2019-11-14</lastmod>
@@ -149,6 +156,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/mount-vmware-shared-folder/</loc>
+    
+    <lastmod>2019-05-22</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/linux-git-branch-name/</loc>
     
     <lastmod>2019-05-21</lastmod>
@@ -157,6 +171,20 @@
   
   <url>
     <loc>https://www.coder17.com/posts/ss-tunnel-dns/</loc>
+    
+    <lastmod>2019-05-19</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/compile-ss-libev/</loc>
+    
+    <lastmod>2019-05-19</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/config-sshd/</loc>
     
     <lastmod>2019-05-19</lastmod>
     
@@ -921,6 +949,20 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/VMware/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/%E5%A4%9A%E8%AF%B4/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -1082,6 +1124,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/ss-libev/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/Y580/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -1153,6 +1202,20 @@
   
   <url>
     <loc>https://www.coder17.com/tags/iptables/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/ssh/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E7%AB%AF%E5%8F%A3/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
