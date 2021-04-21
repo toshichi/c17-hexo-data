@@ -74,6 +74,88 @@
   </entry>
   
   <entry>
+    <title>Nextcloud 新建用户报错</title>
+    <link href="https://www.coder17.com/posts/nextcloud-new-user-error/"/>
+    <id>https://www.coder17.com/posts/nextcloud-new-user-error/</id>
+    <published>2020-08-12T17:31:00.000Z</published>
+    <updated>2020-08-12T17:31:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Nextcloud 新建用户时，日志提示错误：</p><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Call</span> <span class="keyword">to</span> a member <span class="keyword">function</span> getSize() <span class="keyword">on</span> <span class="type">bool</span></span><br></pre></td></tr></table></figure><p>导致用户列表无法显示，且新用户无法登录。</p><p>原因是用户配额和 <code>quota_include_external_storage</code> 设置之间有冲突。</p><p>绕过方案为：</p><ul><li><p>修改<code>/var/www/html/config/config.php</code>：</p>  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">‘quota_include_external_storage’ =&gt; <span class="literal">false</span>,</span><br></pre></td></tr></table></figure></li><li><p>此时用户列表可以显示，删除新建的出错用户</p></li><li><p>重新添加新用户，配额容量无限制</p></li><li><p>以新用户身份登陆一次，确认文件正常</p></li><li><p>将 <code>quota_include_external_storage</code> 改回去</p></li><li><p>根据需求限制新用户配额</p></li></ul><p>此时新用户可正常使用。</p><p>当共享大量文件给新用户时，由于被共享文件也计入用户配额使用，因此可能提示配额超限。</p><p>此外如果共享文件的 owner 曾出现误报存储已满问题时，即使通过修改 <code>quota_include_external_storage</code> 解决，被共享用户在进入共享文件目录时也仍会提示其他用户存储满。暂时无法解决，无实际影响可忽略。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Nextcloud%20%E6%96%B0%E5%BB%BA%E7%94%A8%E6%88%B7%E6%8A%A5%E9%94%99/image-20200813023129134.png" alt="image-20200813023129134"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Nextcloud 新建用户时，日志提示错误：&lt;/p&gt;
+&lt;figure class=&quot;highlight pgsql&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Nextcloud" scheme="https://www.coder17.com/tags/Nextcloud/"/>
+    
+    <category term="报错" scheme="https://www.coder17.com/tags/%E6%8A%A5%E9%94%99/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nextcloud 误报存储已满</title>
+    <link href="https://www.coder17.com/posts/nextcloud-storage-full/"/>
+    <id>https://www.coder17.com/posts/nextcloud-storage-full/</id>
+    <published>2020-08-06T08:22:00.000Z</published>
+    <updated>2020-08-06T08:22:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 Nextcloud 数据目录下 mount 其他位置的存储时，会误报存储已满。</p><p>问题原因在于统计文件大小时会将外部存储和被共享文件全部计入，而统计总容量时不计算外部存储和 mount 的其他位置。</p><p>修改<code>/var/www/html/config/config.php</code>，添加参数：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">‘quota_include_external_storage’ =&gt; <span class="literal">true</span>,</span><br></pre></td></tr></table></figure><p>并且在用户配置中，将配额改为“无限”以外的具体数值：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/NextCloud%20%E8%AF%AF%E6%8A%A5%E5%AD%98%E5%82%A8%E5%B7%B2%E6%BB%A1/image-20200806172234483.png" alt="image-20200806172234483"></p><p>设置后当前用户不再提示存储满，但如果此用户分享文件给其他用户，则被分享用户访问时仍会提醒文件 owner 的存储满。</p><p>此外，即使 UI 上不提示，但 Nextcloud 内部的判定依然是存储满，因此 File Versioning 会因为空间不足而不工作，目前没有找到解决方法。因此不推荐层叠 mount 方式存储。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;在 Nextcloud 数据目录下 mount 其他位置的存储时，会误报存储已满。&lt;/p&gt;
+&lt;p&gt;问题原因在于统计文件大小时会将外部存储和被共享文件全部计入，而统计总容量时不计算外部存储和 mount 的其他位置。&lt;/p&gt;
+&lt;p&gt;修改&lt;code&gt;/var/www/html/</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Nextcloud" scheme="https://www.coder17.com/tags/Nextcloud/"/>
+    
+    <category term="误报" scheme="https://www.coder17.com/tags/%E8%AF%AF%E6%8A%A5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nextcloud 自动扫描硬盘文件更新</title>
+    <link href="https://www.coder17.com/posts/nextcloud-auto-scan/"/>
+    <id>https://www.coder17.com/posts/nextcloud-auto-scan/</id>
+    <published>2020-08-06T06:18:00.000Z</published>
+    <updated>2020-08-06T06:18:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Nextcloud 如果直接在数据目录进行读写文件，Web UI 上不会显示文件的实时更新。解决方案有三种。</p><h2 id="1-手动扫描更新"><a href="#1-手动扫描更新" class="headerlink" title="1. 手动扫描更新"></a>1. 手动扫描更新</h2><p>在命令行使用 <code>php occ files:scan --all</code> 手动扫描。在 docker 中执行需要用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su -s /bin/bash -c <span class="string">&quot;php /var/www/html/occ files:scan --all&quot;</span> -g users www-data</span><br></pre></td></tr></table></figure><p>其中 -g 后的参数依次为分组名和用户名。</p><h2 id="2-修改-config-php-自动扫描"><a href="#2-修改-config-php-自动扫描" class="headerlink" title="2. 修改 config.php 自动扫描"></a>2. 修改 config.php 自动扫描</h2><p>修改<code>/var/www/html/config/config.php</code>，添加参数：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;filesystem_check_changes&#x27;</span> =&gt; <span class="literal">true</span>,</span><br></pre></td></tr></table></figure><p>实现自动扫描</p><h2 id="3-使用外部存储"><a href="#3-使用外部存储" class="headerlink" title="3. 使用外部存储"></a>3. 使用外部存储</h2><p>将需要直接读写的目录分离，并使用外部存储功能挂载。缺点是外部存储由插件实现，时常有 bug 出现。</p><p>参考：</p><p><a href="https://help.nextcloud.com/t/folders-and-filesystem-check-changes/8203">https://help.nextcloud.com/t/folders-and-filesystem-check-changes/8203</a></p><p><a href="https://it.ismy.fun/2018/11/12/nextcloud-auto-files-scan/">https://it.ismy.fun/2018/11/12/nextcloud-auto-files-scan/</a></p><p><a href="https://unix.stackexchange.com/questions/372850/how-to-run-command-as-different-user">https://unix.stackexchange.com/questions/372850/how-to-run-command-as-different-user</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Nextcloud 如果直接在数据目录进行读写文件，Web UI 上不会显示文件的实时更新。解决方案有三种。&lt;/p&gt;
+&lt;h2 id=&quot;1-手动扫描更新&quot;&gt;&lt;a href=&quot;#1-手动扫描更新&quot; class=&quot;headerlink&quot; title=&quot;1. 手动扫描更新&quot;&gt;&lt;/a</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Nextcloud" scheme="https://www.coder17.com/tags/Nextcloud/"/>
+    
+    <category term="扫描硬盘" scheme="https://www.coder17.com/tags/%E6%89%AB%E6%8F%8F%E7%A1%AC%E7%9B%98/"/>
+    
+  </entry>
+  
+  <entry>
     <title>QNAP 普通用户环境变量不生效解决</title>
     <link href="https://www.coder17.com/posts/qnap-env-var/"/>
     <id>https://www.coder17.com/posts/qnap-env-var/</id>
@@ -240,6 +322,30 @@
   </entry>
   
   <entry>
+    <title>Portainer 启动/升级</title>
+    <link href="https://www.coder17.com/posts/protainer-launch-update/"/>
+    <id>https://www.coder17.com/posts/protainer-launch-update/</id>
+    <published>2020-03-26T08:41:00.000Z</published>
+    <updated>2020-03-26T08:41:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Launch"><a href="#Launch" class="headerlink" title="Launch"></a>Launch</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker volume create portainer_data</span><br><span class="line">docker run -d -p 127.0.0.1:9000:9000 -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data --restart unless-stopped --name portainer portainer/portainer</span><br></pre></td></tr></table></figure><p>From <a href="https://portainer.io/install.html">https://portainer.io/install.html</a> </p><h2 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h2><ul><li><p>在 Web 界面执行 Duplicate/Edit</p></li><li><p>直接确认后，会自动拉取新镜像并停止旧 Container，但不能自动拉起新 Container</p></li><li><p>SSH 登录，手动删除旧 Container，再使用上述第二条命令重新拉起即可</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker rm portainer</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Launch&quot;&gt;&lt;a href=&quot;#Launch&quot; class=&quot;headerlink&quot; title=&quot;Launch&quot;&gt;&lt;/a&gt;Launch&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Portainer" scheme="https://www.coder17.com/tags/Portainer/"/>
+    
+  </entry>
+  
+  <entry>
     <title>QNAP 硬盘不休眠解决</title>
     <link href="https://www.coder17.com/posts/qnap-hdd-wont-sleep/"/>
     <id>https://www.coder17.com/posts/qnap-hdd-wont-sleep/</id>
@@ -381,6 +487,58 @@
   </entry>
   
   <entry>
+    <title>搭建 Shadowsocks 客户端服务端并加为服务</title>
+    <link href="https://www.coder17.com/posts/shadowsocks-server/"/>
+    <id>https://www.coder17.com/posts/shadowsocks-server/</id>
+    <published>2019-12-27T13:22:00.000Z</published>
+    <updated>2019-12-27T13:22:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e">https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e</a></p><h2 id="1-install-and-config"><a href="#1-install-and-config" class="headerlink" title="1. install and config"></a>1. install and config</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python-pip</span><br><span class="line">sudo apt install shadowsocks</span><br><span class="line">or</span><br><span class="line">sudo pip install git+https://github.com/shadowsocks/shadowsocks.git@master</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2. 配置"></a>2. 配置</h2><h3 id="2-1-客户端"><a href="#2-1-客户端" class="headerlink" title="2.1 客户端"></a>2.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;27.102.111.111&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>: <span class="number">12345</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-2-服务端"><a href="#2-2-服务端" class="headerlink" title="2.2 服务端"></a>2.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/ssserver.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;port_password&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;3389&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;2003&quot;</span>: <span class="string">&quot;passsss&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>:<span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>:<span class="number">3389</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>:<span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>:<span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="3-add-as-service"><a href="#3-add-as-service" class="headerlink" title="3. add as service"></a>3. add as service</h2><h3 id="3-1-客户端"><a href="#3-1-客户端" class="headerlink" title="3.1 客户端"></a>3.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Client Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/bin/sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/shadowsocks.service</span><br><span class="line">sudo systemctl start shadowsocks.service</span><br><span class="line">service shadowsocks status</span><br></pre></td></tr></table></figure><h3 id="3-2-服务端"><a href="#3-2-服务端" class="headerlink" title="3.2 服务端"></a>3.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/ssserver.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Server Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/local/bin/ssserver -c /etc/ssserver.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/ssserver.service</span><br><span class="line">sudo systemctl start ssserver.service</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e&quot;&gt;https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a7</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
+    
+    <category term="服务端" scheme="https://www.coder17.com/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx 禁止未授权 URL 访问（HTTP 444）</title>
+    <link href="https://www.coder17.com/posts/nginx-ban-url/"/>
+    <id>https://www.coder17.com/posts/nginx-ban-url/</id>
+    <published>2019-12-20T18:47:00.000Z</published>
+    <updated>2019-12-20T18:47:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    listen [::]:80 default_server;</span><br><span class="line">    listen 443 default_server ssl;</span><br><span class="line">    ssl_certificate &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;fullchain.pem;</span><br><span class="line">    ssl_certificate_key &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;privkey.pem;</span><br><span class="line">    server_name _;</span><br><span class="line">    return 444;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其中证书可以随便指定</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Nginx" scheme="https://www.coder17.com/tags/Nginx/"/>
+    
+    <category term="过滤" scheme="https://www.coder17.com/tags/%E8%BF%87%E6%BB%A4/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Certbot cloudflare 泛域名证书配置</title>
     <link href="https://www.coder17.com/posts/certbot-cloudflare-wildcard/"/>
     <id>https://www.coder17.com/posts/certbot-cloudflare-wildcard/</id>
@@ -405,185 +563,6 @@
     <category term="cloudflare" scheme="https://www.coder17.com/tags/cloudflare/"/>
     
     <category term="泛域名证书" scheme="https://www.coder17.com/tags/%E6%B3%9B%E5%9F%9F%E5%90%8D%E8%AF%81%E4%B9%A6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>安装 mosh 与 byobu</title>
-    <link href="https://www.coder17.com/posts/install-mosh-byobu/"/>
-    <id>https://www.coder17.com/posts/install-mosh-byobu/</id>
-    <published>2019-11-24T13:02:00.000Z</published>
-    <updated>2019-11-24T13:02:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-mosh"><a href="#1-mosh" class="headerlink" title="1 mosh"></a>1 mosh</h2><p>在延迟过高的服务器上操作时，使用 mosh 来通过 UDP 连接加强体验。甚至网络中断后重连或系统休眠后仍能维持连接。<br>默认使用 60000 以上端口，一个 UDP 只能有一个连接。<br>此处配置成和 ssh 使用相同端口来方便连接。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install mosh</span><br></pre></td></tr></table></figure><p>连接时： </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosh -p &lt;mosh port&gt; --ssh=<span class="string">&#x27;ssh -p &lt;ssh port&gt;&#x27;</span> &lt;user&gt;@&lt;server address&gt;</span><br></pre></td></tr></table></figure><h3 id="1-1-WinSCP-中使用-mosh"><a href="#1-1-WinSCP-中使用-mosh" class="headerlink" title="1.1 WinSCP 中使用 mosh"></a>1.1 WinSCP 中使用 mosh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosh -p !<span class="comment"># --ssh=&#x27;ssh -p !#&#x27; !U@!@</span></span><br></pre></td></tr></table></figure><h3 id="1-2-端口转发注意点"><a href="#1-2-端口转发注意点" class="headerlink" title="1.2 端口转发注意点"></a>1.2 端口转发注意点</h3><p>因为 mosh 所使用的端口是客户端连接时指定的，所以不能转发到不同的端口。<br>比如通过把服务器的 60001 UDP 转发到 50001，再使用 mosh -p 50001，是无法连接的。<br>需要转发到相同端口连接。<br>为避免麻烦，使用与转发的 ssh TCP 端口相同的端口即可。</p><h2 id="2-byobu"><a href="#2-byobu" class="headerlink" title="2 byobu"></a>2 byobu</h2><p>mosh 单一端口只支持一个连接，所以要多线操作时不方便使用多连接的方式，因此需要分屏操作。<br>tmux 快捷键十分反人类，难以记忆，得不偿失。虽然可以修改，但往往使用 docker 或公用服务器时一一修改非常麻烦。<br>因此选择默认快捷键适合人类使用的 byobu。byobu 是日语びょうぶ屏風。<br>byobu 可以选择基于 tmux 后端还是 screen 后端。使用 <code>byobu-select-backend</code> 进行切换。<br>一般 ubuntu 会内置 byobu，非常方便。</p><h3 id="2-1-快捷键"><a href="#2-1-快捷键" class="headerlink" title="2.1 快捷键"></a>2.1 快捷键</h3><p>F2 新建 Window， F3 F4 移动到 Window<br>Shift F2 上下分割，Ctrl F2 左右分割<br>Shift F3 F4 移动到分屏，Ctrl F6 关闭当前分屏<br>Shift + 方向键 移动到分屏<br>F5 重载配置文件，Shift F5 似乎是切换状态栏<br>F6 Detach session<br>F7 滚动模式，按 pgup pgdn 滚屏，回车退出<br>Alt + pgup/pgdn 直接滚屏<br>F8 修改 Window 名<br>F9 配置，Shift + F12 切换F键有效性<br>Shift + F11 最大化当前窗口</p><h3 id="2-2-时间换行问题"><a href="#2-2-时间换行问题" class="headerlink" title="2.2 时间换行问题"></a>2.2 时间换行问题</h3><p>有时状态栏最后一位时间会换行，导致状态栏错位。这是因为当前终端字体不支持系统 logo 的特殊字符显示。按 F9 进配置，选择 <code>Toggle status notifications</code>，去掉 logo，Apply 即可。</p><h3 id="2-3-提示符风格"><a href="#2-3-提示符风格" class="headerlink" title="2.3 提示符风格"></a>2.3 提示符风格</h3><p>默认配色不是默认配色，使用 <code>byobu-disable-prompt</code> 恢复默认。</p><h3 id="2-4-256色不支持"><a href="#2-4-256色不支持" class="headerlink" title="2.4 256色不支持"></a>2.4 256色不支持</h3><p>部分版本切换到默认配色时会不支持 256 色，<code>echo $TERM</code> 返回 <code>screen</code>。<br>这是默认 tmux 配置的问题。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim <span class="variable">$BYOBU_PREFIX</span>/share/byobu/profiles/tmux</span><br></pre></td></tr></table></figure><p>查找 <code>set -g default-terminal &quot;screenr&quot;</code> 修改为 <code>set -g default-terminal &quot;screen-256color&quot;</code></p><h3 id="2-5-支持滚轮和鼠标"><a href="#2-5-支持滚轮和鼠标" class="headerlink" title="2.5 支持滚轮和鼠标"></a>2.5 支持滚轮和鼠标</h3><p>Alt + F12 切换鼠标支持</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%AE%89%E8%A3%85%20mosh%20%E4%B8%8E%20byobu/image-20210421235258827.png" alt="image-20210421235258827"></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;1-mosh&quot;&gt;&lt;a href=&quot;#1-mosh&quot; class=&quot;headerlink&quot; title=&quot;1 mosh&quot;&gt;&lt;/a&gt;1 mosh&lt;/h2&gt;&lt;p&gt;在延迟过高的服务器上操作时，使用 mosh 来通过 UDP 连接加强体验。甚至网络中断后重连或系统休眠后仍能</summary>
-      
-    
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
-    
-    <category term="mosh" scheme="https://www.coder17.com/tags/mosh/"/>
-    
-    <category term="byobu" scheme="https://www.coder17.com/tags/byobu/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>配置 Ubuntu 18.04 自动更新</title>
-    <link href="https://www.coder17.com/posts/ubuntu-1804-autoupdate/"/>
-    <id>https://www.coder17.com/posts/ubuntu-1804-autoupdate/</id>
-    <published>2019-11-16T15:17:00.000Z</published>
-    <updated>2019-11-16T15:17:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install unattended-upgrades</span><br><span class="line">sudo vim /etc/apt/apt.conf.d/50unattended-upgrades</span><br></pre></td></tr></table></figure><p>去掉 update 一行前的注释，并修改自动清除未用包的设置。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;$&#123;distro_id&#125;:$&#123;distro_codename&#125;-updates&quot;;</span><br><span class="line">...</span><br><span class="line">Unattended-Upgrade::Remove-Unused-Kernel-Packages &quot;true&quot;;</span><br><span class="line">Unattended-Upgrade::Remove-Unused-Dependencies &quot;true&quot;;</span><br></pre></td></tr></table></figure><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%20Ubuntu%2018.04%20%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/image-20191117001230583.png" alt="image-20191117001230583"></p><p>然后修改重启配置：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/apt/apt.conf.d/20auto-upgrades</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">APT::Periodic::Update-Package-Lists &quot;1&quot;;</span><br><span class="line">APT::Periodic::Unattended-Upgrade &quot;1&quot;;</span><br></pre></td></tr></table></figure><p>最后测试运行，确认生效：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo unattended-upgrades –dry-run –debug</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;</summary>
-      
-    
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
-    
-    <category term="Ubuntu" scheme="https://www.coder17.com/tags/Ubuntu/"/>
-    
-    <category term="自动更新" scheme="https://www.coder17.com/tags/%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Windows 远程投屏方案</title>
-    <link href="https://www.coder17.com/posts/remote-control/"/>
-    <id>https://www.coder17.com/posts/remote-control/</id>
-    <published>2019-11-14T12:25:00.000Z</published>
-    <updated>2019-11-14T12:25:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-Windows-gt-Android"><a href="#1-Windows-gt-Android" class="headerlink" title="1 Windows-&gt;Android"></a>1 Windows-&gt;Android</h2><h3 id="1-1-VNC-协议"><a href="#1-1-VNC-协议" class="headerlink" title="1.1 VNC 协议"></a>1.1 VNC 协议</h3><p>使用 <a href="https://play.google.com/store/apps/details?id=com.realvnc.viewer.android">VNC Viewer</a></p><p>优点：</p><ul><li>   屏幕没有工具栏</li></ul><p>缺点：</p><ul><li>   需要鼠标操作，不能用键盘/遥控器定位</li><li>   间歇性断线</li><li>   没有声音</li></ul><h3 id="1-2-RDP-协议"><a href="#1-2-RDP-协议" class="headerlink" title="1.2 RDP 协议"></a>1.2 RDP 协议</h3><p>使用 <a href="https://play.google.com/store/apps/details?id=com.devolutions.remotedesktopmanager">Remote Desktop Manager</a></p><p>优点：</p><ul><li>   键盘可以操作</li><li>   稳定</li><li>   有声音</li></ul><p>缺点：</p><ul><li>第一次创建连接需要用鼠标点</li><li>工具栏需要操作才能消去</li></ul><h3 id="1-3-向日葵软件"><a href="#1-3-向日葵软件" class="headerlink" title="1.3 向日葵软件"></a>1.3 向日葵软件</h3><p>使用 <a href="https://sunlogin.oray.com/zh_CN/remote/screen">远程投屏-向日葵</a></p><p>优点：</p><ul><li>暂缺</li></ul><p>缺点：</p><ul><li>依赖公网</li><li>依赖第三方服务</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;1-Windows-gt-Android&quot;&gt;&lt;a href=&quot;#1-Windows-gt-Android&quot; class=&quot;headerlink&quot; title=&quot;1 Windows-&amp;gt;Android&quot;&gt;&lt;/a&gt;1 Windows-&amp;gt;Android&lt;/h2</summary>
-      
-    
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/tags/Windows/"/>
-    
-    <category term="投屏" scheme="https://www.coder17.com/tags/%E6%8A%95%E5%B1%8F/"/>
-    
-    <category term="远程控制" scheme="https://www.coder17.com/tags/%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在 Ubuntu VPS 上引导 iso 安装纯净系统</title>
-    <link href="https://www.coder17.com/posts/vps-boot-from-iso/"/>
-    <id>https://www.coder17.com/posts/vps-boot-from-iso/</id>
-    <published>2019-09-19T15:00:00.000Z</published>
-    <updated>2019-09-19T15:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>租用 VPS 厂商的机器时，一般只能预装厂商原有的镜像。有时镜像并不纯净，厂商会在里面加料。因此需要安装原版系统。下面以腾讯云重新安装 Ubuntu 18.04 LTS 为例。</p><h2 id="1-检测系统环境"><a href="#1-检测系统环境" class="headerlink" title="1. 检测系统环境"></a>1. 检测系统环境</h2><h3 id="1-1-确定系统有-grub"><a href="#1-1-确定系统有-grub" class="headerlink" title="1.1 确定系统有 grub"></a>1.1 确定系统有 grub</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure><h3 id="1-2-确认分区布局"><a href="#1-2-确认分区布局" class="headerlink" title="1.2 确认分区布局"></a>1.2 确认分区布局</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure><p>查看 <code>/</code>  和 <code>/boot</code> 目录是否在不同分区。如果仅有根目录，处理较为容易，否则在后续步骤中需要注意。</p><h2 id="2-下载系统镜像"><a href="#2-下载系统镜像" class="headerlink" title="2. 下载系统镜像"></a>2. 下载系统镜像</h2><p>注意：Ubuntu 如果使用常规 iso，安装会报错，因此使用网络安装版（Network installer）的iso。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -O /boot/isoboot.iso http://archive.ubuntu.com/ubuntu/dists/bionic-updates/main/installer-amd64/current/images/netboot/mini.iso</span><br></pre></td></tr></table></figure><h2 id="3-准备-Memdisk"><a href="#3-准备-Memdisk" class="headerlink" title="3. 准备 Memdisk"></a>3. 准备 Memdisk</h2><p>原理是将 iso 镜像读入内存。使用 apt 安装 Syslinux：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install syslinux -y</span><br></pre></td></tr></table></figure><p>复制 memdisk 文件到引导目录：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp -f /usr/lib/syslinux/memdisk /boot/memdisk</span><br></pre></td></tr></table></figure><h2 id="4-修改-Grub-引导"><a href="#4-修改-Grub-引导" class="headerlink" title="4. 修改 Grub 引导"></a>4. 修改 Grub 引导</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/grub.d/41_custom</span><br></pre></td></tr></table></figure><p>插入以下内容到 EOF 之前：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">menuentry &#x27;OS Web Install&#x27; &#123;</span><br><span class="line">    insmod part_msdos</span><br><span class="line">        insmod part_gpt</span><br><span class="line">        insmod ext2</span><br><span class="line">    set root=(hd0,msdos1)</span><br><span class="line">    echo &#x27;Loading memdisk ...&#x27;</span><br><span class="line">    linux16 /boot/memdisk raw iso</span><br><span class="line">    echo &#x27;Loading ISO ...&#x27;</span><br><span class="line">    initrd16 /boot/isoboot.iso</span><br><span class="line">    echo &#x27;Booting ISO ...&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>注意，此处根据刚才分析分区布局时候的结果而有所不同：</p><blockquote><ul><li>如果你的服务器是单块硬盘，而且只有一个分区，那么root的值为 <strong>(hd0,msdos1)</strong></li><li>如果你的服务器的单块硬盘，存在不止一个分区，看 /boot 分区在哪个盘上，比如在 /dev/vda5 上，那就是 <strong>(hd0,msdos5)</strong></li><li>其他更复杂的情况，重启服务器，到达 Grub 界面时按下 <strong>C</strong> 键，进入 Grub 命令行，并按照以下步骤操作：</li></ul></blockquote><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">grub&gt;</span><span class="bash"> ls</span></span><br><span class="line">(hd0) (hd0,msdos1) (hd0,msdos5)</span><br><span class="line"><span class="meta">grub&gt;</span><span class="bash"> ls (hd0,msdos1)/</span></span><br><span class="line">error: unknown filesystem. # 说明这个分区不是正确的启动分区，继续尝试</span><br><span class="line"><span class="meta">grub&gt;</span><span class="bash"> ls (hd0,msdos5)/</span></span><br><span class="line">lost+found/ etc/ (各种文件夹) # 说明这个分区是正确的启动分区</span><br><span class="line"></span><br><span class="line">reboot #回到系统</span><br></pre></td></tr></table></figure><p>修改 <code>/etc/default/grub</code> 配置文件增大 <code>GRUB_TIMEOUT</code> 超时时间，然后更新 Grub 配置：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update-grub</span><br></pre></td></tr></table></figure><p>之后确认是否正确写入：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure><h2 id="5-备份配置"><a href="#5-备份配置" class="headerlink" title="5. 备份配置"></a>5. 备份配置</h2><p>备份网络配置等</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/netplan/50-cloud-init.yaml</span><br></pre></td></tr></table></figure><h2 id="6-重装"><a href="#6-重装" class="headerlink" title="6. 重装"></a>6. 重装</h2><p>重启，使用 VNC 连接，启动时选择 <strong>OS Web Install</strong> 并操作重装。</p><p>因为使用的是最小镜像，需要联网下载大量安装包，过程可能比较漫长，耐心等待即可。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%9C%A8%20Ubuntu%20%E4%B8%8A%E5%BC%95%E5%AF%BC%20iso/image-20210421212105375.png" alt="image-20210421212105375"></p><hr><p>参考：</p><p><a href="https://blog.ilemonrain.com/linux/grub-memdisk-boot-iso.html">https://blog.ilemonrain.com/linux/grub-memdisk-boot-iso.html</a></p><p><a href="https://www.imbeee.com/2017/12/10/install-pure-system-on-vps-and-encrypt-it/">https://www.imbeee.com/2017/12/10/install-pure-system-on-vps-and-encrypt-it/</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;租用 VPS 厂商的机器时，一般只能预装厂商原有的镜像。有时镜像并不纯净，厂商会在里面加料。因此需要安装原版系统。下面以腾讯云重新安装 Ubuntu 18.04 LTS 为例。&lt;/p&gt;
-&lt;h2 id=&quot;1-检测系统环境&quot;&gt;&lt;a href=&quot;#1-检测系统环境&quot; class=</summary>
-      
-    
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
-    
-    
-    <category term="VPS" scheme="https://www.coder17.com/tags/VPS/"/>
-    
-    <category term="Ubuntu" scheme="https://www.coder17.com/tags/Ubuntu/"/>
-    
-    <category term="腾讯云" scheme="https://www.coder17.com/tags/%E8%85%BE%E8%AE%AF%E4%BA%91/"/>
-    
-    <category term="引导 iso" scheme="https://www.coder17.com/tags/%E5%BC%95%E5%AF%BC-iso/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>不装 VS Windows Terminal 编译 msxi 自签名安装</title>
-    <link href="https://www.coder17.com/posts/msxi-sign-install/"/>
-    <id>https://www.coder17.com/posts/msxi-sign-install/</id>
-    <published>2019-06-15T15:00:00.000Z</published>
-    <updated>2019-06-15T15:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Windows Terminal 一直没有发布可以直接安装的二进制文件，想自行编译的时候，看到系统需求中包含体积巨大的 Visual Studio 和 Windows SDK，脑袋都大了。直接下载其他人编译好的安装包又不放心，那么就想个办法避免在本地环境编译吧。</p><h2 id="1-编译结果获取"><a href="#1-编译结果获取" class="headerlink" title="1. 编译结果获取"></a>1. 编译结果获取</h2><p>首先想到 Azure DevOps，这个可以简单理解成微软提供的在线 CI 平台，写好编译文件就可以调用微软的自带所有编译环境的镜像直接在线编译，并生成二进制下载。这个服务可以使用 edu 教育账号免费使用，有 edu 邮箱的都可以用。我曾经使用这个编译过其他人久不更新的 MFC 项目。自己写一个 ，或者修改微软生成的 <code>azure-pipelines.yml</code> 即可。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678181063.png" alt="1560678181063"></p><p>那么就从 GitHub 上把微软的代码拿过来，再写个 pipeline 直接编译吧。这时注意到，GitHub 上的项目中，居然已经包含了写好的 pipeline。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678325392.png" alt="1560678325392"></p><p>想了想也是自然，微软写的东西当然自己也会用 Azure DevOps 啊。</p><p>接下来注意到，在 GitHub 仓库的 Readme 中，已经有 Azure Pipelines 的编译结果图标了。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678474529.png" alt="1560678474529"></p><p>单击图标，打开软的 DevOps 仓库，可见每次 push 代码都是会自动编译的。进一步分析发现，只有合并到 master 分支时会编译出二进制文件。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678578167.png" alt="1560678578167"></p><p>那么我们选择其中一个 master 分支的 CI job：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678636549.png" alt="1560678636549"></p><p>可以看到，右上角有 Artifacts 按钮，说明这个 CI 是会上传编译出来的二进制文件到服务器的。不清楚这三个有什么区别，我起初以为分别对应 x64、x86 和 arm64 的编译结果，但我下载第一个压缩包中，是包含了三个平台的编译结果的。压缩包很大，150多M，内容如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678772276.png" alt="1560678772276"></p><p>其中的 <code>CascadiaPackage_0.0.1.0_x64.msix</code> 就是我们要的二进制安装包。</p><h2 id="2-安装尝试"><a href="#2-安装尝试" class="headerlink" title="2. 安装尝试"></a>2. 安装尝试</h2><p>首先把系统调成开发者模式。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678844942.png" alt="1560678844942"></p><p>然后双击 msix 文件直接安装，发现安装失败，提示安装包没有签名。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560679034249.png" alt="1560679034249"></p><p>一番搜索之后，发现如果使用 VS 在本机直接部署，VS 会自动帮你签名。如果使用 VS 命令行工具直接编译出来的结果，是没有签名的。</p><p>在 GitHub 仓库的一个 <a href="https://github.com/microsoft/Terminal/issues/489#issuecomment-496170540">issue</a> 中有人提到，需要用 <code>SignTool.exe</code> 来为这个安装包签名。</p><h2 id="3-证书生成"><a href="#3-证书生成" class="headerlink" title="3. 证书生成"></a>3. 证书生成</h2><p>签名首先需要一个证书。在这里我们直接自签发一个证书并添加信任就行了。参考刚才的 issue 中提到的脚本，打开管理员权限的 Power Shell ，并 cd 到 msix 安装包所在目录中，执行如下命令：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">New-SelfSignedCertificate</span> <span class="literal">-Type</span> Custom <span class="literal">-Subject</span> <span class="string">&quot;CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US&quot;</span> <span class="literal">-KeyUsage</span> DigitalSignature <span class="literal">-FriendlyName</span> <span class="string">&quot;WindowsTerminal&quot;</span> <span class="literal">-CertStoreLocation</span> <span class="string">&quot;Cert:\LocalMachine\My&quot;</span> <span class="literal">-TextExtension</span> <span class="selector-tag">@</span>(<span class="string">&quot;2.5.29.37=&#123;text&#125;1.3.6.1.5.5.7.3.3&quot;</span>, <span class="string">&quot;2.5.29.19=&#123;text&#125;&quot;</span>)</span><br></pre></td></tr></table></figure><p>此时会显示一个证书指纹，复制其中指纹并替换掉下面命令中的 <code>C5C9D98CE9A23FB72C20B4D039876F3D93C3E1FF</code>，同时修改命令中的密码。</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$password</span> = <span class="built_in">ConvertTo-SecureString</span> <span class="literal">-String</span> <span class="string">&quot;随便设置一个密码&quot;</span> <span class="literal">-Force</span> <span class="literal">-AsPlainText</span></span><br><span class="line"><span class="built_in">Export-PfxCertificate</span> <span class="literal">-cert</span> <span class="string">&quot;Cert:\LocalMachine\My\C5C9D98CE9A23FB72C20B4D039876F3D93C3E1FF&quot;</span> <span class="literal">-FilePath</span> WindowsTerminal.pfx <span class="literal">-Password</span> <span class="variable">$password</span></span><br><span class="line"><span class="built_in">Remove-Item</span> <span class="literal">-Path</span> <span class="string">&quot;Cert:\LocalMachine\My\C5C9D98CE9A23FB72C20B4D039876F3D93C3E1FF&quot;</span></span><br></pre></td></tr></table></figure><p>此时当前目录会生成一个 <code>WindowsTerminal.pfx</code> 证书。双击之，安装到计算机存储的受信任人（Trusted People）目录中，中间会要你输入刚才脚本里设置的密码。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560679602449.png" alt="1560679602449"></p><p>好了，证书搞定了。</p><h2 id="4-提取安装签名工具"><a href="#4-提取安装签名工具" class="headerlink" title="4. 提取安装签名工具"></a>4. 提取安装签名工具</h2><p>下面使用  <code>SignTool.exe</code> 工具进行签名。这个工具是 <a href="https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk">Windows 10 SDK</a> 中的一个工具。去微软网站查看发现，这货体积巨大，包含了许多开发 Windows 所需的工具包。但我们并不需要其他的部分，所以这里投机取巧一下，只安装所需的部分。</p><p>首先要下载 ISO 格式的安装镜像，不要直接下 Installer。大概 800M 左右，半夜直连下载速度飞快，白天就不行了，视情况使用更加科学的上网方式。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560679726239.png" alt="1560679726239"></p><p>下好之后，使用 Windows 自带的 Mount 功能映射为虚拟光驱。打开 <code>Installers</code> 目录，找到 <code>Windows App Certification Kit x64-x86_en-us.msi</code> 这个包，双击安装。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560679991475.png" alt="1560679991475"></p><p>这个工具包就包含了我们需要的 <code>SignTools.exe</code> ，其他的部分不需要，可以删掉这个镜像了。在 <code>C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe</code> 路径可以找到我们需要的工具。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560680492261.png" alt="1560680492261"></p><h2 id="5-签名安装"><a href="#5-签名安装" class="headerlink" title="5. 签名安装"></a>5. 签名安装</h2><p>在 msix 和证书文件所在目录打开 cmd，执行以下命令完成签名：</p><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:\Program Files (x86)\Windows Kits\<span class="number">10</span>\App Certification Kit\signtool.exe&quot; sign /fd SHA256 /a  /f WindowsTerminal.pfx /p 你的密码 CascadiaPackage_0.<span class="number">0</span>.<span class="number">1</span>.<span class="number">0</span>_x64.msix</span><br></pre></td></tr></table></figure><p>签好后再双击 msix 包，就可以顺利安装了。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560680665789.png" alt="1560680665789"></p><p>Enjoy！</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560681595443.png" alt="1560681595443"></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Windows Terminal 一直没有发布可以直接安装的二进制文件，想自行编译的时候，看到系统需求中包含体积巨大的 Visual Studio 和 Windows SDK，脑袋都大了。直接下载其他人编译好的安装包又不放心，那么就想个办法避免在本地环境编译吧。&lt;/p&gt;
-&lt;</summary>
-      
-    
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
-    
-    
-    <category term="Windows Terminal" scheme="https://www.coder17.com/tags/Windows-Terminal/"/>
-    
-    <category term="DevOps" scheme="https://www.coder17.com/tags/DevOps/"/>
-    
-    <category term="msxi" scheme="https://www.coder17.com/tags/msxi/"/>
-    
-    <category term="自签名" scheme="https://www.coder17.com/tags/%E8%87%AA%E7%AD%BE%E5%90%8D/"/>
-    
-    <category term="编译" scheme="https://www.coder17.com/tags/%E7%BC%96%E8%AF%91/"/>
-    
-    <category term="SignTools" scheme="https://www.coder17.com/tags/SignTools/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在 Ubuntu 中 mount VMware 共享文件夹</title>
-    <link href="https://www.coder17.com/posts/mount-vmware-shared-folder/"/>
-    <id>https://www.coder17.com/posts/mount-vmware-shared-folder/</id>
-    <published>2019-05-22T12:30:00.000Z</published>
-    <updated>2019-05-22T12:30:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-安装-VMware-Tools"><a href="#1-安装-VMware-Tools" class="headerlink" title="1. 安装 VMware Tools"></a>1. 安装 VMware Tools</h2><ul><li><p>给虚拟机增加一个光驱</p></li><li><p><code>VM&gt; Install VMware Tools</code></p></li><li><p>手动安装</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir /mnt/cdrom</span><br><span class="line">sudo mount /dev/cdrom /mnt/cdrom</span><br><span class="line">tar xzvf /mnt/cdrom/VMwareTools-x.x.x-xxxx.tar.gz -C /tmp/</span><br><span class="line"><span class="built_in">cd</span> /tmp/vmware-tools-distrib/</span><br><span class="line">sudo ./vmware-install.pl -d</span><br><span class="line">sudo reboot</span><br></pre></td></tr></table></figure></li><li><p>可以删掉光驱</p></li></ul><h2 id="2-映射共享文件夹"><a href="#2-映射共享文件夹" class="headerlink" title="2. 映射共享文件夹"></a>2. 映射共享文件夹</h2><ul><li>查看 <code>/mnt/hgfs</code> 目录下是否已有映射的目录</li><li>如果没有，<code>/usr/bin/vmware-config-tools.pl</code></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;1-安装-VMware-Tools&quot;&gt;&lt;a href=&quot;#1-安装-VMware-Tools&quot; class=&quot;headerlink&quot; title=&quot;1. 安装 VMware Tools&quot;&gt;&lt;/a&gt;1. 安装 VMware Tools&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p</summary>
-      
-    
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
-    
-    
-    <category term="Ubuntu" scheme="https://www.coder17.com/tags/Ubuntu/"/>
-    
-    <category term="VMware" scheme="https://www.coder17.com/tags/VMware/"/>
-    
-    <category term="共享文件夹" scheme="https://www.coder17.com/tags/%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%A4%B9/"/>
     
   </entry>
   

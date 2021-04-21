@@ -60,6 +60,87 @@
     
     
     <entry>
+      <title>Nextcloud 新建用户报错</title>
+      <link href="posts/nextcloud-new-user-error/"/>
+      <url>posts/nextcloud-new-user-error/</url>
+      
+        <content type="html"><![CDATA[<p>Nextcloud 新建用户时，日志提示错误：</p><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Call</span> <span class="keyword">to</span> a member <span class="keyword">function</span> getSize() <span class="keyword">on</span> <span class="type">bool</span></span><br></pre></td></tr></table></figure><p>导致用户列表无法显示，且新用户无法登录。</p><p>原因是用户配额和 <code>quota_include_external_storage</code> 设置之间有冲突。</p><p>绕过方案为：</p><ul><li><p>修改<code>/var/www/html/config/config.php</code>：</p>  <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">‘quota_include_external_storage’ =&gt; <span class="literal">false</span>,</span><br></pre></td></tr></table></figure></li><li><p>此时用户列表可以显示，删除新建的出错用户</p></li><li><p>重新添加新用户，配额容量无限制</p></li><li><p>以新用户身份登陆一次，确认文件正常</p></li><li><p>将 <code>quota_include_external_storage</code> 改回去</p></li><li><p>根据需求限制新用户配额</p></li></ul><p>此时新用户可正常使用。</p><p>当共享大量文件给新用户时，由于被共享文件也计入用户配额使用，因此可能提示配额超限。</p><p>此外如果共享文件的 owner 曾出现误报存储已满问题时，即使通过修改 <code>quota_include_external_storage</code> 解决，被共享用户在进入共享文件目录时也仍会提示其他用户存储满。暂时无法解决，无实际影响可忽略。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Nextcloud%20%E6%96%B0%E5%BB%BA%E7%94%A8%E6%88%B7%E6%8A%A5%E9%94%99/image-20200813023129134.png" alt="image-20200813023129134"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Nextcloud </tag>
+            
+            <tag> 报错 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Nextcloud 误报存储已满</title>
+      <link href="posts/nextcloud-storage-full/"/>
+      <url>posts/nextcloud-storage-full/</url>
+      
+        <content type="html"><![CDATA[<p>在 Nextcloud 数据目录下 mount 其他位置的存储时，会误报存储已满。</p><p>问题原因在于统计文件大小时会将外部存储和被共享文件全部计入，而统计总容量时不计算外部存储和 mount 的其他位置。</p><p>修改<code>/var/www/html/config/config.php</code>，添加参数：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">‘quota_include_external_storage’ =&gt; <span class="literal">true</span>,</span><br></pre></td></tr></table></figure><p>并且在用户配置中，将配额改为“无限”以外的具体数值：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/NextCloud%20%E8%AF%AF%E6%8A%A5%E5%AD%98%E5%82%A8%E5%B7%B2%E6%BB%A1/image-20200806172234483.png" alt="image-20200806172234483"></p><p>设置后当前用户不再提示存储满，但如果此用户分享文件给其他用户，则被分享用户访问时仍会提醒文件 owner 的存储满。</p><p>此外，即使 UI 上不提示，但 Nextcloud 内部的判定依然是存储满，因此 File Versioning 会因为空间不足而不工作，目前没有找到解决方法。因此不推荐层叠 mount 方式存储。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Nextcloud </tag>
+            
+            <tag> 误报 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Nextcloud 自动扫描硬盘文件更新</title>
+      <link href="posts/nextcloud-auto-scan/"/>
+      <url>posts/nextcloud-auto-scan/</url>
+      
+        <content type="html"><![CDATA[<p>Nextcloud 如果直接在数据目录进行读写文件，Web UI 上不会显示文件的实时更新。解决方案有三种。</p><h2 id="1-手动扫描更新"><a href="#1-手动扫描更新" class="headerlink" title="1. 手动扫描更新"></a>1. 手动扫描更新</h2><p>在命令行使用 <code>php occ files:scan --all</code> 手动扫描。在 docker 中执行需要用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su -s /bin/bash -c <span class="string">&quot;php /var/www/html/occ files:scan --all&quot;</span> -g users www-data</span><br></pre></td></tr></table></figure><p>其中 -g 后的参数依次为分组名和用户名。</p><h2 id="2-修改-config-php-自动扫描"><a href="#2-修改-config-php-自动扫描" class="headerlink" title="2. 修改 config.php 自动扫描"></a>2. 修改 config.php 自动扫描</h2><p>修改<code>/var/www/html/config/config.php</code>，添加参数：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;filesystem_check_changes&#x27;</span> =&gt; <span class="literal">true</span>,</span><br></pre></td></tr></table></figure><p>实现自动扫描</p><h2 id="3-使用外部存储"><a href="#3-使用外部存储" class="headerlink" title="3. 使用外部存储"></a>3. 使用外部存储</h2><p>将需要直接读写的目录分离，并使用外部存储功能挂载。缺点是外部存储由插件实现，时常有 bug 出现。</p><p>参考：</p><p><a href="https://help.nextcloud.com/t/folders-and-filesystem-check-changes/8203">https://help.nextcloud.com/t/folders-and-filesystem-check-changes/8203</a></p><p><a href="https://it.ismy.fun/2018/11/12/nextcloud-auto-files-scan/">https://it.ismy.fun/2018/11/12/nextcloud-auto-files-scan/</a></p><p><a href="https://unix.stackexchange.com/questions/372850/how-to-run-command-as-different-user">https://unix.stackexchange.com/questions/372850/how-to-run-command-as-different-user</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Nextcloud </tag>
+            
+            <tag> 扫描硬盘 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>QNAP 普通用户环境变量不生效解决</title>
       <link href="posts/qnap-env-var/"/>
       <url>posts/qnap-env-var/</url>
@@ -230,6 +311,31 @@
     
     
     <entry>
+      <title>Portainer 启动/升级</title>
+      <link href="posts/protainer-launch-update/"/>
+      <url>posts/protainer-launch-update/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Launch"><a href="#Launch" class="headerlink" title="Launch"></a>Launch</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker volume create portainer_data</span><br><span class="line">docker run -d -p 127.0.0.1:9000:9000 -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data --restart unless-stopped --name portainer portainer/portainer</span><br></pre></td></tr></table></figure><p>From <a href="https://portainer.io/install.html">https://portainer.io/install.html</a> </p><h2 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h2><ul><li><p>在 Web 界面执行 Duplicate/Edit</p></li><li><p>直接确认后，会自动拉取新镜像并停止旧 Container，但不能自动拉起新 Container</p></li><li><p>SSH 登录，手动删除旧 Container，再使用上述第二条命令重新拉起即可</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker rm portainer</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Portainer </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>QNAP 硬盘不休眠解决</title>
       <link href="posts/qnap-hdd-wont-sleep/"/>
       <url>posts/qnap-hdd-wont-sleep/</url>
@@ -365,6 +471,60 @@
             <tag> Merlin </tag>
             
             <tag> DDNS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>搭建 Shadowsocks 客户端服务端并加为服务</title>
+      <link href="posts/shadowsocks-server/"/>
+      <url>posts/shadowsocks-server/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e">https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e</a></p><h2 id="1-install-and-config"><a href="#1-install-and-config" class="headerlink" title="1. install and config"></a>1. install and config</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python-pip</span><br><span class="line">sudo apt install shadowsocks</span><br><span class="line">or</span><br><span class="line">sudo pip install git+https://github.com/shadowsocks/shadowsocks.git@master</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2. 配置"></a>2. 配置</h2><h3 id="2-1-客户端"><a href="#2-1-客户端" class="headerlink" title="2.1 客户端"></a>2.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;27.102.111.111&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>: <span class="number">12345</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-2-服务端"><a href="#2-2-服务端" class="headerlink" title="2.2 服务端"></a>2.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/ssserver.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;port_password&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;3389&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;2003&quot;</span>: <span class="string">&quot;passsss&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>:<span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>:<span class="number">3389</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>:<span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>:<span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="3-add-as-service"><a href="#3-add-as-service" class="headerlink" title="3. add as service"></a>3. add as service</h2><h3 id="3-1-客户端"><a href="#3-1-客户端" class="headerlink" title="3.1 客户端"></a>3.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Client Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/bin/sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/shadowsocks.service</span><br><span class="line">sudo systemctl start shadowsocks.service</span><br><span class="line">service shadowsocks status</span><br></pre></td></tr></table></figure><h3 id="3-2-服务端"><a href="#3-2-服务端" class="headerlink" title="3.2 服务端"></a>3.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/ssserver.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Server Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/local/bin/ssserver -c /etc/ssserver.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/ssserver.service</span><br><span class="line">sudo systemctl start ssserver.service</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Shadowsocks </tag>
+            
+            <tag> 服务端 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Nginx 禁止未授权 URL 访问（HTTP 444）</title>
+      <link href="posts/nginx-ban-url/"/>
+      <url>posts/nginx-ban-url/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    listen [::]:80 default_server;</span><br><span class="line">    listen 443 default_server ssl;</span><br><span class="line">    ssl_certificate &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;fullchain.pem;</span><br><span class="line">    ssl_certificate_key &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;privkey.pem;</span><br><span class="line">    server_name _;</span><br><span class="line">    return 444;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其中证书可以随便指定</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Nginx </tag>
+            
+            <tag> 过滤 </tag>
             
         </tags>
       
