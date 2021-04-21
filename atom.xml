@@ -44,6 +44,32 @@
   </entry>
   
   <entry>
+    <title>QNAP 普通用户环境变量不生效解决</title>
+    <link href="https://www.coder17.com/posts/qnap-env-var/"/>
+    <id>https://www.coder17.com/posts/qnap-env-var/</id>
+    <published>2020-08-02T14:55:00.000Z</published>
+    <updated>2020-08-02T14:55:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>内置 admin 用户的 home 位于 <code>/root</code> ，而新建用户的 home 位于 <code>/share/homes/USERNAME</code>。此目录缺乏各种 rc 文件。导致安装 opkg 等第三方工具时无法自动设置 path。</p><p>解决方案为使用普通用户登录 SSH 并定位到 home，然后把 root 目录里的各种配置文件软链接过来。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ln -s /root/.bash_logout .bash_logout</span><br><span class="line">ln -s /root/.bash_profile .bash_profile</span><br><span class="line">ln -s /root/.bashrc .bashrc</span><br><span class="line">ln -s /root/.profile .profile</span><br></pre></td></tr></table></figure><p>修改后普通用户的 prompt 也会变成 <code>#</code> ，非常迷惑，原因是 PS1 变量在 <code>.profile</code> 中被修改，<code>sudo vim .profile</code> 编辑该文件，注释掉第一行的修改语句即可。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># export PS1=&#x27;[\w] # &#x27;</span></span><br><span class="line">reset</span><br><span class="line"><span class="built_in">source</span> /opt/etc/profile</span><br></pre></td></tr></table></figure><p>威联通的系统似乎没有考虑过建立普通用户日常使用的问题，默认思维模式都是使用内置 admin 账户完成，软件质量比较一般。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;内置 admin 用户的 home 位于 &lt;code&gt;/root&lt;/code&gt; ，而新建用户的 home 位于 &lt;code&gt;/share/homes/USERNAME&lt;/code&gt;。此目录缺乏各种 rc 文件。导致安装 opkg 等第三方工具时无法自动设置 path。&lt;/p</summary>
+      
+    
+    
+    
+    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
+    
+    
+    <category term="QNAP" scheme="https://www.coder17.com/tags/QNAP/"/>
+    
+    <category term="环境变量" scheme="https://www.coder17.com/tags/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>废物利用为 Galaxy S6 SM-G9200 刷入可用系统</title>
     <link href="https://www.coder17.com/posts/galaxy-s6-system/"/>
     <id>https://www.coder17.com/posts/galaxy-s6-system/</id>
@@ -180,6 +206,36 @@
     <category term="启动项" scheme="https://www.coder17.com/tags/%E5%90%AF%E5%8A%A8%E9%A1%B9/"/>
     
     <category term="autorun" scheme="https://www.coder17.com/tags/autorun/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>下载 m3u8 推流</title>
+    <link href="https://www.coder17.com/posts/m3u8-stream-download/"/>
+    <id>https://www.coder17.com/posts/m3u8-stream-download/</id>
+    <published>2020-02-21T11:48:00.000Z</published>
+    <updated>2020-02-21T11:48:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<ol><li><p>在浏览器 Network 中查找 m3u8</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221204910267.png" alt="image-20210221204910267"></p></li><li><p>如果是上图所示嵌套，逐级打开对应 m3u8 文件，直到出现 ts 文件列表和密钥</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221205009425.png" alt="image-20210221205009425"></p></li><li><p>如果要先下载再合并，则观察 ts 文件 url 规律，使用 curl 批量下载文件</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://what-ever-[<span class="number">1</span>-<span class="number">999</span>].ts</span><br></pre></td></tr></table></figure></li><li><p>将 m3u8 文件下载到同一目录，并替换删除其中 url 前缀</p></li><li><p>按照 URI 参数值下载 m3u8 文件中的密钥 key 文件，应为16字节长度。同时改写 m3u8 文件中 key 路径使其指向此文件</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221205501863.png" alt="image-20210221205501863"></p></li><li><p>使用 ffmpeg 批量解密合并 ts 文件即可获得 mp4 视频</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -loglevel error -allowed_extensions ALL -i prog-index.m3u8 -c <span class="built_in">copy</span> &quot;output.mkv&quot;</span><br></pre></td></tr></table></figure></li><li><p>如果要直接下载，则不需要下载 ts 文件，直接用 ffmpeg 解密 m3u8 文件</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -loglevel error -protocol_whitelist file,http,https,tcp,tls,crypto -allowed_extensions ALL -i prog-index.m3u8 -c <span class="built_in">copy</span> &quot;output.mkv&quot;</span><br></pre></td></tr></table></figure></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;在浏览器 Network 中查找 m3u8&lt;/p&gt;
+&lt;p&gt; &lt;img src= &quot;/images/loading.gif&quot; data-lazy-src=&quot;/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B</summary>
+      
+    
+    
+    
+    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
+    
+    
+    <category term="m3u8" scheme="https://www.coder17.com/tags/m3u8/"/>
+    
+    <category term="推流" scheme="https://www.coder17.com/tags/%E6%8E%A8%E6%B5%81/"/>
+    
+    <category term="下载" scheme="https://www.coder17.com/tags/%E4%B8%8B%E8%BD%BD/"/>
     
   </entry>
   
@@ -564,64 +620,6 @@
     <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
     
     <category term="iptables" scheme="https://www.coder17.com/tags/iptables/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Resilio 私有云的文件同步方案</title>
-    <link href="https://www.coder17.com/posts/20161217-resilio/"/>
-    <id>https://www.coder17.com/posts/20161217-resilio/</id>
-    <published>2016-12-17T04:44:53.000Z</published>
-    <updated>2016-12-17T04:44:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>国内的云服务该倒的都倒了，剩的也都是一些残废。加上最近买了一个小笔记本随身带着，多设备间工作文件的实时同步变得非常重要。<br>尝试了 Dropbox 、 Google Drive 、 付费坚果云等多种云服务之后，我最终选择了 Resilio （原 BTSync ）来搭私有云。</p><h2 id="1-最初的尝试"><a href="#1-最初的尝试" class="headerlink" title="1. 最初的尝试"></a>1. 最初的尝试</h2><p>Resilio 是基于 P2P 的文件同步服务，它把文件分散存储在参与同步的节点上，在同一子网下甚至可以通过 LAN 高速同步。类似 BT 下载的 DHT 网络保证即使客户机没有公网地址也能打洞。<br>起初我只在我的主电脑（几乎不关机）和随身的小电脑上部署了 Resilio ，但主电脑使用的山寨百兆宽带十分不稳定，小电脑在同样不稳定的网络下（对我说的就是你， BJUT 校园网）几乎无法连接主电脑上的节点，即使侥幸连上，速度也只有幽默的十几K。没办法，只能放弃。</p><h2 id="2-为什么放弃坚果云"><a href="#2-为什么放弃坚果云" class="headerlink" title="2. 为什么放弃坚果云"></a>2. 为什么放弃坚果云</h2><p>然后我开始尝试各种商用云服务。国外的各类云服务虽然成熟，但速度全都非常感人。最后在各方安利之下换了坚果云。但坚果云的收费方案非常有意思，按流量收费。免费用户每月最多上传 1G，下载 3G。我数了数我需要保持同步的文件，大概有 8G 左右，精简过后也有 2.5G ，也就是说初始的同步要两个月之后才能完成。<br>那好吧。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20161217-resilio/2016-12-17-14-05-16.jpg"></p><p>付了费之后，空间方案是 30G 初始，每月 +1G， 不限流量。 我开开心心地把 2.5G 传上去了。传完之后我看到了这个：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20161217-resilio/2016-12-17-14-10-33.jpg"></p><p><a href="http://help.jianguoyun.com/?p=1582">http://help.jianguoyun.com/?p=1582</a></p><p>还有这个：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20161217-resilio/2016-12-17-14-11-43.jpg"></p><p><a href="http://help.jianguoyun.com/?p=1366">http://help.jianguoyun.com/?p=1366</a></p><p>我擦，我真是九脸蒙蔽。下个月我断供就不能用了？想用至少续费三个月？而且假如我过了几个月又有大量数据要传，还得先补上上次付费和这次付费之间断供的时间？</p><p>一个月 30，还是有点贵的，数据还被掐在人家手里，不值得。<br>你可以说我付不起钱穷之类的，我只是觉得不值得。有30块我干嘛不给我的 VPS 升一下级？</p><h2 id="3-重新部署-Resilio"><a href="#3-重新部署-Resilio" class="headerlink" title="3. 重新部署 Resilio"></a>3. 重新部署 Resilio</h2><p>坚果云还剩27天，但我已经不想用了。我又重新研究了一下 Resilio ，觉得我可以在我的 VPS 上部署一个 Resilio 作为同步节点。在外网时，小电脑可以通过稳定的 VPS 保持同步。和大电脑在同一内网下时，又可以通过 LAN 快速完成。我的 VPS 是 ConoHa 东京节点，国内访问除了电信有时候丢包厉害点，速度还 OK。<br>Resilio 支持加密分享，也就是说部署在 VPS 上节点的文件可以是加密过的，在 VPS 端无法读取。<br>而且如果有条件，可以部署多个 VPS 节点，比如在阿里云或者腾讯云上部署一个，加快国内访问速度。节点之间可以保持同步。<br>我的服务器系统是 Cent OS，安装 Resilio 只需要导入 yum 源，再导入公钥即可。参考<a href="https://help.getsync.com/hc/en-us/articles/206178924">官方文档</a>。<br>新建<code>/etc/yum.repos.d/resilio-sync.repo</code><br>内容为：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[resilio-sync]</span><br><span class="line">name=Resilio Sync <span class="variable">$basearch</span></span><br><span class="line">baseurl=http://linux-packages.resilio.com/resilio-sync/rpm/<span class="variable">$basearch</span></span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br></pre></td></tr></table></figure><p>然后添加公钥：<br><code>rpm --import https://linux-packages.resilio.com/resilio-sync/key.asc</code><br>再用 yum 安装：<br><code>yum install resilio-sync</code></p><p>安好后准备一下同步目录和配置文件：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir /home/sync</span><br><span class="line">chmod -R 755 /home/sync</span><br><span class="line">cd /home/sync</span><br><span class="line">rslsync --dump-sample-config &gt; rslsync.conf</span><br></pre></td></tr></table></figure><p>编辑配置文件，编辑一下你的机器名、端口号、用户名密码之类的。文件里的说明很详细。我就不多说了。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20161217-resilio/2016-12-17-14-51-10.jpg"></p><p>然后载入配置文件<br><code>rslsync --config /home/sync/rslsync.conf</code><br>并把这条命令加到 rc.local 开机启动，保证每次都能加载这个配置。<br>配置一下防火墙之后，就可以通过 ip:9999 来访问了。<br>登进去之后就跟本地客户端一样啦。在本机的 Resilio 添加同步文件夹，类型选择加密。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20161217-resilio/2016-12-17-14-57-41.jpg"></p><p>会出现三种密钥。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20161217-resilio/2016-12-17-15-00-01.jpg"></p><p>在 VPS 的 resilio 中添加第三个加密密钥，在小电脑的 resilio 中添加读写密钥。<br>这样，大小电脑上的修改都会同步到对方以及 VPS，但 VPS 端文件的变化不会同步到本地机器，保证数据安全。两台电脑上文件同步时，VPS 可以作为加速节点。而且 VPS 端的文件全部是加密过的，如图。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20161217-resilio/2016-12-17-15-02-16.jpg"></p><p>这样即使放到国内的主机上也可以放心数据安全。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20161217-resilio/2016-12-17-15-03-34.jpg"></p><p>在节点列表中可以看到另一台电脑和服务器。<br>如果购买 Pro 授权，还可以选择性同步。未同步的文件会显示为 0KB 占位符，当双击调用或者手动同步时才主动下载。Resilio 的同步是差分增量的，文件会被分割，只同步变化的区块。<br>购买了 Pro 授权之后可以把两台电脑关联为同一账户，添加的文件夹会自动同步到两台机器上，不用在小电脑上手动添加读写密钥。但注意不要在云端使用同一账户，否则不会加密。<br>这个 Pro 授权国内99块人民币，终身授权。比坚果云不知高到哪里去了。<br>氪！</p><p>参考了：<br><a href="http://maokwen.tk/2016/10/14/build-a-private-cloud-on-vps.html">http://maokwen.tk/2016/10/14/build-a-private-cloud-on-vps.html</a><br><a href="https://www.freehao123.com/pcloud/">https://www.freehao123.com/pcloud/</a><br><a href="http://www.dongcoder.com/detail-176844.html">http://www.dongcoder.com/detail-176844.html</a></p><p align = right>by Sykie Chen2016.12.17</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;国内的云服务该倒的都倒了，剩的也都是一些残废。加上最近买了一个小笔记本随身带着，多设备间工作文件的实时同步变得非常重要。&lt;br&gt;尝试了 Dropbox 、 Google Drive 、 付费坚果云等多种云服务之后，我最终选择了 Resilio （原 BTSync ）来搭私有</summary>
-      
-    
-    
-    
-    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
-    
-    
-    <category term="Resilio" scheme="https://www.coder17.com/tags/Resilio/"/>
-    
-    <category term="私有云" scheme="https://www.coder17.com/tags/%E7%A7%81%E6%9C%89%E4%BA%91/"/>
-    
-    <category term="同步" scheme="https://www.coder17.com/tags/%E5%90%8C%E6%AD%A5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>北工大校园网主机保持公网在线</title>
-    <link href="https://www.coder17.com/posts/bjut-online/"/>
-    <id>https://www.coder17.com/posts/bjut-online/</id>
-    <published>2016-09-23T15:00:00.000Z</published>
-    <updated>2016-09-23T15:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%8C%97%E5%B7%A5%E5%A4%A7%E6%A0%A1%E5%9B%AD%E7%BD%91%E4%B8%BB%E6%9C%BA%E4%BF%9D%E6%8C%81%E5%85%AC%E7%BD%91%E5%9C%A8%E7%BA%BF/image-20210421174248252.png" alt="image-20210421174248252"></p><p>由于各种各样的原因，总有的时候希望自己的主机在校园网里长期在线保持公网连接，以提供一些服务。但一方面校园网的 web 认证对 *nix 命令行很不友好。虽然在之前的文章里我提到过使用 curl 的方式从命令行登录。但如果闲置半小时左右没有数据包发出，连接会被自动踢掉。</p><p>另一方面还有可能发生流量用光了扣钱，钱扣完了被踢掉等情况，导致我们的内网主机不能稳定在线。也无法通过 ngrok 等内网穿透技术实现公网访问。</p><p>因此我搞了一个小程序，它可以每分钟检测一次登陆情况，如果未登陆外网则会从预定的账号列表中挑选可用账号自动登录。如果已经登录则会检测已使用流量是否超限，并自动更换下一个可用的账号。</p><p>如果不幸列表中的账号流量均超限了，还可以设置一个保底账号，无视流量限制而保持在线，虽然代价是可能扣很多钱。</p><p>每个月月初流量重置时，会自动重置账号列表。</p><p>还附带了 linux 和 windows 下的自启动脚本，直接放进 rc.local 或者 Windows StartUp 里就可以了。</p><p>内网挂服务的同学可以放心地挂机了。</p><p>Github 主页： <a href="https://github.com/SykieChen/BJUT_Always_Online">https://github.com/SykieChen/BJUT_Always_Online</a></p><p>很惭愧，就做了一点微小的工作，谢谢大家。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src= &quot;/images/loading.gif&quot; data-lazy-src=&quot;/blogimg/%E5%8C%97%E5%B7%A5%E5%A4%A7%E6%A0%A1%E5%9B%AD%E7%BD%91%E4%B8%BB%E6%9C%BA%E4%BF%9D</summary>
-      
-    
-    
-    
-    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
-    
-    
-    <category term="北京工业大学" scheme="https://www.coder17.com/tags/%E5%8C%97%E4%BA%AC%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6/"/>
-    
-    <category term="北工大" scheme="https://www.coder17.com/tags/%E5%8C%97%E5%B7%A5%E5%A4%A7/"/>
-    
-    <category term="Python" scheme="https://www.coder17.com/tags/Python/"/>
-    
-    <category term="网关" scheme="https://www.coder17.com/tags/%E7%BD%91%E5%85%B3/"/>
     
   </entry>
   

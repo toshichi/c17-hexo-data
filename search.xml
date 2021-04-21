@@ -31,6 +31,33 @@
     
     
     <entry>
+      <title>QNAP 普通用户环境变量不生效解决</title>
+      <link href="posts/qnap-env-var/"/>
+      <url>posts/qnap-env-var/</url>
+      
+        <content type="html"><![CDATA[<p>内置 admin 用户的 home 位于 <code>/root</code> ，而新建用户的 home 位于 <code>/share/homes/USERNAME</code>。此目录缺乏各种 rc 文件。导致安装 opkg 等第三方工具时无法自动设置 path。</p><p>解决方案为使用普通用户登录 SSH 并定位到 home，然后把 root 目录里的各种配置文件软链接过来。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ln -s /root/.bash_logout .bash_logout</span><br><span class="line">ln -s /root/.bash_profile .bash_profile</span><br><span class="line">ln -s /root/.bashrc .bashrc</span><br><span class="line">ln -s /root/.profile .profile</span><br></pre></td></tr></table></figure><p>修改后普通用户的 prompt 也会变成 <code>#</code> ，非常迷惑，原因是 PS1 变量在 <code>.profile</code> 中被修改，<code>sudo vim .profile</code> 编辑该文件，注释掉第一行的修改语句即可。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># export PS1=&#x27;[\w] # &#x27;</span></span><br><span class="line">reset</span><br><span class="line"><span class="built_in">source</span> /opt/etc/profile</span><br></pre></td></tr></table></figure><p>威联通的系统似乎没有考虑过建立普通用户日常使用的问题，默认思维模式都是使用内置 admin 账户完成，软件质量比较一般。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> QNAP </tag>
+            
+            <tag> 环境变量 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>废物利用为 Galaxy S6 SM-G9200 刷入可用系统</title>
       <link href="posts/galaxy-s6-system/"/>
       <url>posts/galaxy-s6-system/</url>
@@ -166,6 +193,35 @@
             <tag> 启动项 </tag>
             
             <tag> autorun </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>下载 m3u8 推流</title>
+      <link href="posts/m3u8-stream-download/"/>
+      <url>posts/m3u8-stream-download/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>在浏览器 Network 中查找 m3u8</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221204910267.png" alt="image-20210221204910267"></p></li><li><p>如果是上图所示嵌套，逐级打开对应 m3u8 文件，直到出现 ts 文件列表和密钥</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221205009425.png" alt="image-20210221205009425"></p></li><li><p>如果要先下载再合并，则观察 ts 文件 url 规律，使用 curl 批量下载文件</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://what-ever-[<span class="number">1</span>-<span class="number">999</span>].ts</span><br></pre></td></tr></table></figure></li><li><p>将 m3u8 文件下载到同一目录，并替换删除其中 url 前缀</p></li><li><p>按照 URI 参数值下载 m3u8 文件中的密钥 key 文件，应为16字节长度。同时改写 m3u8 文件中 key 路径使其指向此文件</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E4%B8%8B%E8%BD%BD%20m3u8%20%E6%8E%A8%E6%B5%81/image-20210221205501863.png" alt="image-20210221205501863"></p></li><li><p>使用 ffmpeg 批量解密合并 ts 文件即可获得 mp4 视频</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -loglevel error -allowed_extensions ALL -i prog-index.m3u8 -c <span class="built_in">copy</span> &quot;output.mkv&quot;</span><br></pre></td></tr></table></figure></li><li><p>如果要直接下载，则不需要下载 ts 文件，直接用 ffmpeg 解密 m3u8 文件</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ffmpeg -loglevel error -protocol_whitelist file,http,https,tcp,tls,crypto -allowed_extensions ALL -i prog-index.m3u8 -c <span class="built_in">copy</span> &quot;output.mkv&quot;</span><br></pre></td></tr></table></figure></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> m3u8 </tag>
+            
+            <tag> 推流 </tag>
+            
+            <tag> 下载 </tag>
             
         </tags>
       
