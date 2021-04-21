@@ -6,7 +6,7 @@
   <link href="https://www.coder17.com/atom.xml" rel="self"/>
   
   <link href="https://www.coder17.com/"/>
-  <updated>2018-08-01T15:00:00.000Z</updated>
+  <updated>2018-09-13T15:00:00.000Z</updated>
   <id>https://www.coder17.com/</id>
   
   <author>
@@ -15,6 +15,69 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>禁止 Windows 10 更新后自动重启</title>
+    <link href="https://www.coder17.com/posts/windows-update-restart/"/>
+    <id>https://www.coder17.com/posts/windows-update-restart/</id>
+    <published>2018-09-13T15:00:00.000Z</published>
+    <updated>2018-09-13T15:00:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>昨晚上微软又分发更新并且强制重启了，我四台电脑只幸存了一台，其他上面开的虚拟机和工作环境啥的都没了。</p><p>很生气，研究了一下为啥幸存了一台，发现一年前我就给它动过手脚，当时我打着游戏呢就重启了。查阅了一下自己当时的记录，复现了一下，分享给大家。</p><p>设置组策略什么的都不好用，早晚还是要被微软强奸。<br>排查后发现重启是由任务计划中：</p><p><code>\Microsoft\Windows\UpdateOrchestrator</code></p><p>这个任务触发的，查看其上次启动时间就可以看到 Windows 的重启时间：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/5e4ff6f6.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-10-44.png"></p><p>但这个任务是系统用户创建的，我们自己没有权限搞死它。<br>研究一下任务干了什么：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/71dd76f9.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-11-33.png"></p><p>看到是执行了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%systemroot%\system32\MusNotification.exe</span><br></pre></td></tr></table></figure><p>这个程序来重启。进到系统目录下看看这个文件：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/e985485d.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-11-46.png"></p><p>发现其实是一个硬链接。而且这个程序即使删除或修改，在下次更新后也会自动恢复。我们只想禁止自动更新后的重启，并不是不更新。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/e4e15ead.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-44-14.png"></p><p>所以只能用 IFEO 映像劫持了：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/6adb1ad4.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-44-46.png"></p><p>路径：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options</span><br></pre></td></tr></table></figure><p>新建一个 Key，改名 <code>MusNotification.exe</code>：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/8d4ed555.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-45-24.png"></p><p>在右边新建字符串值，命名 <code>debugger</code>，值 <code>cscript.exe</code>（图中错误）。这个程序不带参数是啥也不会做的。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/37d84338.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-45-53.png"></p><p>重启一下，然后就再也不会重启了。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;昨晚上微软又分发更新并且强制重启了，我四台电脑只幸存了一台，其他上面开的虚拟机和工作环境啥的都没了。&lt;/p&gt;
+&lt;p&gt;很生气，研究了一下为啥幸存了一台，发现一年前我就给它动过手脚，当时我打着游戏呢就重启了。查阅了一下自己当时的记录，复现了一下，分享给大家。&lt;/p&gt;
+&lt;p&gt;设置</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/tags/Windows/"/>
+    
+    <category term="自动更新" scheme="https://www.coder17.com/tags/%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/"/>
+    
+    <category term="重启" scheme="https://www.coder17.com/tags/%E9%87%8D%E5%90%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Switch 游戏加速透明代理的改进部署</title>
+    <link href="https://www.coder17.com/posts/trans-proxy-splatton2-mod/"/>
+    <id>https://www.coder17.com/posts/trans-proxy-splatton2-mod/</id>
+    <published>2018-08-11T15:00:00.000Z</published>
+    <updated>2018-08-11T15:00:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>上篇文章（<a href="/posts/trans-proxy-splatoon2/">搭建透明代理加速 Splatoon2 游戏手记</a>）中，关于部署方式我提到，由于无线网卡的不兼容，开虚拟机的宿主机必须以有线方式接入路由设备。</p><p>我当时选择的是把宿主机笔记本直接放在客厅路由器旁边当服务器用。现在看来这种操作太粗鲁了。因此这里介绍一种更优雅的部署方式。</p><h2 id="1-电力猫"><a href="#1-电力猫" class="headerlink" title="1. 电力猫"></a>1. 电力猫</h2><p>首先我把电脑搬回了卧室，然后试图使用电力猫来有线连接到客厅的路由器。<br>我以前使用的是下面这个腾达的千兆电力猫：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/25a45432.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-21.png"></p><p>这玩意儿是一对，一个用网线插到路由器上，再插到路由器旁边的插座里。另一个在电脑旁边找个插座，用网线连上电脑就行了。利用电力线传输数据。</p><p>我之前刚安装的时候，它速度很快，测速在 400Mbps 以上，考虑到衰减和干扰这个速度是可以接受的。</p><p>但过了一段时间之后它的速度下降的很厉害，最高只有 50Mbps 上下，还不到我宽带的出口速度，已经开始拖慢我的网速了。原因可能是房间供电线路老化之类的吧。我懒得追究了，当时就购入了外置无线网卡解决速度问题。电力猫闲置下来后就送给家里信号不好的同事了。</p><p>鉴于上次的经历不是很愉快，这次我又换了个牌子，重新买了一对水星的千兆电力猫：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/901ea349.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-36.png"></p><p>结果还是一样，刚插上去好好的，速度很快。不一会儿速度就掉了下来，并且大量丢包，玩游戏很难受。</p><p>那没办法了，还是得考虑有线方案。</p><h2 id="2-增加辅助路由"><a href="#2-增加辅助路由" class="headerlink" title="2. 增加辅助路由"></a>2. 增加辅助路由</h2><p>说是有线，其实只要保证 VirtualBox 给虚拟机桥接的那个网卡是有线网卡就行了。上公网不一定非要走有线。</p><p>事到如今，我也没法坚持不加新设备了。最优雅的方式其实还是用 OpenWRT 系统的路由器重新部署一套，一次部署到处使用。但我懒得重新刷 OpenWRT 的系统，想只用一个普通路由解决问题。</p><p>所以我又找了个小路由器，把宿主机有线插入 LAN，并把有线网卡桥接到虚拟机，虚拟机另外添加一张 NAT 网卡用于共享主机的网络连接。其他需要透明代理的设备直接无线接入小路由器。</p><p>拓扑图大概是下面这个样子。宿主机双网卡，无线接主路由，有线接辅助路由。虚拟机双网卡，一张 NAT 上公网，一张桥接辅助路由当透明代理网关。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/c5c0fb24.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-57.png"></p><p>此时因为宿主机和虚拟机都双网卡了，需要设置一下路由表。</p><p>Windows 的路由表比较奇怪，我起初是通过增加有线网卡的跃点数 metric ，试图降低有线网卡（接辅助路由，无公网访问）的优先级，但修改后可以连通外网，DNS 却始终优先使用有线网卡获得的 192.168.2.2 的 DNS 地址，无法解析。我试图手动改路由表，折腾半天也没让它优先走无线网卡的 DNS。但直接 ping 公网 IP 地址确实是通的。</p><p>后来换了个思路，降低无线网卡的跃点数。如图，设置成1之后就 OK 了，Windows 的 DNS 策略真的很谜。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/e969ae75.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-13.png"></p><p>设置好之后路由表如下，都是系统自动生成的。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/0e0a74c6.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-22.png"></p><p>实际上宿主机实际上是三网卡的，两个无线一个有线。起初我尝试用另外一张无线网卡作为 AP 模式发射热点，取代辅助路由的功能，后来发现在 Windows 上配置这个太麻烦了就放弃了。</p><p>然后要设置一下虚拟机的 Ubuntu 系统的路由表。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/b1670d1f.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-35.png"></p><p>可以看到虚拟机有两块网卡，enp0s3 是 NAT 连接到主机的网卡，IP 设成自动获取就可以。</p><p>enp0s8 是桥接了有线网卡，接入辅助路由的。手动指定其 IP 地址为 192.168.2.2。</p><p>此时路由表的主出口不一定是 NAT 那个网卡，导致公网不通。我们删掉默认的出口路由，手动指定出口为 enp0s3 即可。命令如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/4ba28f3d.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-48.png"></p><p>需要使用 sudo 执行。执行过后虚拟机的路由表如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/7469a5d0.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-55.png"></p><p>很简洁，此时我们可以正常上公网了。</p><p>之后把 Switch 接入辅助路由的无线网，手动设置网关为 192.168.2.2，MTU 稍微改小到 1390。参照上篇文章的内容，Switch 应该已经通过代理上网了。测速结果非常可观，没有瓶颈。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/f94f5add.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-17-04.png"></p><p>好了，很开心。进行收尾工作，把手动设置路由的两句话加到 linux 的自启动里，尝试重启主机和虚拟机几次，都可以自动初始化完成。</p><p>非常优雅。收工。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;上篇文章（&lt;a href=&quot;/posts/trans-proxy-splatoon2/&quot;&gt;搭建透明代理加速 Splatoon2 游戏手记&lt;/a&gt;）中，关于部署方式我提到，由于无线网卡的不兼容，开虚拟机的宿主机必须以有线方式接入路由设备。&lt;/p&gt;
+&lt;p&gt;我当时选择的是把宿主机</summary>
+      
+    
+    
+    
+    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
+    
+    
+    <category term="透明代理" scheme="https://www.coder17.com/tags/%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86/"/>
+    
+    <category term="Splatoon2" scheme="https://www.coder17.com/tags/Splatoon2/"/>
+    
+    <category term="加速" scheme="https://www.coder17.com/tags/%E5%8A%A0%E9%80%9F/"/>
+    
+    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
+    
+    <category term="改进" scheme="https://www.coder17.com/tags/%E6%94%B9%E8%BF%9B/"/>
+    
+  </entry>
   
   <entry>
     <title>搭建透明代理加速 Splatoon2 游戏手记</title>
@@ -38,13 +101,13 @@
     <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
     
     
-    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
-    
     <category term="透明代理" scheme="https://www.coder17.com/tags/%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86/"/>
     
     <category term="Splatoon2" scheme="https://www.coder17.com/tags/Splatoon2/"/>
     
     <category term="加速" scheme="https://www.coder17.com/tags/%E5%8A%A0%E9%80%9F/"/>
+    
+    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
     
   </entry>
   
@@ -560,62 +623,6 @@
     <category term="联想" scheme="https://www.coder17.com/tags/%E8%81%94%E6%83%B3/"/>
     
     <category term="BIOS" scheme="https://www.coder17.com/tags/BIOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Windows 8.1 USB 3.0 速度异常的处理</title>
-    <link href="https://www.coder17.com/posts/20150903-win81-usb3/"/>
-    <id>https://www.coder17.com/posts/20150903-win81-usb3/</id>
-    <published>2015-09-06T14:49:00.000Z</published>
-    <updated>2015-09-06T14:49:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Windows 8.1 已经内建 USB 3.0 控制器驱动，正常情况下无需单独安装 USB 3.0 驱动程序。但有时由于兼容性问题或电源策略问题，系统睡眠并重新唤醒后 USB 3.0 端口无法正常工作，现象为 USB 3.0 设备传输速度限制在 30MB/s 上下，系统识别端口为 USB 2.0 端口。如图，设备和打印机中查看 3.0 设备时提示可在 3.0 端口上获得更快速度。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20150903-win81-usb3/1.png"></p><p>首先强制重新安装驱动。在<a href="https://downloadcenter.intel.com/download/22824/USB-3-0-Driver-Intel-USB-3-0-eXtensible-Host-Controller-Driver-for-Intel-8-9-100-Series-and-C220-C610-Chipset-Family">英特尔官网</a>下载最新版本驱动程序。此时若直接安装会提示系统版本不正确，无法安装。<br>进入 <code>\Drivers\Win7</code> 下与系统版本对应（32/64位）的目录，右键 <code>iusb3hub.inf</code> 和 <code>iusb3xhc.inf</code> 安装。<br>在设备管理器中双击 USB 设备中最下面的 <code>USB Root Hub (xHCI)</code>，在电源管理选项卡中取消选择“允许计算机关闭此设备以节约电力”。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20150903-win81-usb3/3.png"></p><p>重启电脑。<br>在设备和打印机中重新查看设备工作状态，提示已插入 3.0 端口。测速 200+MB/s。 休眠并唤醒后不变。Done.</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20150903-win81-usb3/2.png"></p><p align = right>by Sykie Chen2015.9.6</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Windows 8.1 已经内建 USB 3.0 控制器驱动，正常情况下无需单独安装 USB 3.0 驱动程序。但有时由于兼容性问题或电源策略问题，系统睡眠并重新唤醒后 USB 3.0 端口无法正常工作，现象为 USB 3.0 设备传输速度限制在 30MB/s 上下，系统识</summary>
-      
-    
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
-    
-    
-    <category term="Windows 8.1" scheme="https://www.coder17.com/tags/Windows-8-1/"/>
-    
-    <category term="USB 3.0" scheme="https://www.coder17.com/tags/USB-3-0/"/>
-    
-    <category term="Intel" scheme="https://www.coder17.com/tags/Intel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Shadowsocks + obfsproxy 混淆翻墙的实现</title>
-    <link href="https://www.coder17.com/posts/20150825-shadowsocks-obfs/"/>
-    <id>https://www.coder17.com/posts/20150825-shadowsocks-obfs/</id>
-    <published>2015-08-24T17:58:03.000Z</published>
-    <updated>2015-08-24T17:58:03.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Shadowsocks 的作者 <a href="https://twitter.com/clowwindy">@clowwindy</a> 近期被喝茶了，并被迫删除了 Github 上的源码。这意味着 ss 以后不会得到更新，其流量特征也许会被不断进化的 GFW 识别并封锁。故使用 obfsproxy 进行二次混淆，降低被识别的风险。<br>以下步骤均在 Debian 7 32 位系统上进行。</p><h2 id="1-配置-shadowsocks-libev-服务端"><a href="#1-配置-shadowsocks-libev-服务端" class="headerlink" title="1. 配置 shadowsocks-libev 服务端"></a>1. 配置 shadowsocks-libev 服务端</h2><p>参考<a href="https://github.com/shadowsocks/shadowsocks-libev">官方文档</a>，这里从源直接安装。</p><p>添加 GPG public key</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O- http://shadowsocks.org/debian/1D27208A.gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure><p>向 <code>/etc/apt/sources.list</code> 添加以下内容</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http:<span class="regexp">//</span>shadowsocks.org/debian wheezy main</span><br></pre></td></tr></table></figure><p>执行以下命令安装</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install shadowsocks-libev</span><br></pre></td></tr></table></figure><p>安装完成后编辑<code>/etc/shadowsocks-libev/config.json</code> 文件配置加密方式与端口</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>:<span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>:<span class="number">2333</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>:<span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>:<span class="string">&quot;---&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>:<span class="number">600</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>:<span class="string">&quot;aes-256-cfb&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>server 填写 0.0.0.0 允许所有设备连接，填写 127.0.0.1 则仅允许本机内环连接。<br>加密方式一般选择 aes-256-cfb。<br>配置完成后执行</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/shadowsocks-libev start</span><br></pre></td></tr></table></figure><p>启动ss服务端。</p><h2 id="2-配置-shadowsocks-客户端（Windows-平台）"><a href="#2-配置-shadowsocks-客户端（Windows-平台）" class="headerlink" title="2. 配置 shadowsocks 客户端（Windows 平台）"></a>2. 配置 shadowsocks 客户端（Windows 平台）</h2><p>在 <a href="http://shadowsocks.org/en/download/clients.html">http://shadowsocks.org/en/download/clients.html</a> 下载 win 客户端<br>启动后在 GUI 中填写服务器信息并保存，本地端口以666举例。<br>右击托盘图标以配置开机启动，将代理方式设置为 PAC。视情况使用 PAC 脚本或搭配 SwitchyOmega + Chrome 使用。<br>若连接正常，则继续进行 obfsproxy 的部署。</p><h2 id="3-配置-obfsproxy-服务端"><a href="#3-配置-obfsproxy-服务端" class="headerlink" title="3. 配置 obfsproxy 服务端"></a>3. 配置 obfsproxy 服务端</h2><p>使用 python-pip 安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install gcc python-pip python-dev</span><br><span class="line">pip install obfsproxy</span><br></pre></td></tr></table></figure><p>运行服务端：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="built_in">local</span>/bin/obfsproxy --data-dir=/tmp/scramblesuit-server scramblesuit --password=FANGBINXINGFUCKYOURMOTHERSASS444 --dest=127.0.0.1:2333 server 0.0.0.0:23333</span><br></pre></td></tr></table></figure><p>scramblesuit 是一种安全性稍高的加密工作方式，该方式工作时需要临时文件夹存放yaml ticket，故用 –data-dir 参数指定目录。–password 指定了加密密码，必须为 BASE32 字符，即大写字母加数字共32位的字符串。<br>–dest 指定目标端口，此处填写 ss 服务端口。 server 为混淆后对外监听端口，0.0.0.0 表示允许所有网段地址连接。<br>运行成功后会提示</p><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2015</span><span class="number">-08</span><span class="number">-25</span> <span class="number">21</span>:<span class="number">22</span>:<span class="number">02</span>,<span class="number">412</span> [WARNING] Obfsproxy (version: <span class="number">0.2</span><span class="number">.13</span>) starting up.</span><br><span class="line"><span class="number">2015</span><span class="number">-08</span><span class="number">-25</span> <span class="number">21</span>:<span class="number">22</span>:<span class="number">02</span>,<span class="number">412</span> [ERROR]</span><br><span class="line">################################################</span><br><span class="line">Do NOT rely on ScrambleSuit for strong security!</span><br><span class="line">################################################</span><br></pre></td></tr></table></figure><p>并不知道那句 [ERROR] 是什么意思，所以不要理它好了=。=<br>启动成功后需要将其加入自启动。编辑<code>/etc/rc.local</code> 文件添加如下内容</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(/usr/<span class="built_in">local</span>/bin/obfsproxy --data-dir=/tmp/scramblesuit-server scramblesuit --password=FANGBINXINGFUCKYOURMOTHERSASS444 --dest=127.0.0.1:2333 server 0.0.0.0:23333 &gt;/dev/null 2&gt;&amp;1 &amp;)</span><br></pre></td></tr></table></figure><p>包括最外层括号。<br>重启 VPS，服务端应已开始工作。</p><h2 id="4-配置-obfsproxy-客户端"><a href="#4-配置-obfsproxy-客户端" class="headerlink" title="4. 配置 obfsproxy 客户端"></a>4. 配置 obfsproxy 客户端</h2><p>Tor 并没有提供单独的 obfsproxy 客户端下载，需要手动从 Tor Browser 安装包中提取。<br>在 <a href="https://www.torproject.org/projects/obfsproxy.html.en">https://www.torproject.org/projects/obfsproxy.html.en</a> 下载 Tor Browser with obfsproxy<br>下载后作为压缩包打开，定位至 <code>Browser\TorBrowser\Tor\PluggableTransports\</code><br>由于客户端程序有依赖，故将该目录下除子目录 fteproxy 外的所有文件提取至单独文件夹中。<br>运行客户端：</p><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obfsproxy\obfsproxy.exe scramblesuit --password=FANGBINXINGFUCKYOURMOTHERSASS444 --dest=www.devchen.com:<span class="number">23333</span> client <span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">6666</span></span><br></pre></td></tr></table></figure><p>运行成功的提示与服务端的类似。<br>客户端将运行在本机 6666 端口上，修改 shadowsocks 客户端参数，服务器地址填入 127.0.0.1，端口 6666。测试连接是否成功。<br>将客户端加入 Windows 自启动。由于启动后会产生一个控制台窗口，故需要用 vbs 启动客户端以隐藏控制台窗口。</p><figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CreateObject</span>(<span class="string">&quot;WScript.Shell&quot;</span>).Run <span class="string">&quot;obfsproxy\obfsproxy.exe scramblesuit --password=FANGBINXINGFUCKYOURMOTHERSASS444 --dest=www.devchen.com:6667 client 127.0.0.1:4243&quot;</span>,<span class="number">0</span></span><br></pre></td></tr></table></figure><p>存为 VBS 文件，到<code>C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp</code>(Windows 8.1)</p><h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><p>全部完工后端口如下：<br>服务端：<br>2333   -   Shadowsocks 服务端口<br>23333  -   obfsproxy 转发服务端口</p><p>客户端：<br>666    -   Shadowsocks 代理服务端口<br>6666   -   obfsproxy 转发服务端口</p><p>加入 obfs 混淆后访问速度及稳定性明显增加。</p><p align = right>by Sykie Chen2015.8.25</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Shadowsocks 的作者 &lt;a href=&quot;https://twitter.com/clowwindy&quot;&gt;@clowwindy&lt;/a&gt; 近期被喝茶了，并被迫删除了 Github 上的源码。这意味着 ss 以后不会得到更新，其流量特征也许会被不断进化的 GFW 识别并封</summary>
-      
-    
-    
-    
-    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
-    
-    
-    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
-    
-    <category term="VPS" scheme="https://www.coder17.com/tags/VPS/"/>
-    
-    <category term="科学上网" scheme="https://www.coder17.com/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/"/>
     
   </entry>
   

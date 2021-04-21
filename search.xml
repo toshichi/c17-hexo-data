@@ -4,6 +4,68 @@
   
     
     <entry>
+      <title>禁止 Windows 10 更新后自动重启</title>
+      <link href="posts/windows-update-restart/"/>
+      <url>posts/windows-update-restart/</url>
+      
+        <content type="html"><![CDATA[<p>昨晚上微软又分发更新并且强制重启了，我四台电脑只幸存了一台，其他上面开的虚拟机和工作环境啥的都没了。</p><p>很生气，研究了一下为啥幸存了一台，发现一年前我就给它动过手脚，当时我打着游戏呢就重启了。查阅了一下自己当时的记录，复现了一下，分享给大家。</p><p>设置组策略什么的都不好用，早晚还是要被微软强奸。<br>排查后发现重启是由任务计划中：</p><p><code>\Microsoft\Windows\UpdateOrchestrator</code></p><p>这个任务触发的，查看其上次启动时间就可以看到 Windows 的重启时间：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/5e4ff6f6.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-10-44.png"></p><p>但这个任务是系统用户创建的，我们自己没有权限搞死它。<br>研究一下任务干了什么：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/71dd76f9.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-11-33.png"></p><p>看到是执行了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%systemroot%\system32\MusNotification.exe</span><br></pre></td></tr></table></figure><p>这个程序来重启。进到系统目录下看看这个文件：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/e985485d.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-11-46.png"></p><p>发现其实是一个硬链接。而且这个程序即使删除或修改，在下次更新后也会自动恢复。我们只想禁止自动更新后的重启，并不是不更新。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/e4e15ead.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-44-14.png"></p><p>所以只能用 IFEO 映像劫持了：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/6adb1ad4.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-44-46.png"></p><p>路径：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options</span><br></pre></td></tr></table></figure><p>新建一个 Key，改名 <code>MusNotification.exe</code>：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/8d4ed555.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-45-24.png"></p><p>在右边新建字符串值，命名 <code>debugger</code>，值 <code>cscript.exe</code>（图中错误）。这个程序不带参数是啥也不会做的。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/37d84338.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-45-53.png"></p><p>重启一下，然后就再也不会重启了。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> 自动更新 </tag>
+            
+            <tag> 重启 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Switch 游戏加速透明代理的改进部署</title>
+      <link href="posts/trans-proxy-splatton2-mod/"/>
+      <url>posts/trans-proxy-splatton2-mod/</url>
+      
+        <content type="html"><![CDATA[<p>上篇文章（<a href="/posts/trans-proxy-splatoon2/">搭建透明代理加速 Splatoon2 游戏手记</a>）中，关于部署方式我提到，由于无线网卡的不兼容，开虚拟机的宿主机必须以有线方式接入路由设备。</p><p>我当时选择的是把宿主机笔记本直接放在客厅路由器旁边当服务器用。现在看来这种操作太粗鲁了。因此这里介绍一种更优雅的部署方式。</p><h2 id="1-电力猫"><a href="#1-电力猫" class="headerlink" title="1. 电力猫"></a>1. 电力猫</h2><p>首先我把电脑搬回了卧室，然后试图使用电力猫来有线连接到客厅的路由器。<br>我以前使用的是下面这个腾达的千兆电力猫：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/25a45432.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-21.png"></p><p>这玩意儿是一对，一个用网线插到路由器上，再插到路由器旁边的插座里。另一个在电脑旁边找个插座，用网线连上电脑就行了。利用电力线传输数据。</p><p>我之前刚安装的时候，它速度很快，测速在 400Mbps 以上，考虑到衰减和干扰这个速度是可以接受的。</p><p>但过了一段时间之后它的速度下降的很厉害，最高只有 50Mbps 上下，还不到我宽带的出口速度，已经开始拖慢我的网速了。原因可能是房间供电线路老化之类的吧。我懒得追究了，当时就购入了外置无线网卡解决速度问题。电力猫闲置下来后就送给家里信号不好的同事了。</p><p>鉴于上次的经历不是很愉快，这次我又换了个牌子，重新买了一对水星的千兆电力猫：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/901ea349.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-36.png"></p><p>结果还是一样，刚插上去好好的，速度很快。不一会儿速度就掉了下来，并且大量丢包，玩游戏很难受。</p><p>那没办法了，还是得考虑有线方案。</p><h2 id="2-增加辅助路由"><a href="#2-增加辅助路由" class="headerlink" title="2. 增加辅助路由"></a>2. 增加辅助路由</h2><p>说是有线，其实只要保证 VirtualBox 给虚拟机桥接的那个网卡是有线网卡就行了。上公网不一定非要走有线。</p><p>事到如今，我也没法坚持不加新设备了。最优雅的方式其实还是用 OpenWRT 系统的路由器重新部署一套，一次部署到处使用。但我懒得重新刷 OpenWRT 的系统，想只用一个普通路由解决问题。</p><p>所以我又找了个小路由器，把宿主机有线插入 LAN，并把有线网卡桥接到虚拟机，虚拟机另外添加一张 NAT 网卡用于共享主机的网络连接。其他需要透明代理的设备直接无线接入小路由器。</p><p>拓扑图大概是下面这个样子。宿主机双网卡，无线接主路由，有线接辅助路由。虚拟机双网卡，一张 NAT 上公网，一张桥接辅助路由当透明代理网关。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/c5c0fb24.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-57.png"></p><p>此时因为宿主机和虚拟机都双网卡了，需要设置一下路由表。</p><p>Windows 的路由表比较奇怪，我起初是通过增加有线网卡的跃点数 metric ，试图降低有线网卡（接辅助路由，无公网访问）的优先级，但修改后可以连通外网，DNS 却始终优先使用有线网卡获得的 192.168.2.2 的 DNS 地址，无法解析。我试图手动改路由表，折腾半天也没让它优先走无线网卡的 DNS。但直接 ping 公网 IP 地址确实是通的。</p><p>后来换了个思路，降低无线网卡的跃点数。如图，设置成1之后就 OK 了，Windows 的 DNS 策略真的很谜。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/e969ae75.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-13.png"></p><p>设置好之后路由表如下，都是系统自动生成的。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/0e0a74c6.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-22.png"></p><p>实际上宿主机实际上是三网卡的，两个无线一个有线。起初我尝试用另外一张无线网卡作为 AP 模式发射热点，取代辅助路由的功能，后来发现在 Windows 上配置这个太麻烦了就放弃了。</p><p>然后要设置一下虚拟机的 Ubuntu 系统的路由表。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/b1670d1f.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-35.png"></p><p>可以看到虚拟机有两块网卡，enp0s3 是 NAT 连接到主机的网卡，IP 设成自动获取就可以。</p><p>enp0s8 是桥接了有线网卡，接入辅助路由的。手动指定其 IP 地址为 192.168.2.2。</p><p>此时路由表的主出口不一定是 NAT 那个网卡，导致公网不通。我们删掉默认的出口路由，手动指定出口为 enp0s3 即可。命令如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/4ba28f3d.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-48.png"></p><p>需要使用 sudo 执行。执行过后虚拟机的路由表如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/7469a5d0.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-55.png"></p><p>很简洁，此时我们可以正常上公网了。</p><p>之后把 Switch 接入辅助路由的无线网，手动设置网关为 192.168.2.2，MTU 稍微改小到 1390。参照上篇文章的内容，Switch 应该已经通过代理上网了。测速结果非常可观，没有瓶颈。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/f94f5add.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-17-04.png"></p><p>好了，很开心。进行收尾工作，把手动设置路由的两句话加到 linux 的自启动里，尝试重启主机和虚拟机几次，都可以自动初始化完成。</p><p>非常优雅。收工。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 透明代理 </tag>
+            
+            <tag> Splatoon2 </tag>
+            
+            <tag> 加速 </tag>
+            
+            <tag> Shadowsocks </tag>
+            
+            <tag> 改进 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>搭建透明代理加速 Splatoon2 游戏手记</title>
       <link href="posts/trans-proxy-splatoon2/"/>
       <url>posts/trans-proxy-splatoon2/</url>
@@ -20,13 +82,13 @@
       
         <tags>
             
-            <tag> Shadowsocks </tag>
-            
             <tag> 透明代理 </tag>
             
             <tag> Splatoon2 </tag>
             
             <tag> 加速 </tag>
+            
+            <tag> Shadowsocks </tag>
             
         </tags>
       
