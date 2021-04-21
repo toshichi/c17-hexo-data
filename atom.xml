@@ -47,6 +47,87 @@
   </entry>
   
   <entry>
+    <title>WSL 开启 SSH</title>
+    <link href="https://www.coder17.com/posts/wsl-turn-on-ssh/"/>
+    <id>https://www.coder17.com/posts/wsl-turn-on-ssh/</id>
+    <published>2020-10-08T03:17:00.000Z</published>
+    <updated>2020-10-08T03:17:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="WSL1"><a href="#WSL1" class="headerlink" title="WSL1"></a>WSL1</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg-reconfigure openssh-server</span><br><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><p>注意编辑密钥<br><code>~/.ssh/authorized_keys</code><br>文件权限 600，ssh 目录权限 755</p><h2 id="WSL2"><a href="#WSL2" class="headerlink" title="WSL2"></a>WSL2</h2><h3 id="1-修改端口到高位"><a href="#1-修改端口到高位" class="headerlink" title="1. 修改端口到高位"></a>1. 修改端口到高位</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><h3 id="2-生成主机密钥"><a href="#2-生成主机密钥" class="headerlink" title="2. 生成主机密钥"></a>2. 生成主机密钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/ssh</span><br><span class="line">ssh-keygen -A</span><br></pre></td></tr></table></figure><h3 id="3-启动服务"><a href="#3-启动服务" class="headerlink" title="3. 启动服务"></a>3. 启动服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><h3 id="4-设置端口转发"><a href="#4-设置端口转发" class="headerlink" title="4. 设置端口转发"></a>4. 设置端口转发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/port-forward.sh</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">IP=$(ifconfig eth0 | grep <span class="string">&#x27;inet &#x27;</span> | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>)</span><br><span class="line">netsh.exe interface portproxy delete v4tov4 listenport=23333</span><br><span class="line">netsh.exe interface portproxy add    v4tov4 listenport=23333 connectaddress=<span class="variable">$IP</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 700 ~/port-forward.sh</span><br></pre></td></tr></table></figure><p>使用管理员权限 cmd 执行：</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</span><br></pre></td></tr></table></figure><h3 id="5-设置开机自启"><a href="#5-设置开机自启" class="headerlink" title="5. 设置开机自启"></a>5. 设置开机自启</h3><p>在 Windows 中打开计划任务 Task Scheduler，添加新任务，勾选使用最高权限执行。条件为系统启动和用户登录时。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008122247581.png" alt="image-20201008122247581"></p><p>添加两个操作，分别完成 ssh 启动和端口转发。</p><ol><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root -- service ssh restart</code></li><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</code></li></ol><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008131114568.png" alt="image-20201008131114568"></p><h3 id="6-设置防火墙"><a href="#6-设置防火墙" class="headerlink" title="6. 设置防火墙"></a>6. 设置防火墙</h3><p>Windows 安全中心防火墙页面点击左下详细设置，在左侧入站规则中添加新的端口规则，允许外部访问 SSH 端口</p><p>参考：</p><p><a href="https://qiita.com/gengen16k/items/18262af0781fd32fc9cd">https://qiita.com/gengen16k/items/18262af0781fd32fc9cd</a></p><p><a href="https://tombomemo.com/wsl2-install-settings">https://tombomemo.com/wsl2-install-settings</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;WSL1&quot;&gt;&lt;a href=&quot;#WSL1&quot; class=&quot;headerlink&quot; title=&quot;WSL1&quot;&gt;&lt;/a&gt;WSL1&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="WSL" scheme="https://www.coder17.com/tags/WSL/"/>
+    
+    <category term="ssh" scheme="https://www.coder17.com/tags/ssh/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Windows WebDAV 文件大小限制</title>
+    <link href="https://www.coder17.com/posts/windows-dav-limit/"/>
+    <id>https://www.coder17.com/posts/windows-dav-limit/</id>
+    <published>2020-10-04T16:53:00.000Z</published>
+    <updated>2020-10-04T16:53:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>This sets the maximum you can download from the WebDAV to 4 GB at one time, where 4 GB is the maximum value supported by Windows OS.</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line"><span class="section">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WebClient\Parameters]</span></span><br><span class="line"><span class="attr">&quot;FileSizeLimitInBytes&quot;</span>=dword:ffffffff</span><br></pre></td></tr></table></figure><p>参考: <a href="https://docs.druva.com/Knowledge_Base/inSync/Troubleshooting/WebDAV_download_fails_with_file_size_exceeds__the_limit_error">https://docs.druva.com/Knowledge_Base/inSync/Troubleshooting/WebDAV_download_fails_with_file_size_exceeds__the_limit_error</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;This sets the maximum you can download from the WebDAV to 4 GB at one time, where 4 GB is the maximum value supported by Windows OS.&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/tags/Windows/"/>
+    
+    <category term="WebDAV" scheme="https://www.coder17.com/tags/WebDAV/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Windows Sandbox 桥接网络</title>
+    <link href="https://www.coder17.com/posts/windows-sandbox-bridged/"/>
+    <id>https://www.coder17.com/posts/windows-sandbox-bridged/</id>
+    <published>2020-10-04T16:34:00.000Z</published>
+    <updated>2020-10-04T16:34:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用 Windows 10 的 Sandbox 有时需要桥接主机网络，默认启动时是 NAT 网络，无法访问主机所在网络资源。</p><ol><li><p>启动 Sandbox，主机的网络管理中会出现 <code>vEthernet (Default Switch)</code></p></li><li><p>按住 Ctrl 同时选择上述连接与当前联网的连接，右键选择桥接。</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Sandbox%20%E6%A1%A5%E6%8E%A5%E7%BD%91%E7%BB%9C/image-20201005020749879.png" alt="image-20201005020749879"></p></li><li><p>如果报错提示预想外的错误，直接确定，可以看到两个连接中有一个已经加入桥接，另一个没有。如果是图中这样只有 vEthernet 在桥接中，则删除桥接，重复上一步重新添加，否则会导致主机断网。直到不报错，或者只有当前外部连接加入桥接时为止。</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Sandbox%20%E6%A1%A5%E6%8E%A5%E7%BD%91%E7%BB%9C/image-20201005020903542.png" alt="image-20201005020903542"></p></li><li><p>在没有加入桥接的 vEthernet 连接上右键，选择加入桥接，即可看到两个连接均为桥接。</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Sandbox%20%E6%A1%A5%E6%8E%A5%E7%BD%91%E7%BB%9C/image-20201005021549546.png" alt="image-20201005021549546"></p></li><li><p>此时在沙箱中查看 IP 应该已经处于同一网段。如果不成功则关闭沙箱重开，从上一步继续。</p></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;使用 Windows 10 的 Sandbox 有时需要桥接主机网络，默认启动时是 NAT 网络，无法访问主机所在网络资源。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;启动 Sandbox，主机的网络管理中会出现 &lt;code&gt;vEthernet (Default Switch)&lt;/c</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="Windows Sandbox" scheme="https://www.coder17.com/tags/Windows-Sandbox/"/>
+    
+    <category term="桥接" scheme="https://www.coder17.com/tags/%E6%A1%A5%E6%8E%A5/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Windows 10 USB 图标改变解决</title>
     <link href="https://www.coder17.com/posts/windows-10-usb-icon-fix/"/>
     <id>https://www.coder17.com/posts/windows-10-usb-icon-fix/</id>
@@ -296,6 +377,34 @@
   </entry>
   
   <entry>
+    <title>VHDX 空间释放</title>
+    <link href="https://www.coder17.com/posts/vhdx-release/"/>
+    <id>https://www.coder17.com/posts/vhdx-release/</id>
+    <published>2020-04-09T03:21:00.000Z</published>
+    <updated>2020-04-09T03:21:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>动态磁盘不会自动释放，因此如果有需要可以手动释放。似乎 exFat 分区效果不佳。</p><p>如果虚拟磁盘已经挂载，需要先卸载。然后运行 <code>diskpart</code>，执行：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select vdisk file&#x3D;&quot;&lt;Path to VHDX&gt;&quot;</span><br><span class="line">attach vdisk readonly</span><br><span class="line">compact vdisk</span><br><span class="line">detach vdisk</span><br></pre></td></tr></table></figure><p>参考：</p><p><a href="https://blog.littlelanmoe.com/%E6%9D%82%E8%B0%88/364">https://blog.littlelanmoe.com/杂谈/364</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;动态磁盘不会自动释放，因此如果有需要可以手动释放。似乎 exFat 分区效果不佳。&lt;/p&gt;
+&lt;p&gt;如果虚拟磁盘已经挂载，需要先卸载。然后运行 &lt;code&gt;diskpart&lt;/code&gt;，执行：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;tab</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="VHDX" scheme="https://www.coder17.com/tags/VHDX/"/>
+    
+    <category term="空间释放" scheme="https://www.coder17.com/tags/%E7%A9%BA%E9%97%B4%E9%87%8A%E6%94%BE/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Linux MAC 地址伪装</title>
     <link href="https://www.coder17.com/posts/linux-mac-faking/"/>
     <id>https://www.coder17.com/posts/linux-mac-faking/</id>
@@ -452,117 +561,6 @@
     <category term="启动项" scheme="https://www.coder17.com/tags/%E5%90%AF%E5%8A%A8%E9%A1%B9/"/>
     
     <category term="autorun" scheme="https://www.coder17.com/tags/autorun/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>华硕路由添加 DDNS 服务</title>
-    <link href="https://www.coder17.com/posts/asus-ddns/"/>
-    <id>https://www.coder17.com/posts/asus-ddns/</id>
-    <published>2020-03-04T17:05:00.000Z</published>
-    <updated>2020-03-04T17:05:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>以 dockdns 为例，必须安装 Merlin 固件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /jffs/scripts/ddns-start</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># register a subdomain at https://www.duckdns.org/ to get your token</span></span><br><span class="line">SUBDOMAIN=<span class="string">&quot;your_subdomain&quot;</span></span><br><span class="line">TOKEN=<span class="string">&quot;your-token&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># no modification below needed</span></span><br><span class="line">curl --silent <span class="string">&quot;https://www.duckdns.org/update?domains=<span class="variable">$SUBDOMAIN</span>&amp;token=<span class="variable">$TOKEN</span>&amp;ip=<span class="variable">$1</span>&quot;</span> &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"><span class="keyword">if</span> [ $? -eq 0 ];</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    /sbin/ddns_custom_updated 1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    /sbin/ddns_custom_updated 0</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod a+rx /jffs/scripts/*</span><br></pre></td></tr></table></figure><p>并在 web 设置中 <code>Administration -&gt; System</code> 启用用户脚本，在 <code>WAN -&gt; DDNS -&gt; DDNS Service</code> 中设置为<code>custom</code> 即可。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;以 dockdns 为例，必须安装 Merlin 固件。&lt;/p&gt;
-&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;</summary>
-      
-    
-    
-    
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
-    
-    
-    <category term="华硕" scheme="https://www.coder17.com/tags/%E5%8D%8E%E7%A1%95/"/>
-    
-    <category term="路由器" scheme="https://www.coder17.com/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/"/>
-    
-    <category term="Merlin" scheme="https://www.coder17.com/tags/Merlin/"/>
-    
-    <category term="DDNS" scheme="https://www.coder17.com/tags/DDNS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>搭建 Shadowsocks 客户端服务端并加为服务</title>
-    <link href="https://www.coder17.com/posts/shadowsocks-server/"/>
-    <id>https://www.coder17.com/posts/shadowsocks-server/</id>
-    <published>2019-12-27T13:22:00.000Z</published>
-    <updated>2019-12-27T13:22:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e">https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e</a></p><h2 id="1-install-and-config"><a href="#1-install-and-config" class="headerlink" title="1. install and config"></a>1. install and config</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python-pip</span><br><span class="line">sudo apt install shadowsocks</span><br><span class="line">or</span><br><span class="line">sudo pip install git+https://github.com/shadowsocks/shadowsocks.git@master</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2. 配置"></a>2. 配置</h2><h3 id="2-1-客户端"><a href="#2-1-客户端" class="headerlink" title="2.1 客户端"></a>2.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;27.102.111.111&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>: <span class="number">12345</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-2-服务端"><a href="#2-2-服务端" class="headerlink" title="2.2 服务端"></a>2.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/ssserver.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;port_password&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;3389&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;2003&quot;</span>: <span class="string">&quot;passsss&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>:<span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>:<span class="number">3389</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>:<span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>:<span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="3-add-as-service"><a href="#3-add-as-service" class="headerlink" title="3. add as service"></a>3. add as service</h2><h3 id="3-1-客户端"><a href="#3-1-客户端" class="headerlink" title="3.1 客户端"></a>3.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Client Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/bin/sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/shadowsocks.service</span><br><span class="line">sudo systemctl start shadowsocks.service</span><br><span class="line">service shadowsocks status</span><br></pre></td></tr></table></figure><h3 id="3-2-服务端"><a href="#3-2-服务端" class="headerlink" title="3.2 服务端"></a>3.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/ssserver.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Server Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/local/bin/ssserver -c /etc/ssserver.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/ssserver.service</span><br><span class="line">sudo systemctl start ssserver.service</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e&quot;&gt;https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a7</summary>
-      
-    
-    
-    
-    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
-    
-    
-    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
-    
-    <category term="服务端" scheme="https://www.coder17.com/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Nginx 禁止未授权 URL 访问（HTTP 444）</title>
-    <link href="https://www.coder17.com/posts/nginx-ban-url/"/>
-    <id>https://www.coder17.com/posts/nginx-ban-url/</id>
-    <published>2019-12-20T18:47:00.000Z</published>
-    <updated>2019-12-20T18:47:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    listen [::]:80 default_server;</span><br><span class="line">    listen 443 default_server ssl;</span><br><span class="line">    ssl_certificate &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;fullchain.pem;</span><br><span class="line">    ssl_certificate_key &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;privkey.pem;</span><br><span class="line">    server_name _;</span><br><span class="line">    return 444;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其中证书可以随便指定</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class</summary>
-      
-    
-    
-    
-    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
-    
-    
-    <category term="Nginx" scheme="https://www.coder17.com/tags/Nginx/"/>
-    
-    <category term="过滤" scheme="https://www.coder17.com/tags/%E8%BF%87%E6%BB%A4/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Certbot cloudflare 泛域名证书配置</title>
-    <link href="https://www.coder17.com/posts/certbot-cloudflare-wildcard/"/>
-    <id>https://www.coder17.com/posts/certbot-cloudflare-wildcard/</id>
-    <published>2019-12-15T19:30:00.000Z</published>
-    <updated>2019-12-15T19:30:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install software-properties-common</span><br><span class="line">sudo add-apt-repository universe</span><br><span class="line">sudo add-apt-repository ppa:certbot/certbot</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install -y certbot python3-certbot-dns-cloudflare</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2.  配置"></a>2.  配置</h2><blockquote><p>  Use of this plugin requires a configuration file containing Cloudflare API credentials, obtained from your Cloudflare account page.</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/letsencrypt/cloudflare.ini</span><br></pre></td></tr></table></figure><p>  Example credentials file:</p>  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Cloudflare API credentials used by Certbot</span></span><br><span class="line"><span class="attr">dns_cloudflare_email</span> = cloudflare@example.com</span><br><span class="line"><span class="attr">dns_cloudflare_api_key</span> = <span class="number">0123456789</span>abcdef0123456789abcdef01234567</span><br></pre></td></tr></table></figure><p>  The path to this file can be provided interactively or using the –dns-cloudflare-credentials command-line argument. Certbot records the path to this file for use during renewal, but does not store the file’s contents.</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 600 /etc/letsencrypt/cloudflare.ini</span><br></pre></td></tr></table></figure></blockquote><h2 id="3-获取"><a href="#3-获取" class="headerlink" title="3. 获取"></a>3. 获取</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot -a dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -i nginx -d <span class="string">&quot;*.coder17.com&quot;</span> -d coder17.com</span><br></pre></td></tr></table></figure><p>注意不能完全信任其对 nginx 的修改</p><p>如果不需要自动修改 nginx 则：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot certonly -a dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -d <span class="string">&quot;home.coder17.com&quot;</span> -d <span class="string">&quot;frph.coder17.com&quot;</span> -d <span class="string">&quot;*.frph.coder17.com&quot;</span> -d <span class="string">&quot;*.home.coder17.com&quot;</span></span><br></pre></td></tr></table></figure><h2 id="4-更新测试"><a href="#4-更新测试" class="headerlink" title="4. 更新测试"></a>4. 更新测试</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot renew --dry-run</span><br></pre></td></tr></table></figure><h2 id="5-部署自动更新"><a href="#5-部署自动更新" class="headerlink" title="5. 部署自动更新"></a>5. 部署自动更新</h2><p>默认情况下会自动添加自动更新，每天两次。<br>使用 <code>sudo systemctl list-timers</code> 查看，配置文件位于 <code>/etc/systemctl/system/timers.target.wants/certbot.timer</code></p><p>如果运行有问题，使用下面命令创建 crontab 任务，每两个月一次。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo crontab -e</span><br><span class="line"></span><br><span class="line">0 0 1 */2 * /usr/bin/certbot renew &gt;&gt; <span class="string">&quot;/var/log/certbot_<span class="subst">$(date +<span class="string">&quot;\%Y-\%m-\%d&quot;</span>)</span>.log&quot;</span> 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">sudo service cron restart</span><br></pre></td></tr></table></figure><h2 id="6-转换证书格式"><a href="#6-转换证书格式" class="headerlink" title="6. 转换证书格式"></a>6. 转换证书格式</h2><p>默认申请的是 pem 格式证书，位于 <code>/etc/letsencrypt/live</code> 中，需要转换为 Windows 使用的 pfx 格式时，使用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="built_in">export</span> -out certificate.pfx -inkey privkey.pem -<span class="keyword">in</span> cert.pem -certfile chain.pem -passout pass:</span><br></pre></td></tr></table></figure><h2 id="7-复制"><a href="#7-复制" class="headerlink" title="7. 复制"></a>7. 复制</h2><p>因为 live 目录中为软连接，复制时需要使用 <code>-L</code> 参数，如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -Lr /etc/letsencrypt/live /mnt/hgfs/certs</span><br></pre></td></tr></table></figure><p>Refer: <a href="https://certbot-dns-cloudflare.readthedocs.io/en/stable/">https://certbot-dns-cloudflare.readthedocs.io/en/stable/</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;1-安装&quot;&gt;&lt;a href=&quot;#1-安装&quot; class=&quot;headerlink&quot; title=&quot;1. 安装&quot;&gt;&lt;/a&gt;1. 安装&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;p</summary>
-      
-    
-    
-    
-    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
-    
-    
-    <category term="Certbot" scheme="https://www.coder17.com/tags/Certbot/"/>
-    
-    <category term="cloudflare" scheme="https://www.coder17.com/tags/cloudflare/"/>
-    
-    <category term="泛域名证书" scheme="https://www.coder17.com/tags/%E6%B3%9B%E5%9F%9F%E5%90%8D%E8%AF%81%E4%B9%A6/"/>
     
   </entry>
   

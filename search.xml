@@ -33,6 +33,87 @@
     
     
     <entry>
+      <title>WSL 开启 SSH</title>
+      <link href="posts/wsl-turn-on-ssh/"/>
+      <url>posts/wsl-turn-on-ssh/</url>
+      
+        <content type="html"><![CDATA[<h2 id="WSL1"><a href="#WSL1" class="headerlink" title="WSL1"></a>WSL1</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg-reconfigure openssh-server</span><br><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><p>注意编辑密钥<br><code>~/.ssh/authorized_keys</code><br>文件权限 600，ssh 目录权限 755</p><h2 id="WSL2"><a href="#WSL2" class="headerlink" title="WSL2"></a>WSL2</h2><h3 id="1-修改端口到高位"><a href="#1-修改端口到高位" class="headerlink" title="1. 修改端口到高位"></a>1. 修改端口到高位</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><h3 id="2-生成主机密钥"><a href="#2-生成主机密钥" class="headerlink" title="2. 生成主机密钥"></a>2. 生成主机密钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/ssh</span><br><span class="line">ssh-keygen -A</span><br></pre></td></tr></table></figure><h3 id="3-启动服务"><a href="#3-启动服务" class="headerlink" title="3. 启动服务"></a>3. 启动服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><h3 id="4-设置端口转发"><a href="#4-设置端口转发" class="headerlink" title="4. 设置端口转发"></a>4. 设置端口转发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/port-forward.sh</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">IP=$(ifconfig eth0 | grep <span class="string">&#x27;inet &#x27;</span> | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>)</span><br><span class="line">netsh.exe interface portproxy delete v4tov4 listenport=23333</span><br><span class="line">netsh.exe interface portproxy add    v4tov4 listenport=23333 connectaddress=<span class="variable">$IP</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 700 ~/port-forward.sh</span><br></pre></td></tr></table></figure><p>使用管理员权限 cmd 执行：</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</span><br></pre></td></tr></table></figure><h3 id="5-设置开机自启"><a href="#5-设置开机自启" class="headerlink" title="5. 设置开机自启"></a>5. 设置开机自启</h3><p>在 Windows 中打开计划任务 Task Scheduler，添加新任务，勾选使用最高权限执行。条件为系统启动和用户登录时。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008122247581.png" alt="image-20201008122247581"></p><p>添加两个操作，分别完成 ssh 启动和端口转发。</p><ol><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root -- service ssh restart</code></li><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</code></li></ol><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008131114568.png" alt="image-20201008131114568"></p><h3 id="6-设置防火墙"><a href="#6-设置防火墙" class="headerlink" title="6. 设置防火墙"></a>6. 设置防火墙</h3><p>Windows 安全中心防火墙页面点击左下详细设置，在左侧入站规则中添加新的端口规则，允许外部访问 SSH 端口</p><p>参考：</p><p><a href="https://qiita.com/gengen16k/items/18262af0781fd32fc9cd">https://qiita.com/gengen16k/items/18262af0781fd32fc9cd</a></p><p><a href="https://tombomemo.com/wsl2-install-settings">https://tombomemo.com/wsl2-install-settings</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> WSL </tag>
+            
+            <tag> ssh </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows WebDAV 文件大小限制</title>
+      <link href="posts/windows-dav-limit/"/>
+      <url>posts/windows-dav-limit/</url>
+      
+        <content type="html"><![CDATA[<p>This sets the maximum you can download from the WebDAV to 4 GB at one time, where 4 GB is the maximum value supported by Windows OS.</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line"><span class="section">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WebClient\Parameters]</span></span><br><span class="line"><span class="attr">&quot;FileSizeLimitInBytes&quot;</span>=dword:ffffffff</span><br></pre></td></tr></table></figure><p>参考: <a href="https://docs.druva.com/Knowledge_Base/inSync/Troubleshooting/WebDAV_download_fails_with_file_size_exceeds__the_limit_error">https://docs.druva.com/Knowledge_Base/inSync/Troubleshooting/WebDAV_download_fails_with_file_size_exceeds__the_limit_error</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> WebDAV </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows Sandbox 桥接网络</title>
+      <link href="posts/windows-sandbox-bridged/"/>
+      <url>posts/windows-sandbox-bridged/</url>
+      
+        <content type="html"><![CDATA[<p>使用 Windows 10 的 Sandbox 有时需要桥接主机网络，默认启动时是 NAT 网络，无法访问主机所在网络资源。</p><ol><li><p>启动 Sandbox，主机的网络管理中会出现 <code>vEthernet (Default Switch)</code></p></li><li><p>按住 Ctrl 同时选择上述连接与当前联网的连接，右键选择桥接。</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Sandbox%20%E6%A1%A5%E6%8E%A5%E7%BD%91%E7%BB%9C/image-20201005020749879.png" alt="image-20201005020749879"></p></li><li><p>如果报错提示预想外的错误，直接确定，可以看到两个连接中有一个已经加入桥接，另一个没有。如果是图中这样只有 vEthernet 在桥接中，则删除桥接，重复上一步重新添加，否则会导致主机断网。直到不报错，或者只有当前外部连接加入桥接时为止。</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Sandbox%20%E6%A1%A5%E6%8E%A5%E7%BD%91%E7%BB%9C/image-20201005020903542.png" alt="image-20201005020903542"></p></li><li><p>在没有加入桥接的 vEthernet 连接上右键，选择加入桥接，即可看到两个连接均为桥接。</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Sandbox%20%E6%A1%A5%E6%8E%A5%E7%BD%91%E7%BB%9C/image-20201005021549546.png" alt="image-20201005021549546"></p></li><li><p>此时在沙箱中查看 IP 应该已经处于同一网段。如果不成功则关闭沙箱重开，从上一步继续。</p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows Sandbox </tag>
+            
+            <tag> 桥接 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Windows 10 USB 图标改变解决</title>
       <link href="posts/windows-10-usb-icon-fix/"/>
       <url>posts/windows-10-usb-icon-fix/</url>
@@ -276,6 +357,33 @@
             <tag> SM-G9200 </tag>
             
             <tag> 刷机 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>VHDX 空间释放</title>
+      <link href="posts/vhdx-release/"/>
+      <url>posts/vhdx-release/</url>
+      
+        <content type="html"><![CDATA[<p>动态磁盘不会自动释放，因此如果有需要可以手动释放。似乎 exFat 分区效果不佳。</p><p>如果虚拟磁盘已经挂载，需要先卸载。然后运行 <code>diskpart</code>，执行：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select vdisk file&#x3D;&quot;&lt;Path to VHDX&gt;&quot;</span><br><span class="line">attach vdisk readonly</span><br><span class="line">compact vdisk</span><br><span class="line">detach vdisk</span><br></pre></td></tr></table></figure><p>参考：</p><p><a href="https://blog.littlelanmoe.com/%E6%9D%82%E8%B0%88/364">https://blog.littlelanmoe.com/杂谈/364</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> VHDX </tag>
+            
+            <tag> 空间释放 </tag>
             
         </tags>
       
@@ -715,6 +823,35 @@
     
     
     <entry>
+      <title>Windows RDP 添加证书</title>
+      <link href="posts/windows-rdp-cert/"/>
+      <url>posts/windows-rdp-cert/</url>
+      
+        <content type="html"><![CDATA[<p>使用远程桌面时，默认使用自签发的证书，会导致连接时弹出 SSL 证书警告。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/1558647325871.png" alt="1558647325871"></p><p>勾上不提醒可以消除警告，但会导致 SSL 连接不安全。因此导入第三方签发的证书解决问题。</p><p>下面以 Let’s Encrypt 的证书为例：</p><h2 id="1-证书格式"><a href="#1-证书格式" class="headerlink" title="1. 证书格式"></a>1. 证书格式</h2><p>证书必须为 pfx 格式，转换 pem 时使用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="built_in">export</span> -out certificate.pfx -inkey privkey.pem -<span class="keyword">in</span> cert.pem -certfile chain.pem -passout pass:</span><br></pre></td></tr></table></figure><h2 id="2-手动添加并关联证书"><a href="#2-手动添加并关联证书" class="headerlink" title="2 手动添加并关联证书"></a>2 手动添加并关联证书</h2><p><a href="https://superuser.com/questions/1093159/how-to-provide-a-verified-server-certificate-for-remote-desktop-rdp-connection">英文参考</a>  <a href="https://blog.csdn.net/a549569635/article/details/48831105">CSDN 参考</a></p><h3 id="2-1-运行-mmc，添加证书管理单元"><a href="#2-1-运行-mmc，添加证书管理单元" class="headerlink" title="2.1 运行 mmc，添加证书管理单元"></a>2.1 运行 mmc，添加证书管理单元</h3><blockquote><p>在 <strong>文件</strong> 中选择 <strong>添加/删除管理单元</strong> 。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/20150930203909755" alt="管理控制台"></p><p>在左侧选中 <strong>证书</strong> 后点击 <strong>添加</strong> 。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/20150930204204227" alt="添加或删除单元"></p><p>在弹出的对话框中选择 <strong>计算机账户</strong>，点击 <strong>下一步</strong> 。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/1558648079123.png" alt="1558648079123"></p><p>之后选择 <strong>本地计算机</strong>（保持默认） 然后点击 <strong>完成</strong> ，再然后点击 <strong>确定</strong> 。</p></blockquote><h3 id="2-2-把证书添加到-Local-Computer-下的-Personal-中"><a href="#2-2-把证书添加到-Local-Computer-下的-Personal-中" class="headerlink" title="2.2 把证书添加到 Local Computer 下的 Personal 中"></a>2.2 把证书添加到 Local Computer 下的 Personal 中</h3><blockquote><p>在 <strong>证书-个人</strong> 上点击 <strong>右键</strong> ，选择 <strong>所有任务-导入</strong> 。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/20150930205922703" alt="右键"></p><p>按照向导点击 <strong>下一步</strong> ,之后选择你的 <strong>证书文件</strong> （<strong>p12</strong>格式的证书文件选择时需要更改文件类型才可以找到），之后需要输入之前设置的密码，<strong>证书存储</strong> 选择 <strong>根据证书类型，自动选择证书存储</strong> ，然后点击下一步即可。</p></blockquote><h3 id="2-3-添加权限"><a href="#2-3-添加权限" class="headerlink" title="2.3 添加权限"></a>2.3 添加权限</h3><blockquote><p>首先在已经导入的证书上点击 <strong>右键</strong> ，选择 <strong>所有任务-管理私钥</strong> 。</p><p>之后添加 <strong>NETWORK SERVICE</strong> 用户。</p><p>至少要将 <strong>读取</strong> 权限分配给 <strong>NETWORK SERVICE</strong> ，然后确定。</p></blockquote><h3 id="2-4-分配给远程桌面"><a href="#2-4-分配给远程桌面" class="headerlink" title="2.4 分配给远程桌面"></a>2.4 分配给远程桌面</h3><blockquote><p>展开路径 <strong>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp</strong> ，然后添加如下项：</p><p>名称: SSLCertificateSHA1Hash<br>类型: REG_BINARY</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/20150930220406678" alt="新建项"></p><p>之后回到之前的证书管理，双击打开已经导入的证书，在 <strong>详细信息</strong> 中选择 <strong>指纹</strong> ，并记录下方的值。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/20150930221224563" alt="证书指纹"></p><p>最后将记录的值填入之前新建注册表项的 <strong>数据</strong> 位置。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/20150930221424388" alt="填入指纹"></p></blockquote><h2 id="3-使用-Powershell-自动添加-替换证书"><a href="#3-使用-Powershell-自动添加-替换证书" class="headerlink" title="3. 使用 Powershell 自动添加/替换证书"></a>3. 使用 Powershell 自动添加/替换证书</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$certPath</span> = <span class="string">&quot;C:\certs\live\certificate.pfx&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># get TSGeneralSetting</span></span><br><span class="line"><span class="variable">$TSGeneralSetting</span> = <span class="built_in">gwmi</span> <span class="literal">-class</span> <span class="string">&quot;Win32_TSGeneralSetting&quot;</span> <span class="literal">-Namespace</span> root\cimv2\terminalservices <span class="literal">-Filter</span> <span class="string">&quot;TerminalName=&#x27;RDP-tcp&#x27;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># remove old cert</span></span><br><span class="line"><span class="variable">$oldThumbprint</span> = <span class="variable">$TSGeneralSetting</span>.SSLCertificateSHA1Hash</span><br><span class="line"><span class="built_in">Get-ChildItem</span> Cert:\LocalMachine\My | <span class="built_in">Where-Object</span> &#123;<span class="variable">$_</span>.Thumbprint <span class="operator">-like</span> <span class="variable">$oldThumbprint</span>&#125; | <span class="built_in">Remove-Item</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># import new cert</span></span><br><span class="line"><span class="string">&quot;&quot;</span> | certutil <span class="operator">-f</span> <span class="literal">-importPFX</span> <span class="variable">$certPath</span></span><br><span class="line"><span class="variable">$cert</span> = <span class="built_in">New-Object</span> System.Security.Cryptography.X509Certificates.X509Certificate2</span><br><span class="line"><span class="variable">$cert</span>.Import(<span class="variable">$certPath</span>, <span class="string">&quot;&quot;</span>, [<span class="type">System.Security.Cryptography.X509Certificates.X509KeyStorageFlags</span>]<span class="string">&quot;PersistKeySet&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># set permission</span></span><br><span class="line"><span class="variable">$WinhttpPath</span> = <span class="string">&quot;C:\Program Files (x86)\Windows Resource Kits\Tools&quot;</span></span><br><span class="line">&amp;<span class="string">&quot;<span class="variable">$WinhttpPath</span>\winhttpcertcfg.exe&quot;</span> <span class="literal">-g</span> <span class="literal">-c</span> LOCAL_MACHINE\MY <span class="literal">-s</span> <span class="variable">$cert</span>.Subject.split(<span class="string">&quot;=&quot;</span>)[<span class="number">1</span>] <span class="literal">-a</span> <span class="string">&quot;NETWORK SERVICE&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># set to rdp</span></span><br><span class="line"><span class="built_in">swmi</span> <span class="literal">-path</span> <span class="variable">$TSGeneralSetting</span>.__path <span class="literal">-argument</span> <span class="selector-tag">@</span>&#123;SSLCertificateSHA1Hash=<span class="variable">$cert</span>.Thumbprint&#125;</span><br></pre></td></tr></table></figure><p>使用计划任务运行上述脚本即可定期自动更新证书，注意需要管理员权限。</p><h3 id="3-1-坑：添加证书使用-Import-PfxCertificate"><a href="#3-1-坑：添加证书使用-Import-PfxCertificate" class="headerlink" title="3.1 坑：添加证书使用 Import-PfxCertificate"></a>3.1 坑：添加证书使用 Import-PfxCertificate</h3><p>注意，添加证书时，不能使用<a href="https://docs.microsoft.com/en-us/powershell/module/pkiclient/import-pfxcertificate?view=win10-ps#feedback"><code>Import-PfxCertificate</code></a>，此函数有 <a href="https://github.com/MicrosoftDocs/windows-powershell-docs/issues/295">bug</a>，添加的证书无法查看私钥，非常坑。</p><p>以下代码返回空值，因此不能修改权限：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$item</span> = (<span class="built_in">Get-ChildItem</span> Cert:\LocalMachine\My | <span class="built_in">Where-Object</span> &#123;<span class="variable">$_</span>.Thumbprint <span class="operator">-like</span> <span class="variable">$Thumbprint</span>&#125;)</span><br><span class="line"><span class="variable">$item</span>.PrivateKey.CspKeyContainerInfo.UniqueKeyContainerName</span><br></pre></td></tr></table></figure><h3 id="3-2-坑：添加证书使用"><a href="#3-2-坑：添加证书使用" class="headerlink" title="3.2 坑：添加证书使用"></a>3.2 坑：添加证书使用</h3><p><code>System.Security.Cryptography.X509Certificates.X509Store</code></p><p>添加代码如下：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># import new cert</span></span><br><span class="line"><span class="variable">$cert</span> = <span class="built_in">New-Object</span> System.Security.Cryptography.X509Certificates.X509Certificate2</span><br><span class="line"><span class="variable">$cert</span>.Import(<span class="string">&quot;C:\certs\certificate.pfx&quot;</span>, <span class="string">&quot;password&quot;</span>, [<span class="type">System.Security.Cryptography.X509Certificates.X509KeyStorageFlags</span>]<span class="string">&quot;PersistKeySet&quot;</span>)</span><br><span class="line"><span class="variable">$store</span> = <span class="built_in">New-object</span> System.Security.Cryptography.X509Certificates.X509Store <span class="literal">-argumentlist</span> <span class="string">&quot;MY&quot;</span>, LocalMachine</span><br><span class="line"><span class="comment"># $store = Get-Item cert:\LocalMachine\My</span></span><br><span class="line"><span class="variable">$store</span>.Open([<span class="type">System.Security.Cryptography.X509Certificates.OpenFlags</span>]<span class="string">&quot;ReadWrite&quot;</span>)</span><br><span class="line"><span class="variable">$store</span>.Add(<span class="variable">$cert</span>)</span><br><span class="line"><span class="variable">$store</span>.Close()</span><br></pre></td></tr></table></figure><p>使用上面代码中方法安装的证书，虽然可以获取到私钥，但提示文件不存在。会出现无法使用以下代码操作修改权限的情况：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set permission</span></span><br><span class="line"><span class="variable">$item</span> = (<span class="built_in">Get-ChildItem</span> Cert:\LocalMachine\My | <span class="built_in">Where-Object</span> &#123;<span class="variable">$_</span>.Thumbprint <span class="operator">-like</span> <span class="variable">$Thumbprint</span>&#125;)</span><br><span class="line"><span class="variable">$fullPath</span> = <span class="built_in">Join-Path</span> <span class="variable">$env:ProgramData</span>\Microsoft\Crypto\RSA\MachineKeys <span class="variable">$item</span>.PrivateKey.CspKeyContainerInfo.UniqueKeyContainerName</span><br><span class="line"><span class="variable">$acl</span> = <span class="built_in">Get-Acl</span> <span class="literal">-Path</span> <span class="variable">$fullPath</span></span><br><span class="line"><span class="variable">$permission</span> = <span class="string">&quot;NT AUTHORITY\NETWORK SERVICE&quot;</span>,<span class="string">&quot;Read&quot;</span>,<span class="string">&quot;Allow&quot;</span></span><br><span class="line"><span class="variable">$accessRule</span> = <span class="built_in">New-object</span> System.Security.AccessControl.FileSystemAccessRule <span class="variable">$permission</span></span><br><span class="line"><span class="variable">$acl</span>.AddAccessRule(<span class="variable">$accessRule</span>)</span><br><span class="line"><span class="built_in">Set-Acl</span> <span class="variable">$fullPath</span> <span class="variable">$acl</span></span><br></pre></td></tr></table></figure><p>错误信息如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/1558717520224.png" alt="1558717520224"></p><p>原因不明，只有通过 mmc 图形界面导入的证书无此问题。</p><p>因此尝试使用 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=19801"><code>WinHttpCertCFG</code></a> 进行权限修改。</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set permission</span></span><br><span class="line"><span class="variable">$WinhttpPath</span> = <span class="string">&quot;C:\Program Files (x86)\Windows Resource Kits\Tools&quot;</span></span><br><span class="line">&amp;<span class="string">&quot;<span class="variable">$WinhttpPath</span>\winhttpcertcfg.exe&quot;</span> <span class="literal">-g</span> <span class="literal">-c</span> LOCAL_MACHINE\MY <span class="literal">-s</span> <span class="variable">$cert</span>.Subject.split(<span class="string">&quot;=&quot;</span>)[<span class="number">1</span>] <span class="literal">-a</span> <span class="string">&quot;NETWORK SERVICE&quot;</span></span><br></pre></td></tr></table></figure><p>但即使权限修改成功，此时导入的证书仍无法设置为 <code>SSLCertificateSHA1Hash</code>，报错如下：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">swmi</span> : Invalid <span class="keyword">parameter</span></span><br><span class="line">At line:<span class="number">1</span> char:<span class="number">1</span></span><br><span class="line">+ <span class="built_in">swmi</span> <span class="literal">-path</span> <span class="variable">$TSGeneralSetting</span>.__path <span class="literal">-argument</span> <span class="selector-tag">@</span>&#123;SSLCertificateSHA1Has ...</span><br><span class="line">+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    + CategoryInfo          : InvalidOperation: (:) [<span class="built_in">Set-WmiInstance</span>], ManagementException</span><br><span class="line">    + FullyQualifiedErrorId : SetWMIManagementException,Microsoft.PowerShell.Commands.SetWmiInstance</span><br></pre></td></tr></table></figure><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20RDP%20%E6%B7%BB%E5%8A%A0%E8%AF%81%E4%B9%A6/1558720712709.png" alt="1558720712709"></p><p>mmc 导入的证书同样无问题。因此尝试 <a href="https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/certutil"><code>certutil</code></a> 导入证书。</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span> | certutil <span class="operator">-f</span> <span class="literal">-importPFX</span> <span class="variable">$certPath</span></span><br></pre></td></tr></table></figure><p>前方空引号用于传递空密码。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> RDP </tag>
+            
+            <tag> 证书 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>在 Ubuntu 中 mount VMware 共享文件夹</title>
       <link href="posts/mount-vmware-shared-folder/"/>
       <url>posts/mount-vmware-shared-folder/</url>
@@ -856,6 +993,62 @@
     
     
     <entry>
+      <title>WSL 同步主机 ssh key</title>
+      <link href="posts/wsl-sync-ssh-keys/"/>
+      <url>posts/wsl-sync-ssh-keys/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br><span class="line">vim ~/.zshrc</span><br><span class="line"></span><br><span class="line">mv -f ~/.ssh/known_hosts ~/.ssh/known_hosts.bak</span><br><span class="line">chmod -R 0755 ~/.ssh</span><br><span class="line">cp -r /mnt/c/Users/sykie/.ssh/* ~/.ssh</span><br><span class="line">chmod 0600 ~/.ssh/*</span><br><span class="line">chmod 0755 ~/.ssh</span><br><span class="line">mv -f ~/.ssh/known_hosts.bak ~/.ssh/known_hosts</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> WSL </tag>
+            
+            <tag> ssh </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>新建 Windows 服务</title>
+      <link href="posts/create-windows-service/"/>
+      <url>posts/create-windows-service/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>下载 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17657">Windows NT Resource Kit</a></p></li><li><p>添加指向 <code>srvany.exe</code> 的服务</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc create &lt;name&gt; binpath= &quot;C:\Program Files (x86)\Windows Resource Kits\Tools\srvany.exe&quot; <span class="built_in">start</span>= auto displayname= &quot;&lt;Display Name&gt;&quot;</span><br></pre></td></tr></table></figure></li><li><p>修改注册表</p><p> 定位到</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\&lt;name&gt;</span><br></pre></td></tr></table></figure><p> 添加子键</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Key Name: Parameters</span><br><span class="line">Class : &lt;leave blank&gt;</span><br></pre></td></tr></table></figure><p> 在子键下新建字符串值，指向真正要启动的程序</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Value Name: Application</span><br><span class="line">Data Type : REG_SZ</span><br><span class="line">String : &lt;path&gt;\&lt;application.ext&gt;</span><br></pre></td></tr></table></figure></li><li><p>进 services.msc 看看，启动</p></li></ol><p>参考：<a href="https://support.microsoft.com/en-us/help/137890/how-to-create-a-user-defined-service">https://support.microsoft.com/en-us/help/137890/how-to-create-a-user-defined-service</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> 服务 </tag>
+            
+            <tag> srvany </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>配置 ssh key 登录和改 sshd 端口</title>
       <link href="posts/config-sshd/"/>
       <url>posts/config-sshd/</url>
@@ -877,6 +1070,33 @@
             <tag> ssh </tag>
             
             <tag> 端口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ConEmu 里 tqdm 等进度条吃屎解决</title>
+      <link href="posts/tqdm-sucks-in-conemu/"/>
+      <url>posts/tqdm-sucks-in-conemu/</url>
+      
+        <content type="html"><![CDATA[<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/ConEmu%20%E9%87%8C%20tqdm%20%E7%AD%89%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%90%83%E5%B1%8E%E8%A7%A3%E5%86%B3/c937aa35.png" alt="c937aa35.png"></p><p>运行全横行进度条时，莫名换行，更改字体也无效。</p><h2 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h2><p>是 ConEmu 的 RealConsole 的字体问题，不管 ConEmu 显示什么字体，都是在一对一映射一个隐藏的 RealConsole 的字体。</p><p>按 Ctrl+Alt+Win+Space 弹出 RealConsole，右键属性发现字体是新宋体：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/ConEmu%20%E9%87%8C%20tqdm%20%E7%AD%89%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%90%83%E5%B1%8E%E8%A7%A3%E5%86%B3/a2ac7518.png" alt="a2ac7518.png"></p><p>新宋体无法正确显示进度条使用的方块字符。</p><p>首先在注册表 <code>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console\TrueTypeFont</code> 中把新宋体改成一个正常的带中文的等宽字体，比如 <code>Sarasa Term</code> 系列</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/ConEmu%20%E9%87%8C%20tqdm%20%E7%AD%89%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%90%83%E5%B1%8E%E8%A7%A3%E5%86%B3/856ef4f9.png" alt="856ef4f9.png"></p><p>然后在 ConEmu 设置中，Feature 选项里点右侧 Show real console 旁边的省略号按钮，修改字体为正常字体。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/ConEmu%20%E9%87%8C%20tqdm%20%E7%AD%89%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%90%83%E5%B1%8E%E8%A7%A3%E5%86%B3/46a8b97f.png" alt="46a8b97f.png"></p><p>好了，美滋滋。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/ConEmu%20%E9%87%8C%20tqdm%20%E7%AD%89%E8%BF%9B%E5%BA%A6%E6%9D%A1%E5%90%83%E5%B1%8E%E8%A7%A3%E5%86%B3/b45a736d.png" alt="b45a736d.png"></p><p>参考官方帮助：<br><a href="https://conemu.github.io/en/UnicodeSupport.html">ConEmu | Unicode Support</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ConEmu </tag>
+            
+            <tag> tqdm </tag>
             
         </tags>
       
@@ -974,6 +1194,60 @@
     
     
     <entry>
+      <title>WinSCP 使用外部工具连接 ssh</title>
+      <link href="posts/winscp-ssh-tool/"/>
+      <url>posts/winscp-ssh-tool/</url>
+      
+        <content type="html"><![CDATA[<h2 id="WSL-bash-ConEmu"><a href="#WSL-bash-ConEmu" class="headerlink" title="WSL bash + ConEmu"></a>WSL bash + ConEmu</h2><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WinSCP%20%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%B7%A5%E5%85%B7%E8%BF%9E%E6%8E%A5%20ssh/71f2b46d.png" alt="71f2b46d.png"></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Program Files\ConEmu\ConEmu64.exe&quot;</span> -run bash.exe -cur_console:c -c <span class="string">&quot;ssh !U@!@ -p !#&quot;</span> -new_console:p5</span><br></pre></td></tr></table></figure><h2 id="WSL-bash-cmd"><a href="#WSL-bash-cmd" class="headerlink" title="WSL bash + cmd"></a>WSL bash + cmd</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Windows\System32\cmd.exe&quot;</span> /k <span class="string">&quot;C:\Windows\Sysnative\bash.exe -c ^&quot;</span>mosh -p !<span class="comment"># --ssh=^&#x27;ssh -p !#^&#x27; !U@!@^&quot;&quot;</span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ssh </tag>
+            
+            <tag> WinSCP </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows 远程桌面连接到自己</title>
+      <link href="posts/windows-rdp-self/"/>
+      <url>posts/windows-rdp-self/</url>
+      
+        <content type="html"><![CDATA[<p>连接到 localhost 或者 127.0.0.1 会报错。<br>连接到 127.0.0.2 即可。</p><p><a href="https://techjourney.net/workaround-for-remote-desktop-client-to-connect-to-localhost-local-terminal-server-service/">Workaround for Remote Desktop Client to Connect to Localhost (Local Terminal Server Service) - Tech Journey</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> RDP </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>重命名 Nextcloud 分享链接</title>
       <link href="posts/nextcloud-share-rename/"/>
       <url>posts/nextcloud-share-rename/</url>
@@ -1001,6 +1275,33 @@
     
     
     <entry>
+      <title>WinSCP 获取 sudo 权限</title>
+      <link href="posts/winscp-sudo/"/>
+      <url>posts/winscp-sudo/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>查看 sftp 路径</p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/ssh/sshd_config|grep sftp</span><br><span class="line">Subsystem sftp /usr/lib/openssh/sftp-server</span><br></pre></td></tr></table></figure></li><li><p>编辑 sudo</p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo visudo</span><br><span class="line"></span><br><span class="line"><span class="comment"># Allow members of group sudo to execute any command</span></span><br><span class="line">%sudo   ALL=(ALL:ALL) ALL</span><br><span class="line">tojo    ALL=NOPASSWD:  /usr/lib/openssh/sftp-server</span><br></pre></td></tr></table></figure></li><li><p>可选</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/WinSCP%20%E8%8E%B7%E5%8F%96%20sudo%20%E6%9D%83%E9%99%90/8baf2e2e.png" alt="WinSCP 获取 sudo 权限_2018-11-26-03-18-06.png"></p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> WinSCP </tag>
+            
+            <tag> sudo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Nextcloud https 协议有混合内容无法显示</title>
       <link href="posts/nextcloud-https-mixed-content/"/>
       <url>posts/nextcloud-https-mixed-content/</url>
@@ -1020,6 +1321,120 @@
             <tag> Nextcloud </tag>
             
             <tag> https </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows 远程桌面同时查看内容（shadow）</title>
+      <link href="posts/windows-rdp-shadow/"/>
+      <url>posts/windows-rdp-shadow/</url>
+      
+        <content type="html"><![CDATA[<p>远程桌面连接中重复使用同一用户登录时，默认情况下新连接会顶掉旧连接。如果允许同一用户多重登陆，则会建立多个 session，并存。但多个 session 之间内容并不共享。<br>所以需要同时查看同一 session 的桌面时，就需要使用 shadow 方式查看已经连接的桌面。</p><p>以下操作均在 rdp 服务端进行</p><h2 id="1-允许静默连接"><a href="#1-允许静默连接" class="headerlink" title="1 允许静默连接"></a>1 允许静默连接</h2><p>组策略<br><code>Computer Configuration\Administrative Templates\Windows Components\Remote Desktop Services\Remote Desktop Session Host\Connections\</code><br>修改 <code>Set rules for remote control of Remote Desktop Services user sessions</code> 为 <code>Full control without user&#39;s permission</code></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E5%90%8C%E6%97%B6%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AE%B9%EF%BC%88shadow%EF%BC%89/ab0de617.png" alt="ab0de617.png"></p><h2 id="2-查看已经登陆的用户与-session"><a href="#2-查看已经登陆的用户与-session" class="headerlink" title="2 查看已经登陆的用户与 session"></a>2 查看已经登陆的用户与 session</h2><p><code>qwinsta</code> 或者 <code>query session</code></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E5%90%8C%E6%97%B6%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AE%B9%EF%BC%88shadow%EF%BC%89/e5c1fa31.png" alt="e5c1fa31.png"></p><h2 id="3-连接到对应-session"><a href="#3-连接到对应-session" class="headerlink" title="3 连接到对应 session"></a>3 连接到对应 session</h2><p>管理员权限</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mstsc /shadow:&lt;id&gt; /control /noconsentprompt</span><br></pre></td></tr></table></figure><h2 id="4-建立一个-bat-脚本"><a href="#4-建立一个-bat-脚本" class="headerlink" title="4 建立一个 bat 脚本"></a>4 建立一个 bat 脚本</h2><p>当一个 user 只能建立一个 session 时，使用用户名区分更方便。<br>使用管理员权限运行</p><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="keyword">for</span> /f &quot;tokens=<span class="number">3</span>&quot; <span class="variable">%%a</span> <span class="keyword">in</span> (&#x27;qwinsta ^| <span class="built_in">find</span> &quot;%<span class="number">1</span>&quot;&#x27;) <span class="keyword">do</span> <span class="built_in">set</span> id=<span class="variable">%%a</span></span><br><span class="line">mstsc /shadow:<span class="variable">%id%</span> /control /noconsentprompt</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> RDP </tag>
+            
+            <tag> shadow </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>网络打印机提示需要用户干预</title>
+      <link href="posts/windows-printer-error/"/>
+      <url>posts/windows-printer-error/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>控制面板查看打印机属性，复制 IP 地址</p></li><li><p>删除网络打印机</p></li><li><p>添加打印机，选择未列出打印机</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%BD%91%E7%BB%9C%E6%89%93%E5%8D%B0%E6%9C%BA%E6%8F%90%E7%A4%BA%E9%9C%80%E8%A6%81%E7%94%A8%E6%88%B7%E5%B9%B2%E9%A2%84/c5eb0867.png" alt="网络打印机提示需要用户干预_2018-11-22-04-07-19.png"></p></li><li><p>使用 TCP/IP 添加打印机</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%BD%91%E7%BB%9C%E6%89%93%E5%8D%B0%E6%9C%BA%E6%8F%90%E7%A4%BA%E9%9C%80%E8%A6%81%E7%94%A8%E6%88%B7%E5%B9%B2%E9%A2%84/3088c452.png" alt="网络打印机提示需要用户干预_2018-11-22-04-07-37.png"></p></li><li><p>选 TCP/IP 设备，填入 IP 地址，端口名是虚拟硬件端口名，不是 TCP 端口，随便起名。</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%BD%91%E7%BB%9C%E6%89%93%E5%8D%B0%E6%9C%BA%E6%8F%90%E7%A4%BA%E9%9C%80%E8%A6%81%E7%94%A8%E6%88%B7%E5%B9%B2%E9%A2%84/d7f81ad9.png" alt="网络打印机提示需要用户干预_2018-11-22-04-07-43.png"></p></li><li><p>浏览设备驱动中定位到驱动目录，选择正确型号。</p></li></ol><p><a href="http://h30318.www3.hp.com/pub/softlib/software13/COL32431/bi-80329-11/hp_LJP1100_P1560_P1600_Full_Solution-v20120831-50157036_SMO.exe">创宇打印机驱动</a><br>型号: <code>HP LaserJet Professional P1606dn</code><br>IP: <code>10.11.255.47</code></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 报错 </tag>
+            
+            <tag> Windows </tag>
+            
+            <tag> 网络打印机 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>配置远程管理 Hyper-V Server</title>
+      <link href="posts/hyper-v-server-management/"/>
+      <url>posts/hyper-v-server-management/</url>
+      
+        <content type="html"><![CDATA[<p>太恶心了，我建议尽量不要使用 Hyper-V Server，珍爱生命，节约时间。</p><h2 id="1-安装-Hyper-V-Server-系统"><a href="#1-安装-Hyper-V-Server-系统" class="headerlink" title="1. 安装 Hyper-V Server 系统"></a>1. 安装 Hyper-V Server 系统</h2><p><a href="https://www.microsoft.com/en-us/evalcenter/evaluate-hyper-v-server-2016">https://www.microsoft.com/en-us/evalcenter/evaluate-hyper-v-server-2016</a></p><h2 id="2-在客户端（管理端）把目标机（服务器）添加为信任主机"><a href="#2-在客户端（管理端）把目标机（服务器）添加为信任主机" class="headerlink" title="2. 在客户端（管理端）把目标机（服务器）添加为信任主机"></a>2. 在客户端（管理端）把目标机（服务器）添加为信任主机</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Set-Item</span> WSMan:\localhost\Client\TrustedHosts <span class="literal">-Value</span> <span class="string">&#x27;c17-hyperv-serv&#x27;</span></span><br><span class="line"><span class="built_in">Get-Item</span> WSMan:\localhost\Client\TrustedHosts</span><br></pre></td></tr></table></figure><p>可以是计算机名（NetBIOS名），公网域名或者IP，但如果用后两者会导致 Hyper-V Manager 无法管理，非常坑爹。<br>而只添加计算机名又会导致后边 Server Manager 中无法管理服务器磁盘，原因不明，非常恶心。<br>所以最省事的做法是直接信任全部。 </p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Set-Item</span> WSMan:\localhost\Client\TrustedHosts <span class="literal">-Value</span> <span class="string">&quot;*&quot;</span> <span class="literal">-Force</span></span><br></pre></td></tr></table></figure><p>去他妈的安全性，不在一个域里也没什么安全可言。 </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%20Hyper-V%20Server/1eee4b39.png" alt="配置远程管理 Hyper-V Server_2018-11-22-04-00-13.png"></p><h2 id="3-安装-RSAT"><a href="#3-安装-RSAT" class="headerlink" title="3. 安装 RSAT"></a>3. 安装 RSAT</h2><p><a href="https://www.microsoft.com/en-us/download/details.aspx?id=45520">https://www.microsoft.com/en-us/download/details.aspx?id=45520</a></p><h2 id="4-启动-Server-Manager"><a href="#4-启动-Server-Manager" class="headerlink" title="4. 启动 Server Manager"></a>4. 启动 Server Manager</h2><p>添加主机，输入上面信任过的名字，提示 kerberos authentication error。<br>如果没信任会提示 WinRX 啥啥的错误。<br>右键 Manage as，修改用户名密码。<br>用户名格式：<code>c17-hyperv-serv\Administrator</code><br>密码为管理员密码<br>然后就能连上了</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%20Hyper-V%20Server/48afe458.png" alt="配置远程管理 Hyper-V Server_2018-11-22-04-01-10.png"></p><h2 id="5-修改本机-hosts-文件"><a href="#5-修改本机-hosts-文件" class="headerlink" title="5. 修改本机 hosts 文件"></a>5. 修改本机 hosts 文件</h2><p>我觉得这步非常不优雅。<br>之前为了不改 hosts，绑了个公网域名，但添加到 Hyper-V Manager 的时候总报错，花式报错，提示操作了一个什么不存在的对象，好像是因为它把我的公网域名认作是 Windows 域的名字了。<br>添加计算机名绑定到 IP 即可。<br>大概其实不添加也行，但毕竟 Netbios 广播不稳定，而且不在同一个子网下也不能用，还是绑了吧。 </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%20Hyper-V%20Server/587f9a6f.png" alt="配置远程管理 Hyper-V Server_2018-11-22-04-01-28.png"></p><h2 id="6-设置组策略允许-NTLM-认证"><a href="#6-设置组策略允许-NTLM-认证" class="headerlink" title="6. 设置组策略允许 NTLM 认证"></a>6. 设置组策略允许 NTLM 认证</h2><p>现在添加主机会报这个错</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%20Hyper-V%20Server/473f9357.png" alt="配置远程管理 Hyper-V Server_2018-11-22-04-03-29.png"></p><p>总之是很烦人的信任问题。因为主机和客户机不在一个域里面就会老出类似的问题。<br>按照里面的提示去组策略搞事情，按照格式在计算机名前面加 WSMAN/</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%20Hyper-V%20Server/096ccb07.png" alt="配置远程管理 Hyper-V Server_2018-11-22-04-03-44.png"></p><p>乖乖添加计算机名</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%20Hyper-V%20Server/eeb9fda2.png" alt="配置远程管理 Hyper-V Server_2018-11-22-04-04-00.png"></p><h2 id="7-添加凭据"><a href="#7-添加凭据" class="headerlink" title="7. 添加凭据"></a>7. 添加凭据</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmdkey /add:c17<span class="literal">-hv1</span> /user:administrator /pass:<span class="number">1</span>qaz@WSX</span><br></pre></td></tr></table></figure><h2 id="8-滚到-Hyper-V-Manager-中添加主机"><a href="#8-滚到-Hyper-V-Manager-中添加主机" class="headerlink" title="8. 滚到 Hyper-V Manager 中添加主机"></a>8. 滚到 Hyper-V Manager 中添加主机</h2><p>在 Hyper-V Manager 中添加主机，注意图里的域名要替换成 NetBIOS 名。网上说用 IP 也行但我没成功。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%20Hyper-V%20Server/d6178f9b.png" alt="配置远程管理 Hyper-V Server_2018-11-22-04-04-12.png"></p><h2 id="9-修复远程计算机管理"><a href="#9-修复远程计算机管理" class="headerlink" title="9. 修复远程计算机管理"></a>9. 修复远程计算机管理</h2><h3 id="9-1-远程主机"><a href="#9-1-远程主机" class="headerlink" title="9.1 远程主机"></a>9.1 远程主机</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;Remote Event Log Management&quot;</span> new enable=yes</span><br><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;Remote Service Management&quot;</span> new enable=yes</span><br><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;File and Printer Sharing&quot;</span> new enable=yes</span><br><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;Remote Scheduled Tasks Management&quot;</span> new enable=yes</span><br><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;Performance Logs and Alerts&quot;</span> new enable=yes</span><br><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;File and Printer Sharing&quot;</span> new enable=yes</span><br><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;Remote Volume Management&quot;</span> new enable=yes</span><br><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;Windows Remote Management&quot;</span> new enable=yes</span><br><span class="line"></span><br><span class="line"><span class="built_in">Set-Service</span> VDS <span class="literal">-StartupType</span> Automatic</span><br><span class="line">Cscript \windows\system32\scregedit.wsf /im <span class="number">1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure><h3 id="9-2-本地主机"><a href="#9-2-本地主机" class="headerlink" title="9.2 本地主机"></a>9.2 本地主机</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Netsh advfirewall firewall <span class="built_in">set</span> rule <span class="built_in">group</span>=<span class="string">&quot;Remote Volume Management&quot;</span> new enable=yes</span><br></pre></td></tr></table></figure><h2 id="10-启动远程设备管理器"><a href="#10-启动远程设备管理器" class="headerlink" title="10. 启动远程设备管理器"></a>10. 启动远程设备管理器</h2><p>打开远程组策略</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpedit.msc /gpcomputer: c17<span class="literal">-hv1</span></span><br></pre></td></tr></table></figure><p>修改</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Computer Configuration\Administrative Templates\System\Device Installation</span><br></pre></td></tr></table></figure><p>Enable <code>Allow remote access to the PnP interface</code><br>如果还不行就用这个<a href="http://www.device-tool.com/">小工具</a></p><h2 id="11-装驱动"><a href="#11-装驱动" class="headerlink" title="11. 装驱动"></a>11. 装驱动</h2><p>正常运行 exe，实在安不上的比如显卡驱动，使用 inf 安装器：</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnputil -i -a *.inf</span><br></pre></td></tr></table></figure><h2 id="12-其他大概没有用的步骤"><a href="#12-其他大概没有用的步骤" class="headerlink" title="12. 其他大概没有用的步骤"></a>12. 其他大概没有用的步骤</h2><p>这些步骤在其他教程提到，但我没有操作也能使用。</p><h3 id="12-1-打开-WSManCredSSP服务"><a href="#12-1-打开-WSManCredSSP服务" class="headerlink" title="12.1 打开 WSManCredSSP服务"></a>12.1 打开 WSManCredSSP服务</h3><p>连接服务器 PowerShell</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%85%8D%E7%BD%AE%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%20Hyper-V%20Server/6d02347a.png" alt="配置远程管理 Hyper-V Server_2018-11-22-04-05-23.png"></p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Enable-WSManCredSSP</span> <span class="literal">-Role</span> server</span><br></pre></td></tr></table></figure><h3 id="12-2-客户端启用身份认证转发"><a href="#12-2-客户端启用身份认证转发" class="headerlink" title="12.2 客户端启用身份认证转发"></a>12.2 客户端启用身份认证转发</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Enable-WSManCredSSP</span> <span class="literal">-Role</span> client <span class="literal">-DelegateComputer</span> <span class="string">&quot;radar.coder17.com&quot;</span></span><br></pre></td></tr></table></figure><p>参考：<a href="https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/manage/remotely-manage-hyper-v-hosts">https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/manage/remotely-manage-hyper-v-hosts</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> Hyper-V Server </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows 远程桌面固定 DPI</title>
+      <link href="posts/windows-rdp-fix-dpi/"/>
+      <url>posts/windows-rdp-fix-dpi/</url>
+      
+        <content type="html"><![CDATA[<p>智障远程桌面会自适应客户机的 DPI，很烦人，每次布局都会变。<br>而且家里电脑的 VirtualBox 会出 bug，客户机非 100% 缩放连上去时，窗口标题会消失，在窗口上点右键直接蓝屏，提示 win32kfull.sys 崩溃，查了查大概是虚拟机驱动的问题。Chrome 在此模式下下载文件也会崩溃。<br>公司电脑没毛病，大概率是系统问题。但懒得重装，本着最懒原则直接禁用自适应 DPI 比较方便。<br>在服务端修改注册表：  </p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations</span><br></pre></td></tr></table></figure><p>新建32位DWORD <code>IgnoreClientDesktopScaleFactor</code><br>设为1  </p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REG ADD &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations&quot; /v IgnoreClientDesktopScaleFactor /t REG_DWORD /d <span class="number">1</span></span><br></pre></td></tr></table></figure><p>重启。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E5%9B%BA%E5%AE%9A%20DPI/f70e5359.png" alt="Windows 远程桌面固定 DPI_2018-11-22-03-58-21.png"></p><p><a href="https://social.technet.microsoft.com/Forums/en-US/7260267b-686d-4271-9dc2-5ae76e733e3f/disable-dpi-scaling-sync-for-remote-desktop-protocol-81">https://social.technet.microsoft.com/Forums/en-US/7260267b-686d-4271-9dc2-5ae76e733e3f/disable-dpi-scaling-sync-for-remote-desktop-protocol-81</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> RDP </tag>
+            
+            <tag> DPI </tag>
             
         </tags>
       
@@ -1146,6 +1561,64 @@
             <tag> 加速 </tag>
             
             <tag> Shadowsocks </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows RDP 启动本地显卡</title>
+      <link href="posts/windows-local-gpu/"/>
+      <url>posts/windows-local-gpu/</url>
+      
+        <content type="html"><![CDATA[<p>使用管理员身份运行，可以使用 <a href=":note:3ca143be-6360-4942-beaa-a45b2c6fccc5">Windows 批处理自动提权</a></p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /d %~dp0</span><br><span class="line"><span class="keyword">for</span> /f <span class="string">&quot;tokens=3&quot;</span> %%a <span class="keyword">in</span> (<span class="string">&#x27;qwinsta ^| find &quot;&lt; user name &gt;&quot;&#x27;</span>) <span class="keyword">do</span> <span class="built_in">set</span> id=%%a</span><br><span class="line">powershell <span class="built_in">Disconnect-RDUser</span> <span class="literal">-HostServer</span> localhost <span class="literal">-UnifiedSessionID</span> %id% <span class="literal">-Force</span></span><br><span class="line">tscon %id% /DEST:console</span><br><span class="line">wmic <span class="keyword">process</span> call create <span class="string">&quot;&lt; program uses GPU &gt;&quot;</span></span><br></pre></td></tr></table></figure><p>运行后 RDP 会断开，重连即可。注意提前在显卡驱动中将所需程序设为使用 GPU 运行。<br>其中第三行为主动断开 RDP，防止第四行被动断开后弹窗。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> RDP </tag>
+            
+            <tag> 显卡 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>防止 WSL 下 git 显示所有文件修改过</title>
+      <link href="posts/wsl-git-autocrlf/"/>
+      <url>posts/wsl-git-autocrlf/</url>
+      
+        <content type="html"><![CDATA[<p>如果常在 Windows 下使用 git，则修改 WSL 中 git 设置：</p><p><code>git config --global core.autocrlf input</code></p><p>如果常在 WSL 中使用，则修改 Windows 默认设置：</p><p><code>git config --global core.autocrlf false</code></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> git </tag>
+            
+            <tag> WSL </tag>
+            
+            <tag> autocrlf </tag>
             
         </tags>
       
