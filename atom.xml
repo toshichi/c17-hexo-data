@@ -100,6 +100,34 @@
   </entry>
   
   <entry>
+    <title>Docker volume 备份与恢复</title>
+    <link href="https://www.coder17.com/posts/docker-volume-backup/"/>
+    <id>https://www.coder17.com/posts/docker-volume-backup/</id>
+    <published>2020-07-29T10:16:00.000Z</published>
+    <updated>2020-07-29T10:16:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://jiajially.gitbooks.io/dockerguide/content/chapter_fastlearn/docker_run/--volumes-from.html">https://jiajially.gitbooks.io/dockerguide/content/chapter_fastlearn/docker_run/--volumes-from.html</a></p><p>使用 –volumes-from 创建一个加载 dbdata 容器卷的容器，并从本地主机挂载当前到容器的 /backup 目录：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run --volumes-from aaa -v $(<span class="built_in">pwd</span>):/backup alpine tar zcvf /backup/aaa.tar.gz /&lt;path&gt;</span><br></pre></td></tr></table></figure><p>volumes-from 创建的容器其挂载的所有数据卷路径均与原容器相同，因此 <code>&lt;path&gt;</code> 改为原容器数据卷的挂载位置即可。</p><p>容器启动后，使用了 tar 命令来将 dbdata 卷备份为本地的 /backup/backup.tar。 如果要恢复数据到一个容器，首先创建一个带有数据卷的目标容器。（或者先创建空数据卷）</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -v volume_name:/volume_mount_path --name target alpine /bin/ash</span><br></pre></td></tr></table></figure><p>然后创建另一个容器，挂载 dbdata2 的容器，并使用 untar 解压备份文件到挂载的容器卷中。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run --volumes-from target -v $(<span class="built_in">pwd</span>):/backup alpine tar zxvf /backup/aaa.tar.gz -C /</span><br></pre></td></tr></table></figure><p>其中 <code>-C /</code> 表示解压路径从根目录开始，从而确保路径和备份时完全对应。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://jiajially.gitbooks.io/dockerguide/content/chapter_fastlearn/docker_run/--volumes-from.html&quot;&gt;https://jiajially.gitbooks.i</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
+    
+    
+    <category term="Docker" scheme="https://www.coder17.com/tags/Docker/"/>
+    
+    <category term="volume" scheme="https://www.coder17.com/tags/volume/"/>
+    
+    <category term="备份" scheme="https://www.coder17.com/tags/%E5%A4%87%E4%BB%BD/"/>
+    
+  </entry>
+  
+  <entry>
     <title>华硕路由修改区域</title>
     <link href="https://www.coder17.com/posts/asus-region-mod/"/>
     <id>https://www.coder17.com/posts/asus-region-mod/</id>
@@ -156,6 +184,32 @@
     <category term="SM-G9200" scheme="https://www.coder17.com/tags/SM-G9200/"/>
     
     <category term="刷机" scheme="https://www.coder17.com/tags/%E5%88%B7%E6%9C%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Linux MAC 地址伪装</title>
+    <link href="https://www.coder17.com/posts/linux-mac-faking/"/>
+    <id>https://www.coder17.com/posts/linux-mac-faking/</id>
+    <published>2020-04-06T09:01:00.000Z</published>
+    <updated>2020-04-06T09:01:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://wiki.archlinux.jp/index.php/MAC_%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E5%81%BD%E8%A3%85#.E6.96.B9.E6.B3.95_1:_systemd-networkd">https://wiki.archlinux.jp/index.php/MAC_アドレス偽装#.E6.96.B9.E6.B3.95_1:_systemd-networkd</a></p><p>Tested on Ubuntu 18.04 LTS</p><p>创建系统服务，每次开机时使用 ip link set 修改 mac 地址。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/macspoof@.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=MAC Address Change %I</span><br><span class="line"><span class="attr">Wants</span>=network-pre.target</span><br><span class="line"><span class="attr">Before</span>=network-pre.target</span><br><span class="line"><span class="attr">BindsTo</span>=sys-subsystem-net-devices-%i.device</span><br><span class="line"><span class="attr">After</span>=sys-subsystem-net-devices-%i.device</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=<span class="literal">on</span>eshot</span><br><span class="line"><span class="attr">ExecStart</span>=/sbin/ip link set dev %i address <span class="number">90</span>:<span class="number">2</span>b:<span class="number">34</span>:d2:<span class="number">15</span>:<span class="number">25</span></span><br><span class="line"><span class="attr">ExecStart</span>=/sbin/ip link set dev %i up</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> macspoof@eth0.service</span><br></pre></td></tr></table></figure><p>已知问题：有时涉及网络的重启（推测如 docker）会导致失效。此时需要重启服务。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service macspoof@eno2 restart</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://wiki.archlinux.jp/index.php/MAC_%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E5%81%BD%E8%A3%85#.E6.96.B9.E6.B3.95_1:_systemd-net</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
+    
+    <category term="MAC 地址伪装" scheme="https://www.coder17.com/tags/MAC-%E5%9C%B0%E5%9D%80%E4%BC%AA%E8%A3%85/"/>
     
   </entry>
   
@@ -395,6 +449,64 @@
   </entry>
   
   <entry>
+    <title>Linux 显示 git 分支名</title>
+    <link href="https://www.coder17.com/posts/linux-git-branch-name/"/>
+    <id>https://www.coder17.com/posts/linux-git-branch-name/</id>
+    <published>2019-05-21T19:16:00.000Z</published>
+    <updated>2019-05-21T19:16:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<ol><li><p>Download <a href="https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh">this</a></p></li><li><p>Copy to <code>~/.git-prompt.sh</code>, or wget it.</p></li><li><p><code>.bashrc</code></p></li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">source</span> ~/.git-prompt.sh</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PS1=<span class="string">&#x27;\[\e]0;\u@\h: \w\a\]$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1)\[\033[00m\]\$ &#x27;</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Download &lt;a href=&quot;https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh&quot;&gt;this&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
+    
+    <category term="git" scheme="https://www.coder17.com/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Proxychains 配置支持多场景和自定义 DNS</title>
+    <link href="https://www.coder17.com/posts/proxychains-dns/"/>
+    <id>https://www.coder17.com/posts/proxychains-dns/</id>
+    <published>2019-05-19T09:20:00.000Z</published>
+    <updated>2019-05-19T09:20:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Proxychains 开启时使用的是写死的公用 DNS 4.2.2.2，并不科学。同时只能支持一个代理或代理链，需要切换使用多个代理时并不方便。</p><p>下面以使用 <code>pc</code> 和 <code>pf</code> 两个命令分别连接两个不同的代理为例:</p><h2 id="链接-ss-的代理"><a href="#链接-ss-的代理" class="headerlink" title="链接 ss 的代理"></a>链接 ss 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxychains.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">socks5  127.0.0.1 1080</span><br></pre></td></tr></table></figure><h2 id="链接-fiddler-的代理"><a href="#链接-fiddler-的代理" class="headerlink" title="链接 fiddler 的代理"></a>链接 fiddler 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxyfiddler.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">http  127.0.0.1 8888</span><br></pre></td></tr></table></figure><h2 id="usage"><a href="#usage" class="headerlink" title="usage"></a>usage</h2><ul><li><code>pc xx</code> : use socks5 proxy 127.0.0.1:4411 to connect to xx</li><li><code>pf xx</code> : use http proxy 127.0.0.1:8888 to connect to xx, usually fiddler</li></ul><h2 id="Proxychains-4-NG"><a href="#Proxychains-4-NG" class="headerlink" title="Proxychains 4 NG"></a>Proxychains 4 NG</h2><p>新版没有以前不能解析域名的问题，直接安装即可。<br>但 Proxychains4 不支持 git，原因不明，会报错，因此使用 ProxychainsNG</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/rofl0r/proxychains-ng.git</span><br><span class="line"><span class="built_in">cd</span> proxychains-ng</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line"><span class="built_in">cd</span> .. &amp;&amp; rm -rf proxychains-ng</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=\<span class="string">&#x27;proxychains4\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=\<span class="string">&#x27;proxychains4 -f /etc/proxyfiddler.conf\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br></pre></td></tr></table></figure><hr><h2 id="以下适用于-Proxychains-3-版本，已过时"><a href="#以下适用于-Proxychains-3-版本，已过时" class="headerlink" title="以下适用于 Proxychains 3 版本，已过时"></a>以下适用于 Proxychains 3 版本，已过时</h2><h3 id="改源码支持指定-dns"><a href="#改源码支持指定-dns" class="headerlink" title="改源码支持指定 dns"></a>改源码支持指定 dns</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="variable">$HOME</span>/.proxychains</span><br><span class="line">sudo vim /usr/lib/proxychains3/proxyresolv</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># This script is called by proxychains to resolve DNS names</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DNS server used to resolve names</span></span><br><span class="line">DNS_SERVER=<span class="variable">$&#123;PROXYRESOLV_DNS:-4.2.2.2&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> = 0 ] ; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot; usage:&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;  proxyresolv &lt;hostname&gt; &quot;</span></span><br><span class="line">    <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> LD_PRELOAD=libproxychains.so.3</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$DNS_SERVER</span> = <span class="string">&quot;none&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    dig <span class="variable">$1</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    dig <span class="variable">$1</span> @<span class="variable">$DNS_SERVER</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=<span class="string">&#x27;ln -sf /etc/proxyfiddler.conf $HOME/.proxychains/proxychains.conf; PROXYRESOLV_DNS=none proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=<span class="string">&#x27;ln -sf /etc/proxychains.conf $HOME/.proxychains/proxychains.conf; proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"></span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line">sudo ln -s ~/.proxychains /root/.proxychains</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Proxychains 开启时使用的是写死的公用 DNS 4.2.2.2，并不科学。同时只能支持一个代理或代理链，需要切换使用多个代理时并不方便。&lt;/p&gt;
+&lt;p&gt;下面以使用 &lt;code&gt;pc&lt;/code&gt; 和 &lt;code&gt;pf&lt;/code&gt; 两个命令分别连接两个不同的代理为</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
+    
+    <category term="Proxychains" scheme="https://www.coder17.com/tags/Proxychains/"/>
+    
+    <category term="DNS" scheme="https://www.coder17.com/tags/DNS/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Windows 10 商店应用无法启动解决</title>
     <link href="https://www.coder17.com/posts/uwp-crash/"/>
     <id>https://www.coder17.com/posts/uwp-crash/</id>
@@ -485,128 +597,6 @@
     <category term="散热" scheme="https://www.coder17.com/tags/%E6%95%A3%E7%83%AD/"/>
     
     <category term="小米" scheme="https://www.coder17.com/tags/%E5%B0%8F%E7%B1%B3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>禁止 Windows 10 更新后自动重启</title>
-    <link href="https://www.coder17.com/posts/windows-update-restart/"/>
-    <id>https://www.coder17.com/posts/windows-update-restart/</id>
-    <published>2018-09-13T15:00:00.000Z</published>
-    <updated>2018-09-13T15:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>昨晚上微软又分发更新并且强制重启了，我四台电脑只幸存了一台，其他上面开的虚拟机和工作环境啥的都没了。</p><p>很生气，研究了一下为啥幸存了一台，发现一年前我就给它动过手脚，当时我打着游戏呢就重启了。查阅了一下自己当时的记录，复现了一下，分享给大家。</p><p>设置组策略什么的都不好用，早晚还是要被微软强奸。<br>排查后发现重启是由任务计划中：</p><p><code>\Microsoft\Windows\UpdateOrchestrator</code></p><p>这个任务触发的，查看其上次启动时间就可以看到 Windows 的重启时间：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/5e4ff6f6.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-10-44.png"></p><p>但这个任务是系统用户创建的，我们自己没有权限搞死它。<br>研究一下任务干了什么：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/71dd76f9.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-11-33.png"></p><p>看到是执行了：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%systemroot%\system32\MusNotification.exe</span><br></pre></td></tr></table></figure><p>这个程序来重启。进到系统目录下看看这个文件：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/e985485d.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-11-46.png"></p><p>发现其实是一个硬链接。而且这个程序即使删除或修改，在下次更新后也会自动恢复。我们只想禁止自动更新后的重启，并不是不更新。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/e4e15ead.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-44-14.png"></p><p>所以只能用 IFEO 映像劫持了：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/6adb1ad4.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-44-46.png"></p><p>路径：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options</span><br></pre></td></tr></table></figure><p>新建一个 Key，改名 <code>MusNotification.exe</code>：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/8d4ed555.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-45-24.png"></p><p>在右边新建字符串值，命名 <code>debugger</code>，值 <code>cscript.exe</code>（图中错误）。这个程序不带参数是啥也不会做的。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%A6%81%E6%AD%A2%20Windows%2010%20%E6%9B%B4%E6%96%B0%E5%90%8E%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF/37d84338.png" alt="禁止 Windows 10 更新后自动重启_2018-11-22-03-45-53.png"></p><p>重启一下，然后就再也不会重启了。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;昨晚上微软又分发更新并且强制重启了，我四台电脑只幸存了一台，其他上面开的虚拟机和工作环境啥的都没了。&lt;/p&gt;
-&lt;p&gt;很生气，研究了一下为啥幸存了一台，发现一年前我就给它动过手脚，当时我打着游戏呢就重启了。查阅了一下自己当时的记录，复现了一下，分享给大家。&lt;/p&gt;
-&lt;p&gt;设置</summary>
-      
-    
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/tags/Windows/"/>
-    
-    <category term="自动更新" scheme="https://www.coder17.com/tags/%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0/"/>
-    
-    <category term="重启" scheme="https://www.coder17.com/tags/%E9%87%8D%E5%90%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Switch 游戏加速透明代理的改进部署</title>
-    <link href="https://www.coder17.com/posts/trans-proxy-splatton2-mod/"/>
-    <id>https://www.coder17.com/posts/trans-proxy-splatton2-mod/</id>
-    <published>2018-08-11T15:00:00.000Z</published>
-    <updated>2018-08-11T15:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>上篇文章（<a href="/posts/trans-proxy-splatoon2/">搭建透明代理加速 Splatoon2 游戏手记</a>）中，关于部署方式我提到，由于无线网卡的不兼容，开虚拟机的宿主机必须以有线方式接入路由设备。</p><p>我当时选择的是把宿主机笔记本直接放在客厅路由器旁边当服务器用。现在看来这种操作太粗鲁了。因此这里介绍一种更优雅的部署方式。</p><h2 id="1-电力猫"><a href="#1-电力猫" class="headerlink" title="1. 电力猫"></a>1. 电力猫</h2><p>首先我把电脑搬回了卧室，然后试图使用电力猫来有线连接到客厅的路由器。<br>我以前使用的是下面这个腾达的千兆电力猫：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/25a45432.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-21.png"></p><p>这玩意儿是一对，一个用网线插到路由器上，再插到路由器旁边的插座里。另一个在电脑旁边找个插座，用网线连上电脑就行了。利用电力线传输数据。</p><p>我之前刚安装的时候，它速度很快，测速在 400Mbps 以上，考虑到衰减和干扰这个速度是可以接受的。</p><p>但过了一段时间之后它的速度下降的很厉害，最高只有 50Mbps 上下，还不到我宽带的出口速度，已经开始拖慢我的网速了。原因可能是房间供电线路老化之类的吧。我懒得追究了，当时就购入了外置无线网卡解决速度问题。电力猫闲置下来后就送给家里信号不好的同事了。</p><p>鉴于上次的经历不是很愉快，这次我又换了个牌子，重新买了一对水星的千兆电力猫：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/901ea349.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-36.png"></p><p>结果还是一样，刚插上去好好的，速度很快。不一会儿速度就掉了下来，并且大量丢包，玩游戏很难受。</p><p>那没办法了，还是得考虑有线方案。</p><h2 id="2-增加辅助路由"><a href="#2-增加辅助路由" class="headerlink" title="2. 增加辅助路由"></a>2. 增加辅助路由</h2><p>说是有线，其实只要保证 VirtualBox 给虚拟机桥接的那个网卡是有线网卡就行了。上公网不一定非要走有线。</p><p>事到如今，我也没法坚持不加新设备了。最优雅的方式其实还是用 OpenWRT 系统的路由器重新部署一套，一次部署到处使用。但我懒得重新刷 OpenWRT 的系统，想只用一个普通路由解决问题。</p><p>所以我又找了个小路由器，把宿主机有线插入 LAN，并把有线网卡桥接到虚拟机，虚拟机另外添加一张 NAT 网卡用于共享主机的网络连接。其他需要透明代理的设备直接无线接入小路由器。</p><p>拓扑图大概是下面这个样子。宿主机双网卡，无线接主路由，有线接辅助路由。虚拟机双网卡，一张 NAT 上公网，一张桥接辅助路由当透明代理网关。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/c5c0fb24.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-15-57.png"></p><p>此时因为宿主机和虚拟机都双网卡了，需要设置一下路由表。</p><p>Windows 的路由表比较奇怪，我起初是通过增加有线网卡的跃点数 metric ，试图降低有线网卡（接辅助路由，无公网访问）的优先级，但修改后可以连通外网，DNS 却始终优先使用有线网卡获得的 192.168.2.2 的 DNS 地址，无法解析。我试图手动改路由表，折腾半天也没让它优先走无线网卡的 DNS。但直接 ping 公网 IP 地址确实是通的。</p><p>后来换了个思路，降低无线网卡的跃点数。如图，设置成1之后就 OK 了，Windows 的 DNS 策略真的很谜。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/e969ae75.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-13.png"></p><p>设置好之后路由表如下，都是系统自动生成的。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/0e0a74c6.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-22.png"></p><p>实际上宿主机实际上是三网卡的，两个无线一个有线。起初我尝试用另外一张无线网卡作为 AP 模式发射热点，取代辅助路由的功能，后来发现在 Windows 上配置这个太麻烦了就放弃了。</p><p>然后要设置一下虚拟机的 Ubuntu 系统的路由表。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/b1670d1f.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-35.png"></p><p>可以看到虚拟机有两块网卡，enp0s3 是 NAT 连接到主机的网卡，IP 设成自动获取就可以。</p><p>enp0s8 是桥接了有线网卡，接入辅助路由的。手动指定其 IP 地址为 192.168.2.2。</p><p>此时路由表的主出口不一定是 NAT 那个网卡，导致公网不通。我们删掉默认的出口路由，手动指定出口为 enp0s3 即可。命令如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/4ba28f3d.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-48.png"></p><p>需要使用 sudo 执行。执行过后虚拟机的路由表如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/7469a5d0.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-16-55.png"></p><p>很简洁，此时我们可以正常上公网了。</p><p>之后把 Switch 接入辅助路由的无线网，手动设置网关为 192.168.2.2，MTU 稍微改小到 1390。参照上篇文章的内容，Switch 应该已经通过代理上网了。测速结果非常可观，没有瓶颈。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Switch%20%E6%B8%B8%E6%88%8F%E5%8A%A0%E9%80%9F%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E7%9A%84%E6%94%B9%E8%BF%9B%E9%83%A8%E7%BD%B2/f94f5add.png" alt="Switch%20游戏加速透明代理的改进部署_2018-11-26-13-17-04.png"></p><p>好了，很开心。进行收尾工作，把手动设置路由的两句话加到 linux 的自启动里，尝试重启主机和虚拟机几次，都可以自动初始化完成。</p><p>非常优雅。收工。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;上篇文章（&lt;a href=&quot;/posts/trans-proxy-splatoon2/&quot;&gt;搭建透明代理加速 Splatoon2 游戏手记&lt;/a&gt;）中，关于部署方式我提到，由于无线网卡的不兼容，开虚拟机的宿主机必须以有线方式接入路由设备。&lt;/p&gt;
-&lt;p&gt;我当时选择的是把宿主机</summary>
-      
-    
-    
-    
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
-    
-    
-    <category term="透明代理" scheme="https://www.coder17.com/tags/%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86/"/>
-    
-    <category term="Splatoon2" scheme="https://www.coder17.com/tags/Splatoon2/"/>
-    
-    <category term="加速" scheme="https://www.coder17.com/tags/%E5%8A%A0%E9%80%9F/"/>
-    
-    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
-    
-    <category term="改进" scheme="https://www.coder17.com/tags/%E6%94%B9%E8%BF%9B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>搭建透明代理加速 Splatoon2 游戏手记</title>
-    <link href="https://www.coder17.com/posts/trans-proxy-splatoon2/"/>
-    <id>https://www.coder17.com/posts/trans-proxy-splatoon2/</id>
-    <published>2018-08-01T15:00:00.000Z</published>
-    <updated>2018-08-01T15:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>上周末，朋友终于带着 Switch 来我家玩耍了。好，棒，很开心。</p><p>我发的胖友圈是这样的：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/1a110660.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-20-31.png"></p><p>看起来很开心的样子，然而实际上是这样的：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/090745e2.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-20-41.png"></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/2143eb7f.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-20-48.png"></p><p>以前一直还可以的联通宽带突然爆炸，怎么都连不上老任的服务器。挨着的两个机器甚至无法在好友列表里看到彼此的在线状态。</p><p>我天真地以为过几天网就会好起来吧。但周末结束了，我还是连不上 Splatoon。</p><p>我不管，我要玩乌贼暖暖。</p><h2 id="1-原理与方案选择"><a href="#1-原理与方案选择" class="headerlink" title="1. 原理与方案选择"></a>1. 原理与方案选择</h2><p>加速游戏无非是包转发，之前在 windows 电脑部署的普通 ss 客户端只能转发 http 包。设置其为代理后只能进大厅，无法用 udp 协议与其他玩家通信。</p><p>因此需要部署一个能代理 udp 包的东西。</p><p>当然，最简单的办法还是买现成的加速器，比如X易的UU，但是很贵，一个月三十。想了想九月份开始任天堂也要收联网服务费了，还是放弃了购买加速器。</p><p>自食其力的话，首先想到的是全局微屁恩，但是这东西一来部署起来非常麻烦，二来协议特征太明显，用不了两天就会被安排。</p><p>有一个 SS-Tap 号称能把 ss 转成全局的，但我试过之后并不能分享给局域网设备。</p><p>那么还是找我们的老朋友小飞机吧，ss-libev 分支有一个 ss-redir 的工具，是专用来做透明代理的，可以一战。</p><h2 id="2-软硬环境"><a href="#2-软硬环境" class="headerlink" title="2. 软硬环境"></a>2. 软硬环境</h2><p>硬件上我不想使用路由器刷 op 之类的智能系统的方式，一来刷系统很烦，二来需要多加一个设备。</p><p>我当前有一台 7*24 开机的大笔记本（以下称为S），平时做 NAS 服务器使用。那么可以在这个机器上开一个虚拟机装 ubuntu，使用桥接模式接入现有的网络，再作为网关，在 switch 上手动指定即可。</p><p>ubuntu 使用了 16.04，32 位，内存随便划了 512M。</p><h2 id="3-部署"><a href="#3-部署" class="headerlink" title="3. 部署"></a>3. 部署</h2><p>服务端的部署就不废话了，懒得自己搭买一个也可以的，但注意要加 -u 支持 udp 转发。</p><p>客户端在我们刚才的虚拟机里（以下称为A）。装好系统之后，打开 sshd，在本机上使用 ssh 连到虚拟机A。</p><p>首先要打开系统的转发模式开关。sudo vim /etc/sysctl.conf ，去掉 net.ipv4.ip_forward=1 的注释。然后 sudo sysctl -p 立即生效。</p><p>此时设置局域网内随便一个终端的网关为这个虚拟机的 IP，DNS 可以指定为 114.114.114.114，测试一下应该可以联网。出口 IP 依旧是你本地的出口。我这里使用了另外一台虚拟机（以下称为B）。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/fab63459.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-21-15.png"></p><p>参考官方文档，在虚拟机A上编译最新版 ss-libev。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev libev-dev libudns-dev libsodium-dev libmbedtls-dev libc-ares-dev automake</span><br><span class="line"></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocks/shadowsocks-libev.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> shadowsocks-libev</span><br><span class="line"></span><br><span class="line">git submodule update --init</span><br><span class="line"></span><br><span class="line">./autogen.sh &amp;&amp; ./configure &amp;&amp; make</span><br><span class="line"></span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure><p>其实如果用 ubuntu 16.10 以上系统的话是不用自己编译的，软件源里有二进制包可以直接下载。但为了确保版本最新，还是推荐编译。</p><p>安装好之后，自己写一个 json 把服务器信息写进去。会用小飞机的都知道我也不废话了。</p><p>然后启动 ss-redir，监听的本地端口以 1080 为例。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ss-redir -c /etc/s.json -u -v</span><br></pre></td></tr></table></figure><p><code>-u</code> 是支持 udp 转发的开关，这个前面说过，也需要服务端支持。</p><p><code>-v</code> 是废话模式的开关，可以输出很多 info 级的日志便于调试。</p><p>打开后应该如图所示，开始监听 1080 端口了。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/680feb28.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-22-30.png"></p><p>此时还没有设置转发，在网内其他终端测试出口依旧是本地联通的 IP。</p><p>然后编辑 iptables 实现转发。其中 tcp 包通过 redirect 直接重定向到 1080 端口即可。但 udp 包由于是无状态连接，系统无法通过连接跟踪找到它本来的目的地，因此不能直接重定向，需要借助 tproxy 实现。</p><blockquote><p>首先我们来了解一下 iptables 的 REDIRECT 重定向的意义，REDIRECT 其实就是 DNAT 目的地址转换，只不过它的目的地址为 127.0.0.1，因此给它取了个形象的名字 - 重定向；DNAT 其实是很粗暴的，就是修改数据包的目的 IP 和目的 Port；那么在 ss-redir 中，它是怎么获取数据包原来的目的 IP 和目的 Port 的呢（就像发快递，你总得知道这个快件要发往哪吧，不然你收到来有什么用）？答案是，借助 Linux 的连接跟踪机制。</p><p>什么是连接跟踪？顾名思义，就是跟踪并记录网络连接的状态。Linux 会为每个经过网络堆栈的数据包都生成一个新的连接记录项，此后，所有属于此连接的数据包都会被唯一分配给这个连接，并标识连接的状态。因此，做了 NAT（网络地址转换）的数据包在内核中都是有记录的。而 ss-redir 只要使用 netfilter 提供的 API 即可从连接记录项中获取数据包原本的目的地址和目的端口，来进行代理。</p><p>但是，上面这种情况只针对 TCP；对于 UDP，如果你做了 DNAT，就无法再获取数据包的原目的地址和目的端口了，具体的技术细节我不清楚，我们只需要知道 UDP 透明代理没有这么简单。</p><p>那么该怎么透明代理 UDP 呢？利用 TPROXY 技术。TPROXY 是在 Kernel 2.6.28 引进的全新透明代理技术，TPROXY 完全不同于传统的 DNAT 方式。TPROXY 实现的透明代理有以下特点：</p><ul><li><p>不对 IP 报文做改动（不做 DNAT）；</p></li><li><p>应用层可用非本机 IP 与其它主机建立 TCP/UDP 连接；</p></li><li><p>Kernel 通过 iptables-tproxy 和策略路由将非本机流量送到 socket 层；</p></li><li><p>仍需要通过其它技术拦截做代理的流量到代理服务器（WCCP 或 PBR 策略路由）。</p></li></ul></blockquote><p>以上摘自： <a href="https://paper.tuisec.win/detail/da1a980ab61ce92">https://paper.tuisec.win/detail/da1a980ab61ce92</a></p><p>那么对 iptables 执行以下改动（先使用 sudo -i 进入 root 权限 bash）：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SS-REDIR TCP</span></span><br><span class="line"></span><br><span class="line">iptables -t nat -N SSREDIR_TCP</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Bypass ssserver and LAN</span></span><br><span class="line"></span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d ===server ip=== -j RETURN</span><br><span class="line"></span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d 0.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d 10.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d 127.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d 169.254.0.0/16 -j RETURN</span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d 172.16.0.0/12 -j RETURN</span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d 192.168.0.0/16 -j RETURN</span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d 224.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t nat -A SSREDIR_TCP -d 240.0.0.0/4 -j RETURN</span><br><span class="line"></span><br><span class="line"><span class="comment"># Redirect TCP</span></span><br><span class="line"></span><br><span class="line">iptables -t nat -A SSREDIR_TCP -p tcp -j REDIRECT --to-ports 1080</span><br><span class="line"></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp -j SSREDIR_TCP</span><br><span class="line"></span><br><span class="line"><span class="comment"># SS_REDIR UDP</span></span><br><span class="line"></span><br><span class="line">ip rule add fwmark 0x02/0x02 table 100</span><br><span class="line">ip route add <span class="built_in">local</span> 0.0.0.0/0 dev lo table 100</span><br><span class="line">iptables -t mangle -N SSREDIR_UDP</span><br><span class="line"></span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d ===server ip=== -j RETURN</span><br><span class="line"></span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d 0.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d 10.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d 127.0.0.0/8 -j RETURN</span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d 169.254.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d 172.16.0.0/12 -j RETURN</span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d 192.168.0.0/16 -j RETURN</span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d 224.0.0.0/4 -j RETURN</span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -d 240.0.0.0/4 -j RETURN</span><br><span class="line"></span><br><span class="line"><span class="comment"># Redirect UDP</span></span><br><span class="line"></span><br><span class="line">iptables -t mangle -A SSREDIR_UDP -p udp -j TPROXY --on-port 1080 --tproxy-mark 0x02/0x02</span><br><span class="line"></span><br><span class="line"><span class="comment"># Enable</span></span><br><span class="line"></span><br><span class="line">iptables -t mangle -A PREROUTING -j SSREDIR_UDP</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>其中的 <code>===server ip===</code> 是你服务器的 IP。</p><p>简单说就是先新建了一个链，把目的地是你服务器地址和其他一些内网地址的包放过去，剩下的全部 tcp 包都转到本地 1080 端口上。然后把这个链加到 PREROUTING 链上，转掉所有入站的 tcp 包。</p><p>然后又新建了一个表，规定表里所有的数据包打上一个标记（0x02/0x02，我随便写的值，也可以使用其他值），再新建一个链，同样放过一些特殊地址的包之后，把剩下的 udp 包全部搞进这个表带上标记。再把所有带标记的包转到本地 1080 端口。最后把这个链也挂到PREROUTING 链上，使之生效。</p><p>上面两段话用词不太准确，只是说个意思方便理解。</p><p>那么加完转发之后，我们的透明代理理论上已经开始工作了。</p><p>在虚拟机B里测测看，出口已经变成服务器地址了。在浏览器里开几个页面也都正常显示。此时可以更改 DNS 为 8.8.8.8 了。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/0688bae0.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-26-09.png"></p><p>好，爽。</p><h2 id="4-坑：桥接无线网卡"><a href="#4-坑：桥接无线网卡" class="headerlink" title="4. 坑：桥接无线网卡"></a>4. 坑：桥接无线网卡</h2><p>高兴的太早了。我上面是在虚拟机里测的。等我把手机和另外一台物理电脑也设置成透明代理做网关之后，却时断时续地打不开网页。甚至我取消 iptables 里面的转发设置时，也不能显示我本地的 IP 出口。</p><p>提示的错误也很奇怪，一会儿是 DNS 无法解析，一会儿是无法连接。做网关的虚拟机A里面的日志也是时断时续。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/42067b08.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-40-20.png"></p><p>查了半天，毫无头绪，把前面的步骤试了又试也没有变化。</p><p>哎，脑壳疼。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/92d8c4eb.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-40-32.png"></p><p>但注意到一个问题，那就是我测试的时候，在同一台大电脑上开的另一个虚拟机下测就没问题，用局域网内其他的设备测就时断时续。</p><p>在这卡了三天之后，怀疑的目光落在了网卡上。宿主机S因为自带的网卡过于老迈，不支持 5G WiFi，为了保证连接速度我使用了一块水星的 USB 外置网卡。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/389f4ec1.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-40-41.png"></p><p>谷歌了一顿之后发现有不少人声称他们的无线网卡无法在 VirtualBox 等虚拟机软件里设置为桥接模式。原因是无线网卡通常不支持混杂模式，无法接收非主机 IP 地址的包。</p><p>但我这个能桥接啊，真的是它的问题么？</p><p>我尝试把虚拟机 A 和 B 桥接的网卡都改回了笔记本自带的 Intel 网卡。这次是真的不能桥接了，完全无法联网，在路由器后台也看不见两个虚拟机。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/3594aac8.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-40-54.png"></p><p>那看来网卡的嫌疑真的很大，那我们试试有线连接吧。</p><p>我之前的电力猫送人了，但路由器在客厅，想要物理接入的话只能把宿主机笔记本S抱过去。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/9193b80c.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-41-04.png"></p><p>然后桥接有线网卡，再试，破案了，网内所有终端都能正常联网了。</p><p>这个坑最坑的地方在于，无线网卡对混杂模式支持的不完整，虽然能正常桥接联网，但却无法转发所有的入站包，使问题难以定位。</p><h2 id="5-坑：MTU"><a href="#5-坑：MTU" class="headerlink" title="5. 坑：MTU"></a>5. 坑：MTU</h2><p>终于填好了坑，我们可以愉快地填下一个坑了。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/d19c73a7.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-41-28.png"></p><p>把 switch 也接入到网关下之后，发现能正常登录、进房间，但无法和其他用户连接。</p><p>显然是 udp 的哪里出了问题吧。但看日志也挺正常的啊，所有的请求都有回应。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/28a82285.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-41-40.png"></p><p>这时我注意到，在使用 curl 请求某个地址的时候，总是先发出两个 udp 包，等待五秒后，又发出两个 udp 包，才解析成功。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/b24336d1.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-41-51.png"></p><p>但直接 nslookup 的时候又能立即返回结果。</p><p>这个现象十分诡异，我到现在也不能解释。</p><p>客户端没有发现问题，那么看看服务端吧。由于之前测试一直用的是购买的服务，看不到日志。所以我又临时开了一台 vps，搭了个服务端来看日志。</p><p>诡异的是使用自己搭的服务端就没有这个问题了，秒查秒回。</p><p>只能理解成大概购买的服务开了某种多重发包的插件吧。</p><p>但问题依然没有解决。</p><p>尝试开了一局游戏，发现在匹配对手的过程中，客户端快速滚过的日志可以看出游戏在反复试图与其他玩家的 ip 发 udp 包试图连接。但服务端的日志滚动速度明显低于客户端。</p><p>怀疑丢包了。</p><p>丢包最大的可能性是 udp 包在传输路径上被 ISP 给丢弃了。udp 包优先级不高，如果 QoS 策略比较激进那么丢包的概率很高。</p><p>但我用 nc 测了测 udp，发现并没有丢包。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/47be85fe.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-42-03.png"></p><p>陷入沉思，在网上随便搜索的时候，看到这么一个帖子：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/6a9275db.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-42-14.png"></p><p>啥玩意儿？MTU 超了居然不拆分而是直接丢包？难怪我用 nc 发小包测的时候不丢。</p><p>联想到之前在 github 上看 madeye 大神回的 issue 里也提到过建议一个 xbox 连不上的哥们试试改 MTU 小一点，我就死马当活马医地在 switch 里把 MTU 从 1400 改成了 1390.。</p><p>然后我特么就进！游！戏！了！</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/dd221766.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-42-24.png"></p><p>看着屏幕上翻滚的日志我是真的想拥抱大海。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E6%90%AD%E5%BB%BA%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E5%8A%A0%E9%80%9F%20Splatoon2%20%E6%B8%B8%E6%88%8F%E6%89%8B%E8%AE%B0/427aefa6.png" alt="搭建透明代理加速 Splatoon2 游戏手记_2018-11-26-13-42-36.png"></p><p>（然后我输了，对面的马桶是真的不知到该怎么打掉</p><h2 id="6-总结优化"><a href="#6-总结优化" class="headerlink" title="6. 总结优化"></a>6. 总结优化</h2><p>这次一共遇到两个迷惑性较大的坑，一个是无线网卡的混杂模式，因为一直以来工作得很好，我并没有第一时间怀疑它。</p><p>另一个是 MTU 的问题，正常讲数据包大于 MTU 时会被拆分，但 ss-libev 作了丢包的操作不知道是出于什么考虑，可能是消除协议特征？</p><p>最后那个 curl 会 DNS 查两次的问题依然没有头绪。不过后来将服务端拆掉换回买的服务之后依然可以正常连接，说明这个问题并没有实际影响，暂且不管吧。</p><p>至于方案的优化，后期把写 iptables 和开 ss-redir 服务的命令写到 rc.local 里开机启动即可。注意 rc.local 加载时系统的环境变量不完整，启动 ss-redir 需要指定其完整路径，可以使用 which ss-dir 或者 whereis ss-dir 命令查看。</p><p>作为网关的虚拟机A也可以调小内存，大概 256M 也可以正常工作的。</p><p>宿主机S决定就让它呆在路由器旁边了，一个服务器是不需要放在卧室里的。回头把外接的硬盘盒和 UPS 也搬过去。</p><p>坑就这么多，谢谢观赏。</p><p>参考资料：</p><p><a href="http://ezlost.tk/2018/02/24/ss-redir/">http://ezlost.tk/2018/02/24/ss-redir/</a></p><p><a href="https://blog.csdn.net/lvshaorong/article/details/52909055">https://blog.csdn.net/lvshaorong/article/details/52909055</a></p><p><a href="https://blog.csdn.net/lvshaorong/article/details/53203674">https://blog.csdn.net/lvshaorong/article/details/53203674</a></p><p><a href="https://github.com/shadowsocks/shadowsocks-libev/issues/1883">https://github.com/shadowsocks/shadowsocks-libev/issues/1883</a></p><p><a href="https://cn.aliyun.com/jiaocheng/148168.html">https://cn.aliyun.com/jiaocheng/148168.html</a></p><p><a href="https://github.com/shadowsocks/shadowsocks-libev/issues/1566">https://github.com/shadowsocks/shadowsocks-libev/issues/1566</a></p><p><a href="https://lixingcong.github.io/2018/06/11/ss-redir-ipset/">https://lixingcong.github.io/2018/06/11/ss-redir-ipset/</a></p><p><a href="https://usodesu.ga/2018-04-26/OpenWrt-Transparent-Proxy-with-ss-redir/">https://usodesu.ga/2018-04-26/OpenWrt-Transparent-Proxy-with-ss-redir/</a></p><p><a href="https://doub.io/ss-jc34/">https://doub.io/ss-jc34/</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;上周末，朋友终于带着 Switch 来我家玩耍了。好，棒，很开心。&lt;/p&gt;
-&lt;p&gt;我发的胖友圈是这样的：&lt;/p&gt;
-&lt;p&gt;&lt;img src= &quot;/images/loading.gif&quot; data-lazy-src=&quot;/blogimg/%E6%90%AD%E5%BB%BA%E9</summary>
-      
-    
-    
-    
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
-    
-    
-    <category term="透明代理" scheme="https://www.coder17.com/tags/%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86/"/>
-    
-    <category term="Splatoon2" scheme="https://www.coder17.com/tags/Splatoon2/"/>
-    
-    <category term="加速" scheme="https://www.coder17.com/tags/%E5%8A%A0%E9%80%9F/"/>
-    
-    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>系统从大硬盘无损迁移到小硬盘的方法备忘</title>
-    <link href="https://www.coder17.com/posts/hdd-move-system/"/>
-    <id>https://www.coder17.com/posts/hdd-move-system/</id>
-    <published>2018-05-09T15:00:00.000Z</published>
-    <updated>2018-05-09T15:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>（好久没写东西，博客也一直没时间迁移，实在是很丢人，谢谢大家还没取关。）</p><p>一般来讲迁移硬盘数据都是小硬盘到大硬盘，很多硬盘对拷软件也只支持源盘小于目标盘的数据迁移。有的支持从大到小迁移的软件也是按文件复制。对于一些隐藏分区或者特殊格式的分区来说，这种复制方式可能丢失数据。我研究了半天摸索了以下方法，作个备忘与参考。</p><p>思路是：<br>新建一个 vhdx 虚拟硬盘→大盘拷进虚拟盘→虚拟盘缩容→虚拟盘拷进小硬盘</p><p>关键节点在于虚拟盘缩容，这样可以保证每一步对拷都是逻辑上的小盘到大盘。注意大盘上的实际数据量不能超过小盘容量。</p><p>这个思路很绕，我暂时没有想出更好的方式。如果有更好的思路或者工具请一定不吝赐教。</p><h2 id="1-新建虚拟盘"><a href="#1-新建虚拟盘" class="headerlink" title="1 新建虚拟盘"></a>1 新建虚拟盘</h2><p>这个很简单，Windows 的磁盘管理就可以。注意新建 vhdx 格式的，否则后面缩容的时候还要花时间转换。虚拟盘最大容量要大于大盘一点，选择动态容量即可。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/0.gif" alt="image-0"></p><h2 id="2-大盘拷进虚拟盘"><a href="#2-大盘拷进虚拟盘" class="headerlink" title="2 大盘拷进虚拟盘"></a>2 大盘拷进虚拟盘</h2><p>在 Windows 的磁盘管理里先把虚拟盘挂载上，一般新建之后会自动挂载。盘符分不分都行。然后随便找个硬盘对拷软件，比如 DiskGenius，把大盘对拷到虚拟盘上。对拷的时候不要选择创建新的硬盘 ID。这一步就不放图了，时间会比较久。</p><h2 id="3-虚拟盘缩容"><a href="#3-虚拟盘缩容" class="headerlink" title="3 虚拟盘缩容"></a>3 虚拟盘缩容</h2><h3 id="3-1-分区调整"><a href="#3-1-分区调整" class="headerlink" title="3.1 分区调整"></a>3.1 分区调整</h3><p>在分区软件里把虚拟盘里的数据分区调整到一起，压缩数据分区到刚好够用，把多出来的空间设置为未分配，使未分配空间全在盘的最后。注意必须保证前面的数据区总容量不超过小盘容量。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181211292.png" alt="image-20210421181211292"></p><h3 id="3-2-虚拟盘容量调整"><a href="#3-2-虚拟盘容量调整" class="headerlink" title="3.2 虚拟盘容量调整"></a>3.2 虚拟盘容量调整</h3><p>首先你要装有 Hyper-V 工具，没有的话到控制面板→添加删除程序→添加删除 Windows 组件里面，把 Hyper-V 相关的都勾上。装好之后要重启。注意，装了 Hyper-V 之后你的 VirtualBox 之类的虚拟机就不能用了，如果要用的话待会儿再卸掉 Hyper-V。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181347514.png" alt="image-20210421181347514"></p><p>装好之后用管理员权限打开 Powershell。在开始菜单输入 Powershell 然后按 Ctrl + Shift + Enter 就是管理员权限。</p><p>执行 ：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Resize-VHD</span> <span class="literal">-Path</span> <span class="string">&quot;E:\sysbk.vhdx&quot;</span> <span class="literal">-ToMinimumSize</span></span><br></pre></td></tr></table></figure><p>注意把 vhdx 的路径换掉。应该很快就完事儿了，然后执行：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Get-VHD</span> <span class="literal">-Path</span> <span class="string">&quot;E:\sysbk.vhdx&quot;</span></span><br></pre></td></tr></table></figure><p>就可以看到虚拟盘容量已经减小到和实际数据量差不多了。这个时候虚拟盘的容量应该是小于目标小盘的容量的，否则后面会失败。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181459770.png" alt="image-20210421181459770"></p><h2 id="4-虚拟盘拷进小硬盘"><a href="#4-虚拟盘拷进小硬盘" class="headerlink" title="4 虚拟盘拷进小硬盘"></a>4 虚拟盘拷进小硬盘</h2><p>很简单的，在磁盘管理里面把缩小之后的 vhdx 挂上，然后在分区软件里对拷到小硬盘上就可以了。</p><p>但是！</p><p>我在这一步遇到了各种疑难杂症。</p><p>首先我的目标盘是一个 nvme 盘，没法通过 USB 挂到其他电脑上对拷，所以只能在本机上从U盘启动 PE 对拷。但这个 PE 是似乎不能挂载 vhd 的，挂载的选项是灰色。</p><p>所幸 DiskGenius 里是可以直接挂虚拟硬盘文件的。然而似乎对 vhdx 兼容性不好，挂载之后始终显示整个盘都是未分配。</p><p>vhd 转 vhdx 是单向的，不能从 vhdx 转为 vhd。我只能新建了一个比缩容后的 vhdx 大一丁点的 vhd，然后在正常的系统内通过磁盘管理挂载了 vhdx，再在  DiskGenius 里从 vhdx 到 vhd 又对拷了一遍。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181543316.png" alt="image-20210421181543316"></p><p>真的需要很长很长的时间，长到等它对拷完成之后我已经快忘了这件事了。<br>然后我就有了一个缩容之后的 vhd 文件。重新启动 PE 之后发现，</p><p>发现这 PE 又能在磁盘管理里挂载 vhd 了！</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E7%B3%BB%E7%BB%9F%E4%BB%8E%E5%A4%A7%E7%A1%AC%E7%9B%98%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB%E5%88%B0%E5%B0%8F%E7%A1%AC%E7%9B%98%E7%9A%84%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98/image-20210421181617712.png" alt="image-20210421181617712"></p><p>好气啊。按照常规操作再来一遍，挂载 vhd，对拷。</p><p>拷完之后，由于我们之前把虚拟硬盘的容量设置成小于小硬盘的实际容量了，所以小硬盘尾部会出现未分配空间。根据需要把这部分空间合并到前面的分区中。</p><p>这样就保留了分区结构和分区表等等的同时，从大盘到小盘完成了系统迁移。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;（好久没写东西，博客也一直没时间迁移，实在是很丢人，谢谢大家还没取关。）&lt;/p&gt;
-&lt;p&gt;一般来讲迁移硬盘数据都是小硬盘到大硬盘，很多硬盘对拷软件也只支持源盘小于目标盘的数据迁移。有的支持从大到小迁移的软件也是按文件复制。对于一些隐藏分区或者特殊格式的分区来说，这种复制方式可</summary>
-      
-    
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
-    
-    
-    <category term="硬盘" scheme="https://www.coder17.com/tags/%E7%A1%AC%E7%9B%98/"/>
-    
-    <category term="无损迁移" scheme="https://www.coder17.com/tags/%E6%97%A0%E6%8D%9F%E8%BF%81%E7%A7%BB/"/>
     
   </entry>
   

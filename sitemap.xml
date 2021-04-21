@@ -51,6 +51,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/docker-volume-backup/</loc>
+    
+    <lastmod>2020-07-29</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/asus-region-mod/</loc>
     
     <lastmod>2020-05-12</lastmod>
@@ -61,6 +68,13 @@
     <loc>https://www.coder17.com/posts/galaxy-s6-system/</loc>
     
     <lastmod>2020-04-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/linux-mac-faking/</loc>
+    
+    <lastmod>2020-04-06</lastmod>
     
   </url>
   
@@ -117,6 +131,20 @@
     <loc>https://www.coder17.com/posts/msxi-sign-install/</loc>
     
     <lastmod>2019-06-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/linux-git-branch-name/</loc>
+    
+    <lastmod>2019-05-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/proxychains-dns/</loc>
+    
+    <lastmod>2019-05-19</lastmod>
     
   </url>
   
@@ -354,6 +382,27 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/Docker/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/volume/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E5%A4%87%E4%BB%BD/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/C/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -424,6 +473,27 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/Linux/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/MAC-%E5%9C%B0%E5%9D%80%E4%BC%AA%E8%A3%85/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/git/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/NFC/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -446,6 +516,20 @@
   
   <url>
     <loc>https://www.coder17.com/tags/IC%E5%8D%A1/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Proxychains/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/DNS/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -523,13 +607,6 @@
   
   <url>
     <loc>https://www.coder17.com/tags/%E5%90%8C%E6%AD%A5/</loc>
-    <lastmod>2021-04-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/tags/Linux/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1077,6 +1154,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/categories/Linux/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/categories/Windows/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -1085,13 +1169,6 @@
   
   <url>
     <loc>https://www.coder17.com/categories/Services/</loc>
-    <lastmod>2021-04-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/categories/Linux/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

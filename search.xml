@@ -87,6 +87,35 @@
     
     
     <entry>
+      <title>Docker volume 备份与恢复</title>
+      <link href="posts/docker-volume-backup/"/>
+      <url>posts/docker-volume-backup/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://jiajially.gitbooks.io/dockerguide/content/chapter_fastlearn/docker_run/--volumes-from.html">https://jiajially.gitbooks.io/dockerguide/content/chapter_fastlearn/docker_run/--volumes-from.html</a></p><p>使用 –volumes-from 创建一个加载 dbdata 容器卷的容器，并从本地主机挂载当前到容器的 /backup 目录：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run --volumes-from aaa -v $(<span class="built_in">pwd</span>):/backup alpine tar zcvf /backup/aaa.tar.gz /&lt;path&gt;</span><br></pre></td></tr></table></figure><p>volumes-from 创建的容器其挂载的所有数据卷路径均与原容器相同，因此 <code>&lt;path&gt;</code> 改为原容器数据卷的挂载位置即可。</p><p>容器启动后，使用了 tar 命令来将 dbdata 卷备份为本地的 /backup/backup.tar。 如果要恢复数据到一个容器，首先创建一个带有数据卷的目标容器。（或者先创建空数据卷）</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -v volume_name:/volume_mount_path --name target alpine /bin/ash</span><br></pre></td></tr></table></figure><p>然后创建另一个容器，挂载 dbdata2 的容器，并使用 untar 解压备份文件到挂载的容器卷中。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run --volumes-from target -v $(<span class="built_in">pwd</span>):/backup alpine tar zxvf /backup/aaa.tar.gz -C /</span><br></pre></td></tr></table></figure><p>其中 <code>-C /</code> 表示解压路径从根目录开始，从而确保路径和备份时完全对应。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Docker </tag>
+            
+            <tag> volume </tag>
+            
+            <tag> 备份 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>华硕路由修改区域</title>
       <link href="posts/asus-region-mod/"/>
       <url>posts/asus-region-mod/</url>
@@ -139,6 +168,33 @@
             <tag> SM-G9200 </tag>
             
             <tag> 刷机 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux MAC 地址伪装</title>
+      <link href="posts/linux-mac-faking/"/>
+      <url>posts/linux-mac-faking/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://wiki.archlinux.jp/index.php/MAC_%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E5%81%BD%E8%A3%85#.E6.96.B9.E6.B3.95_1:_systemd-networkd">https://wiki.archlinux.jp/index.php/MAC_アドレス偽装#.E6.96.B9.E6.B3.95_1:_systemd-networkd</a></p><p>Tested on Ubuntu 18.04 LTS</p><p>创建系统服务，每次开机时使用 ip link set 修改 mac 地址。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/macspoof@.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=MAC Address Change %I</span><br><span class="line"><span class="attr">Wants</span>=network-pre.target</span><br><span class="line"><span class="attr">Before</span>=network-pre.target</span><br><span class="line"><span class="attr">BindsTo</span>=sys-subsystem-net-devices-%i.device</span><br><span class="line"><span class="attr">After</span>=sys-subsystem-net-devices-%i.device</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=<span class="literal">on</span>eshot</span><br><span class="line"><span class="attr">ExecStart</span>=/sbin/ip link set dev %i address <span class="number">90</span>:<span class="number">2</span>b:<span class="number">34</span>:d2:<span class="number">15</span>:<span class="number">25</span></span><br><span class="line"><span class="attr">ExecStart</span>=/sbin/ip link set dev %i up</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> macspoof@eth0.service</span><br></pre></td></tr></table></figure><p>已知问题：有时涉及网络的重启（推测如 docker）会导致失效。此时需要重启服务。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service macspoof@eno2 restart</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> MAC 地址伪装 </tag>
             
         </tags>
       
@@ -377,6 +433,62 @@
             <tag> 编译 </tag>
             
             <tag> SignTools </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux 显示 git 分支名</title>
+      <link href="posts/linux-git-branch-name/"/>
+      <url>posts/linux-git-branch-name/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>Download <a href="https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh">this</a></p></li><li><p>Copy to <code>~/.git-prompt.sh</code>, or wget it.</p></li><li><p><code>.bashrc</code></p></li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">source</span> ~/.git-prompt.sh</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PS1=<span class="string">&#x27;\[\e]0;\u@\h: \w\a\]$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1)\[\033[00m\]\$ &#x27;</span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> git </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Proxychains 配置支持多场景和自定义 DNS</title>
+      <link href="posts/proxychains-dns/"/>
+      <url>posts/proxychains-dns/</url>
+      
+        <content type="html"><![CDATA[<p>Proxychains 开启时使用的是写死的公用 DNS 4.2.2.2，并不科学。同时只能支持一个代理或代理链，需要切换使用多个代理时并不方便。</p><p>下面以使用 <code>pc</code> 和 <code>pf</code> 两个命令分别连接两个不同的代理为例:</p><h2 id="链接-ss-的代理"><a href="#链接-ss-的代理" class="headerlink" title="链接 ss 的代理"></a>链接 ss 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxychains.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">socks5  127.0.0.1 1080</span><br></pre></td></tr></table></figure><h2 id="链接-fiddler-的代理"><a href="#链接-fiddler-的代理" class="headerlink" title="链接 fiddler 的代理"></a>链接 fiddler 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxyfiddler.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">http  127.0.0.1 8888</span><br></pre></td></tr></table></figure><h2 id="usage"><a href="#usage" class="headerlink" title="usage"></a>usage</h2><ul><li><code>pc xx</code> : use socks5 proxy 127.0.0.1:4411 to connect to xx</li><li><code>pf xx</code> : use http proxy 127.0.0.1:8888 to connect to xx, usually fiddler</li></ul><h2 id="Proxychains-4-NG"><a href="#Proxychains-4-NG" class="headerlink" title="Proxychains 4 NG"></a>Proxychains 4 NG</h2><p>新版没有以前不能解析域名的问题，直接安装即可。<br>但 Proxychains4 不支持 git，原因不明，会报错，因此使用 ProxychainsNG</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/rofl0r/proxychains-ng.git</span><br><span class="line"><span class="built_in">cd</span> proxychains-ng</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line"><span class="built_in">cd</span> .. &amp;&amp; rm -rf proxychains-ng</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=\<span class="string">&#x27;proxychains4\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=\<span class="string">&#x27;proxychains4 -f /etc/proxyfiddler.conf\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br></pre></td></tr></table></figure><hr><h2 id="以下适用于-Proxychains-3-版本，已过时"><a href="#以下适用于-Proxychains-3-版本，已过时" class="headerlink" title="以下适用于 Proxychains 3 版本，已过时"></a>以下适用于 Proxychains 3 版本，已过时</h2><h3 id="改源码支持指定-dns"><a href="#改源码支持指定-dns" class="headerlink" title="改源码支持指定 dns"></a>改源码支持指定 dns</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="variable">$HOME</span>/.proxychains</span><br><span class="line">sudo vim /usr/lib/proxychains3/proxyresolv</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># This script is called by proxychains to resolve DNS names</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DNS server used to resolve names</span></span><br><span class="line">DNS_SERVER=<span class="variable">$&#123;PROXYRESOLV_DNS:-4.2.2.2&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> = 0 ] ; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot; usage:&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;  proxyresolv &lt;hostname&gt; &quot;</span></span><br><span class="line">    <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> LD_PRELOAD=libproxychains.so.3</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$DNS_SERVER</span> = <span class="string">&quot;none&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    dig <span class="variable">$1</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    dig <span class="variable">$1</span> @<span class="variable">$DNS_SERVER</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=<span class="string">&#x27;ln -sf /etc/proxyfiddler.conf $HOME/.proxychains/proxychains.conf; PROXYRESOLV_DNS=none proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=<span class="string">&#x27;ln -sf /etc/proxychains.conf $HOME/.proxychains/proxychains.conf; proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"></span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line">sudo ln -s ~/.proxychains /root/.proxychains</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> Proxychains </tag>
+            
+            <tag> DNS </tag>
             
         </tags>
       
