@@ -62,6 +62,118 @@
     
     
     <entry>
+      <title>QNAP 硬盘不休眠解决</title>
+      <link href="posts/qnap-hdd-wont-sleep/"/>
+      <url>posts/qnap-hdd-wont-sleep/</url>
+      
+        <content type="html"><![CDATA[<h2 id="0-系统-raid-结构"><a href="#0-系统-raid-结构" class="headerlink" title="0. 系统 raid 结构"></a>0. 系统 raid 结构</h2><p>使用 <code>cat /proc/mdstat</code> 可以查看所有 raid 卷。</p><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Personalities</span> :<span class="meta"> [linear] [raid0] [raid1] [raid10] [raid6] [raid5] [raid4] [multipath]</span></span><br><span class="line"><span class="attribute">md3</span> : active raid<span class="number">1</span> sdc<span class="number">3</span>[<span class="number">0</span>]</span><br><span class="line">      <span class="attribute">3897063616</span> blocks super <span class="number">1</span>.<span class="number">0</span><span class="meta"> [1/1] [U]</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">md2</span> : active raid<span class="number">1</span> sda<span class="number">3</span>[<span class="number">0</span>]</span><br><span class="line">      <span class="attribute">7804071616</span> blocks super <span class="number">1</span>.<span class="number">0</span><span class="meta"> [1/1] [U]</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">md1</span> : active raid<span class="number">1</span> sdb<span class="number">3</span>[<span class="number">0</span>]</span><br><span class="line">      <span class="attribute">392120832</span> blocks super <span class="number">1</span>.<span class="number">0</span><span class="meta"> [1/1] [U]</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">md322</span> : active raid<span class="number">1</span> sda<span class="number">5</span>[<span class="number">1</span>] sdc<span class="number">5</span>[<span class="number">0</span>]</span><br><span class="line">      <span class="attribute">7235136</span> blocks super <span class="number">1</span>.<span class="number">0</span><span class="meta"> [2/2] [UU]</span></span><br><span class="line">      <span class="attribute">bitmap</span>: <span class="number">0</span>/<span class="number">1</span> pages<span class="meta"> [0KB], 65536KB chunk</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">md256 : active raid1 sda2[1] sdc2[0]</span></span><br><span class="line">      <span class="attribute">530112</span> blocks super <span class="number">1</span>.<span class="number">0</span><span class="meta"> [2/2] [UU]</span></span><br><span class="line">      <span class="attribute">bitmap</span>: <span class="number">0</span>/<span class="number">1</span> pages<span class="meta"> [0KB], 65536KB chunk</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">md321 : active raid1 sdb5[0]</span></span><br><span class="line">      <span class="attribute">8283712</span> blocks super <span class="number">1</span>.<span class="number">0</span><span class="meta"> [2/1] [U_]</span></span><br><span class="line">      <span class="attribute">bitmap</span>: <span class="number">0</span>/<span class="number">1</span> pages<span class="meta"> [0KB], 65536KB chunk</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">md13 : active raid1 sda4[0] sdc4[33] sdb4[32]</span></span><br><span class="line">      <span class="attribute">458880</span> blocks super <span class="number">1</span>.<span class="number">0</span><span class="meta"> [32/3] [UUU_____________________________]</span></span><br><span class="line">      <span class="attribute">bitmap</span>: <span class="number">1</span>/<span class="number">1</span> pages<span class="meta"> [4KB], 65536KB chunk</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">md9 : active raid1 sda1[0] sdc1[33] sdb1[32]</span></span><br><span class="line">      <span class="attribute">530048</span> blocks super <span class="number">1</span>.<span class="number">0</span><span class="meta"> [32/3] [UUU_____________________________]</span></span><br><span class="line">      <span class="attribute">bitmap</span>: <span class="number">1</span>/<span class="number">1</span> pages<span class="meta"> [4KB], 65536KB chunk</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">unused devices: &lt;none&gt;</span></span><br></pre></td></tr></table></figure><p>注意到 md9 md13 md322 md256 均是横跨了机械硬盘的 raid 卷。搜索后得知 md9 和 md13 是系统自动创建的跨所有硬盘的 raid1 数据卷，存储系统配置和目录等。md322 和 md256 是系统 swap 分区。</p><h2 id="1-系统分区-raid-反复读取"><a href="#1-系统分区-raid-反复读取" class="headerlink" title="1. 系统分区 raid 反复读取"></a>1. 系统分区 raid 反复读取</h2><p>使用 <a href="https://drive.google.com/file/d/0B8u8qWRYVhv0S1ozWFRjazFEX1E/view">blkdevMonitor.sh</a> 脚本查看硬盘读写，可以看到大量 md9 相关读取。因此首先处理 md9 和 md13。</p><p>使用 <code>parted /dev/sdb print</code> 命令查看各硬盘，通过容量判断 sdb 是 SSD，sda 和 sdc 是两块机械硬盘。因此将 SSD 以外的硬盘从阵列中踢出。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Disconnecting md9&quot;</span></span><br><span class="line">mdadm /dev/md9 --fail /dev/sda1</span><br><span class="line">mdadm /dev/md9 --fail /dev/sdc1</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Disconnecting md13&quot;</span></span><br><span class="line">mdadm /dev/md13 --fail /dev/sda4</span><br><span class="line">mdadm /dev/md13 --fail /dev/sdc4</span><br></pre></td></tr></table></figure><p>使用 <code>mdadm -D /dev/md9</code> 验证移除是否成功</p><p>然后使用 <code>hdparm -y /dev/sda</code> 立即休眠硬盘，并使用 <code>hdparm -C /dev/sda</code>查看硬盘状态，<code>active/idle</code> 或者 <code>standby</code></p><p>但断开连接时万一系统盘损坏，则系统数据会丢失，因此每天同步一次。使用下列脚本恢复连接。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Re-adding md9&quot;</span></span><br><span class="line">mdadm /dev/md9 --re-add /dev/sda1</span><br><span class="line">mdadm /dev/md9 --re-add /dev/sdc1</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Re-adding md13&quot;</span></span><br><span class="line">mdadm /dev/md13 --re-add /dev/sda4</span><br><span class="line">mdadm /dev/md13 --re-add /dev/sdc4</span><br></pre></td></tr></table></figure><p>保存上述两个脚本后（记得添加 x 权限），使用 crontab 每天运行一次，加回去15分钟后断开连接，应足够其完成同步。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">echo</span> 15 0 \* \* \* /share/homes/Tojo/rebuild_internal_raid.sh &gt;&gt; /etc/config/crontab</span><br><span class="line">sudo <span class="built_in">echo</span> 30 0 \* \* \* /share/homes/Tojo/disconnect_internal_raid.sh &gt;&gt; /etc/config/crontab</span><br><span class="line">sudo crontab /etc/config/crontab &amp;&amp; sudo /etc/init.d/crond.sh restart</span><br></pre></td></tr></table></figure><p>并修改启动脚本使其自动生效。</p><h2 id="2-swap-分区"><a href="#2-swap-分区" class="headerlink" title="2. swap 分区"></a>2. swap 分区</h2><p>使用 <code>cat /proc/swaps</code> 查看系统 swap 分区，发现很诡异地两个 swap 都建立在机械硬盘上。</p><p>但目前看起来不是很影响休眠，就先不管他了。</p><p>参考：</p><p><a href="https://forum.qnap.com/viewtopic.php?f=55&t=130788">Advanced guide to how I completely silenced my TS-453A - QNAP NAS Community Forum</a></p><p><a href="https://forum.qnap.com/viewtopic.php?t=114286">md clarification please_ - QNAP NAS Community Forum</a></p><p><a href="https://wiki.qnap.com/wiki/Find_out_which_process_prevents_the_hard_drives_from_spindown">Find out which process prevents the hard drives from spindown - QNAPedia</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> QNAP </tag>
+            
+            <tag> 硬盘 </tag>
+            
+            <tag> 休眠 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>QNAP 添加定时任务</title>
+      <link href="posts/qnap-crontab/"/>
+      <url>posts/qnap-crontab/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/config/crontab</span><br><span class="line">sudo crontab -l</span><br><span class="line">crontab /etc/config/crontab &amp;&amp; /etc/init.d/crond.sh restart</span><br></pre></td></tr></table></figure><p>记得把要运行的命令属性 +x</p><p>参考：</p><p><a href="https://wiki.qnap.com/wiki/Add_items_to_crontab">Add items to crontab</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> QNAP </tag>
+            
+            <tag> crontab </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>QNAP 修改 sudoers</title>
+      <link href="posts/qnap-mod-sudoers/"/>
+      <url>posts/qnap-mod-sudoers/</url>
+      
+        <content type="html"><![CDATA[<p>威联通 NAS 默认 sudoers 仅包括内置 admin 账户，修改时需要编辑 <code>/usr/etc/sudoers</code> 文件。</p><p>但 <code>/usr/etc</code> 目录中的编辑在重启后均会复原。因此需要在<code>系统设置-&gt;硬件</code>中打开允许 <code>autorun.sh</code> 运行选项，并且编辑该文件。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount $(/sbin/hal_app --get_boot_pd port_id=0)6 /tmp/config</span><br><span class="line">vim /tmp/config/autorun.sh</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">mkdir -p /usr/etc/sudoers.d</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Tojo ALL=(ALL) ALL&quot;</span> &gt; /usr/etc/sudoers.d/Tojo</span><br></pre></td></tr></table></figure><p>如此即可在重启后自动修改 sudoers。如果直接向 <code>/usr/etc/sudoers</code> 末尾写入配置的话，由于该配置文件最后一行为 include 命令，因此会导致在此之后写入的配置无法生效。因此选择向其加载的配置目录中写入新文件。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> QNAP </tag>
+            
+            <tag> sudoers </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>QNAP 添加启动项</title>
+      <link href="posts/qnap-startup/"/>
+      <url>posts/qnap-startup/</url>
+      
+        <content type="html"><![CDATA[<p>在<code>系统设置-&gt;硬件</code>中打开允许 <code>autorun.sh</code> 运行选项，并且编辑该文件。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount $(/sbin/hal_app --get_boot_pd port_id=0)6 /tmp/config</span><br><span class="line">or sudo mount $(sudo /sbin/hal_app --get_boot_pd port_id=0)6 /tmp/config</span><br><span class="line">vim /tmp/config/autorun.sh</span><br></pre></td></tr></table></figure><p>必须添加 shebang，否则会报错。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br></pre></td></tr></table></figure><p>参考：</p><p><a href="https://wiki.qnap.com/wiki/Running_Your_Own_Application_at_Startup">Running Your Own Application at Startup</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> QNAP </tag>
+            
+            <tag> 启动项 </tag>
+            
+            <tag> autorun </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>在 Ubuntu VPS 上引导 iso 安装纯净系统</title>
       <link href="posts/vps-boot-from-iso/"/>
       <url>posts/vps-boot-from-iso/</url>
