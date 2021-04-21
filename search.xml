@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Windows 10 USB 图标改变解决</title>
+      <link href="posts/windows-10-usb-icon-fix/"/>
+      <url>posts/windows-10-usb-icon-fix/</url>
+      
+        <content type="html"><![CDATA[<p>Windows 的驱动服务器在 2019 年 11 月左右出现了一次 bug 导致所有的U盘图标均变为机柜，即使使用 <code>autorun.inf</code> 修改磁盘图标也无法生效，且单击弹出磁盘时，所有的设备名均变为 Device。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20USB%20%E5%9B%BE%E6%A0%87%E6%94%B9%E5%8F%98%E8%A7%A3%E5%86%B3/20191110175553.png" alt="20191110175553"></p><p>原因是 Windows 会联网获取设备驱动与图标，因此服务器端问题会影响本机驱动。驱动服务器问题后来已经修复，但本机已经下载的 USB 驱动还在，因此问题会残留。解决方案是删除已缓存的驱动程序。</p><ul><li><p>打开 <code>C:\ProgramData\Microsoft\Windows\DeviceMetadataCache\dmrccache\en-us</code> 如果目录下有文件，寻找在其中 <code>DeviceInformation</code> 目录中含有 <code>ico2001.ico</code> 的机柜图标的目录，并删除该目录。</p></li><li><p>重启</p></li><li><p>如果没有恢复，或者上述目录中没有文件，则打开控制面板，设备和打印机，删除最下面的无法识别的 Device</p><p>  <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20USB%20%E5%9B%BE%E6%A0%87%E6%94%B9%E5%8F%98%E8%A7%A3%E5%86%B3/image-20200824195700272.png" alt="image-20200824195700272"></p></li><li><p>重新插拔设备，应该可以恢复。此时查看上述目录，应该已经没有文件存在。弹出磁盘的菜单也应恢复显示设备名。</p><p>  <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20USB%20%E5%9B%BE%E6%A0%87%E6%94%B9%E5%8F%98%E8%A7%A3%E5%86%B3/image-20200824195842372.png" alt="image-20200824195842372">  <img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20USB%20%E5%9B%BE%E6%A0%87%E6%94%B9%E5%8F%98%E8%A7%A3%E5%86%B3/image-20200824200746369.png" alt="image-20200824200746369"></p></li></ul><p>参考/图片：<a href="https://noushibou.hatenadiary.jp/entry/2019/11/10/101358">https://noushibou.hatenadiary.jp/entry/2019/11/10/101358</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 图标 </tag>
+            
+            <tag> Windows 10 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>废物利用为 Galaxy S6 SM-G9200 刷入可用系统</title>
       <link href="posts/galaxy-s6-system/"/>
       <url>posts/galaxy-s6-system/</url>
@@ -117,9 +144,9 @@
       
         <tags>
             
-            <tag> Windows </tag>
-            
             <tag> Windows 10 </tag>
+            
+            <tag> Windows </tag>
             
             <tag> UWP </tag>
             
@@ -320,7 +347,7 @@
       <link href="posts/20170112-bjut-helper/"/>
       <url>posts/20170112-bjut-helper/</url>
       
-        <content type="html"><![CDATA[<p>北工大查分野生助手（野生工大助手）。是<a href="http://www.wangyufeng.org/">王雨峰童鞋</a>带头写的一个工大查分小助手。后来申请了星火基金，现在由我和雨峰共同维护。具体说明还在写，先写更新日志。 </p><p>昨晚更新之后很多童鞋说加权和绩点都变了。是这样的，我们更新了绩点的算法，根据教务处的文件，绩点的计算也是要按学分加权的。而加权平均分的部分之前因为学校的数据格式不统一，导致了部分人的新生研讨课也被算进了加权。更新之后能识别出这部分新生研讨课，所以新的加权分就不包含研讨了，导致一部分同学的加权变化。</p><p>昨天访问量达到了 18392，谢谢大家！</p><p>以后也请大家多多支持啦！</p><p>项目地址：<a href="https://github.com/wangyufeng0615/bjuthelper">https://github.com/wangyufeng0615/bjuthelper</a><br>主页：<a href="http://chafen.bjut123.com/">http://chafen.bjut123.com</a><br>内测版：<a href="http://bjut.devchen.cn/">http://bjut.devchen.cn</a>  </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20170112-bjut-helper/image-20210421025448423.png" alt="image-20210421025448423"></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20170112-bjut-helper/image-20210421025456521.png" alt="image-20210421025456521"></p><h2 id="更新日志"><a href="#更新日志" class="headerlink" title="更新日志"></a>更新日志</h2><h3 id="2017-1-12"><a href="#2017-1-12" class="headerlink" title="2017.1.12"></a>2017.1.12</h3><ul><li>添加了更新日志。 </li><li>微调了总科目数的提示文字，避免歧义。 </li><li>修正了未通过科目数计算错误。</li><li>修正了中文成绩（等级）导致的科目计算错误。</li><li>增加了可折叠的通过/未通过成绩统计。</li></ul><h3 id="2017-1-11"><a href="#2017-1-11" class="headerlink" title="2017.1.11"></a>2017.1.11</h3><ul><li>修正了由新生研讨课的中文课程成绩和数据格式不统一导致的计算 bug。（可能会导致部分人加权分数变化）</li><li>修正了错误的绩点计算方式，已经更正为平均学分绩点（加权），参考 <a href="http://undergrad.bjut.edu.cn/WebInfo.aspx?Id=752">教务处文件</a>。</li><li>更改了页面编码为 UTF-8。（但教务那边的辣鸡还是 GB2312 我们也没什么办法）</li></ul><h3 id="2017-1-3"><a href="#2017-1-3" class="headerlink" title="2017.1.3"></a>2017.1.3</h3><ul><li>移除了文件式 cookie，加快了响应和服务器负载。</li><li>添加了免验证码。</li></ul><h3 id="2016-12-6"><a href="#2016-12-6" class="headerlink" title="2016.12.6"></a>2016.12.6</h3><ul><li>添加了说明信息和 ICP 备案号</li></ul><h3 id="2016-12-3"><a href="#2016-12-3" class="headerlink" title="2016.12.3"></a>2016.12.3</h3><ul><li>修正了部分验证码错位的问题</li></ul><h3 id="2016-11-28"><a href="#2016-11-28" class="headerlink" title="2016.11.28"></a>2016.11.28</h3><ul><li>微调了代码架构，加强了微信浏览器的兼容性。</li></ul><h3 id="2016-7-23"><a href="#2016-7-23" class="headerlink" title="2016.7.23"></a>2016.7.23</h3><ul><li>增加了代码说明和项目说明，配了图。</li></ul><h3 id="2016-7-16"><a href="#2016-7-16" class="headerlink" title="2016.7.16"></a>2016.7.16</h3><ul><li>首次上传</li></ul><h2 id="二维码"><a href="#二维码" class="headerlink" title="二维码"></a>二维码</h2><p>来，扫码吧！<br>王雨峰的公众号：七系<br><img src= "/images/loading.gif" data-lazy-src="/blogimg/20170112-bjut-helper/1.png"><br>十七的空指针：<br><img src= "/images/loading.gif" data-lazy-src="/blogimg/20170112-bjut-helper/2.png"></p><p align = right>by Sykie Chen & Alan Wang2017.1.12</p>]]></content>
+        <content type="html"><![CDATA[<p>北工大查分野生助手（野生工大助手）。是<a href="http://www.wangyufeng.org/">王雨峰童鞋</a>带头写的一个工大查分小助手。后来申请了星火基金，现在由我和雨峰共同维护。具体说明还在写，先写更新日志。 </p><p>昨晚更新之后很多童鞋说加权和绩点都变了。是这样的，我们更新了绩点的算法，根据教务处的文件，绩点的计算也是要按学分加权的。而加权平均分的部分之前因为学校的数据格式不统一，导致了部分人的新生研讨课也被算进了加权。更新之后能识别出这部分新生研讨课，所以新的加权分就不包含研讨了，导致一部分同学的加权变化。</p><p>昨天访问量达到了 18392，谢谢大家！</p><p>以后也请大家多多支持啦！</p><p>项目地址：<a href="https://github.com/wangyufeng0615/bjuthelper">https://github.com/wangyufeng0615/bjuthelper</a><br>主页：<a href="http://chafen.bjut123.com/">http://chafen.bjut123.com</a><br>内测版：<a href="http://bjut.devchen.cn/">http://bjut.devchen.cn</a>  </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/20170112-bjut-helper/image-20210421025448423.png" alt="image-20210421025448423"><img src= "/images/loading.gif" data-lazy-src="/blogimg/20170112-bjut-helper/image-20210421025456521.png" alt="image-20210421025456521"></p><h2 id="更新日志"><a href="#更新日志" class="headerlink" title="更新日志"></a>更新日志</h2><h3 id="2017-1-12"><a href="#2017-1-12" class="headerlink" title="2017.1.12"></a>2017.1.12</h3><ul><li>添加了更新日志。 </li><li>微调了总科目数的提示文字，避免歧义。 </li><li>修正了未通过科目数计算错误。</li><li>修正了中文成绩（等级）导致的科目计算错误。</li><li>增加了可折叠的通过/未通过成绩统计。</li></ul><h3 id="2017-1-11"><a href="#2017-1-11" class="headerlink" title="2017.1.11"></a>2017.1.11</h3><ul><li>修正了由新生研讨课的中文课程成绩和数据格式不统一导致的计算 bug。（可能会导致部分人加权分数变化）</li><li>修正了错误的绩点计算方式，已经更正为平均学分绩点（加权），参考 <a href="http://undergrad.bjut.edu.cn/WebInfo.aspx?Id=752">教务处文件</a>。</li><li>更改了页面编码为 UTF-8。（但教务那边的辣鸡还是 GB2312 我们也没什么办法）</li></ul><h3 id="2017-1-3"><a href="#2017-1-3" class="headerlink" title="2017.1.3"></a>2017.1.3</h3><ul><li>移除了文件式 cookie，加快了响应和服务器负载。</li><li>添加了免验证码。</li></ul><h3 id="2016-12-6"><a href="#2016-12-6" class="headerlink" title="2016.12.6"></a>2016.12.6</h3><ul><li>添加了说明信息和 ICP 备案号</li></ul><h3 id="2016-12-3"><a href="#2016-12-3" class="headerlink" title="2016.12.3"></a>2016.12.3</h3><ul><li>修正了部分验证码错位的问题</li></ul><h3 id="2016-11-28"><a href="#2016-11-28" class="headerlink" title="2016.11.28"></a>2016.11.28</h3><ul><li>微调了代码架构，加强了微信浏览器的兼容性。</li></ul><h3 id="2016-7-23"><a href="#2016-7-23" class="headerlink" title="2016.7.23"></a>2016.7.23</h3><ul><li>增加了代码说明和项目说明，配了图。</li></ul><h3 id="2016-7-16"><a href="#2016-7-16" class="headerlink" title="2016.7.16"></a>2016.7.16</h3><ul><li>首次上传</li></ul><h2 id="二维码"><a href="#二维码" class="headerlink" title="二维码"></a>二维码</h2><p>来，扫码吧！<br>王雨峰的公众号：七系<br><img src= "/images/loading.gif" data-lazy-src="/blogimg/20170112-bjut-helper/1.png"><br>十七的空指针：<br><img src= "/images/loading.gif" data-lazy-src="/blogimg/20170112-bjut-helper/2.png"></p><p align = right>by Sykie Chen & Alan Wang2017.1.12</p>]]></content>
       
       
       <categories>

@@ -9,6 +9,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/windows-10-usb-icon-fix/</loc>
+    
+    <lastmod>2020-08-23</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/about/</loc>
     
     <lastmod>2020-08-01</lastmod>
@@ -459,14 +466,14 @@
   </url>
   
   <url>
-    <loc>https://www.coder17.com/tags/Windows/</loc>
+    <loc>https://www.coder17.com/tags/Windows-10/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.coder17.com/tags/Windows-10/</loc>
+    <loc>https://www.coder17.com/tags/Windows/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
