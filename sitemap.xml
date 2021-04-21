@@ -51,6 +51,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/asus-region-mod/</loc>
+    
+    <lastmod>2020-05-12</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/galaxy-s6-system/</loc>
     
     <lastmod>2020-04-24</lastmod>
@@ -86,6 +93,20 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/asus-ddns/</loc>
+    
+    <lastmod>2020-03-04</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/remote-control/</loc>
+    
+    <lastmod>2019-11-14</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/vps-boot-from-iso/</loc>
     
     <lastmod>2019-09-19</lastmod>
@@ -103,6 +124,13 @@
     <loc>https://www.coder17.com/posts/uwp-crash/</loc>
     
     <lastmod>2018-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/nextcloud-share-rename/</loc>
+    
+    <lastmod>2018-11-26</lastmod>
     
   </url>
   
@@ -739,6 +767,34 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/%E5%8D%8E%E7%A1%95/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Merlin/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/DDNS/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/Ubuntu/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -949,7 +1005,35 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/%E6%8A%95%E5%B1%8F/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%88%B6/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/iptables/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Nextcloud/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E9%87%8D%E5%91%BD%E5%90%8D/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

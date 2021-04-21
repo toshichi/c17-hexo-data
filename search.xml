@@ -87,6 +87,35 @@
     
     
     <entry>
+      <title>华硕路由修改区域</title>
+      <link href="posts/asus-region-mod/"/>
+      <url>posts/asus-region-mod/</url>
+      
+        <content type="html"><![CDATA[<p>必须安装 Merlin 固件。</p><p>控制国家码的部分在 CFE 不能修改，且 nvram 修改后重启系统/服务即失效。<br>因此加到系统启动和服务启动的脚本即可。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">touch /jffs/scripts/init-start</span><br><span class="line">ln -s /jffs/scripts/init-start /jffs/scripts/service-event</span><br><span class="line">chmod a+rx /jffs/scripts/*</span><br><span class="line">vi /jffs/scripts/init-start</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">nvram <span class="built_in">unset</span> territory_code</span><br><span class="line">nvram <span class="built_in">set</span> location_code=JP</span><br><span class="line">nvram <span class="built_in">set</span> 0:ccode=JP</span><br><span class="line">nvram <span class="built_in">set</span> 1:ccode=JP</span><br><span class="line">nvram <span class="built_in">set</span> wl0_country_code=JP</span><br><span class="line">nvram <span class="built_in">set</span> wl1_country_code=JP</span><br></pre></td></tr></table></figure><p>并在 web 设置中 <code>Administration -&gt; System</code> 启用用户脚本。<br>其中 AA 为亚洲区，信号功率25，频段不全。需要其他频段时可设为 JP 或 TW。</p><p>然后在 Web 界面中重启路由器。</p><p>改好后语言菜单会解锁全部语言：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%8D%8E%E7%A1%95%E8%B7%AF%E7%94%B1%E4%BF%AE%E6%94%B9%E5%8C%BA%E5%9F%9F/image-20210421222345051.png" alt="image-20210421222345051"></p><p><a href="https://github.com/RMerl/asuswrt-merlin/wiki/User-scripts">User scripts · RMerl/asuswrt-merlin Wiki · GitHub</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 华硕 </tag>
+            
+            <tag> 路由器 </tag>
+            
+            <tag> Merlin </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>废物利用为 Galaxy S6 SM-G9200 刷入可用系统</title>
       <link href="posts/galaxy-s6-system/"/>
       <url>posts/galaxy-s6-system/</url>
@@ -230,6 +259,66 @@
     
     
     <entry>
+      <title>华硕路由添加 DDNS 服务</title>
+      <link href="posts/asus-ddns/"/>
+      <url>posts/asus-ddns/</url>
+      
+        <content type="html"><![CDATA[<p>以 dockdns 为例，必须安装 Merlin 固件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /jffs/scripts/ddns-start</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># register a subdomain at https://www.duckdns.org/ to get your token</span></span><br><span class="line">SUBDOMAIN=<span class="string">&quot;your_subdomain&quot;</span></span><br><span class="line">TOKEN=<span class="string">&quot;your-token&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># no modification below needed</span></span><br><span class="line">curl --silent <span class="string">&quot;https://www.duckdns.org/update?domains=<span class="variable">$SUBDOMAIN</span>&amp;token=<span class="variable">$TOKEN</span>&amp;ip=<span class="variable">$1</span>&quot;</span> &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"><span class="keyword">if</span> [ $? -eq 0 ];</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    /sbin/ddns_custom_updated 1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    /sbin/ddns_custom_updated 0</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod a+rx /jffs/scripts/*</span><br></pre></td></tr></table></figure><p>并在 web 设置中 <code>Administration -&gt; System</code> 启用用户脚本，在 <code>WAN -&gt; DDNS -&gt; DDNS Service</code> 中设置为<code>custom</code> 即可。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 华硕 </tag>
+            
+            <tag> 路由器 </tag>
+            
+            <tag> Merlin </tag>
+            
+            <tag> DDNS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows 远程投屏方案</title>
+      <link href="posts/remote-control/"/>
+      <url>posts/remote-control/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-Windows-gt-Android"><a href="#1-Windows-gt-Android" class="headerlink" title="1 Windows-&gt;Android"></a>1 Windows-&gt;Android</h2><h3 id="1-1-VNC-协议"><a href="#1-1-VNC-协议" class="headerlink" title="1.1 VNC 协议"></a>1.1 VNC 协议</h3><p>使用 <a href="https://play.google.com/store/apps/details?id=com.realvnc.viewer.android">VNC Viewer</a></p><p>优点：</p><ul><li>   屏幕没有工具栏</li></ul><p>缺点：</p><ul><li>   需要鼠标操作，不能用键盘/遥控器定位</li><li>   间歇性断线</li><li>   没有声音</li></ul><h3 id="1-2-RDP-协议"><a href="#1-2-RDP-协议" class="headerlink" title="1.2 RDP 协议"></a>1.2 RDP 协议</h3><p>使用 <a href="https://play.google.com/store/apps/details?id=com.devolutions.remotedesktopmanager">Remote Desktop Manager</a></p><p>优点：</p><ul><li>   键盘可以操作</li><li>   稳定</li><li>   有声音</li></ul><p>缺点：</p><ul><li>第一次创建连接需要用鼠标点</li><li>工具栏需要操作才能消去</li></ul><h3 id="1-3-向日葵软件"><a href="#1-3-向日葵软件" class="headerlink" title="1.3 向日葵软件"></a>1.3 向日葵软件</h3><p>使用 <a href="https://sunlogin.oray.com/zh_CN/remote/screen">远程投屏-向日葵</a></p><p>优点：</p><ul><li>暂缺</li></ul><p>缺点：</p><ul><li>依赖公网</li><li>依赖第三方服务</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> 投屏 </tag>
+            
+            <tag> 远程控制 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>在 Ubuntu VPS 上引导 iso 安装纯净系统</title>
       <link href="posts/vps-boot-from-iso/"/>
       <url>posts/vps-boot-from-iso/</url>
@@ -319,6 +408,33 @@
             <tag> UWP </tag>
             
             <tag> Store </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>重命名 Nextcloud 分享链接</title>
+      <link href="posts/nextcloud-share-rename/"/>
+      <url>posts/nextcloud-share-rename/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://github.com/LazyShpee/sharerenamer">https://github.com/LazyShpee/sharerenamer</a></p><blockquote><p>  Choose ‘download’ and put the files in the apps subfolder of nextcloud, make sure they are in a folder called ‘sharerenamer’ and all in there, not in another subfolder in there (like ‘master’). Then make sure the files are owned by the webserver user (like, www-run or something) and you can enable the app in the app interface.</p></blockquote><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%87%8D%E5%91%BD%E5%90%8D%20Nextcloud%20%E5%88%86%E4%BA%AB%E9%93%BE%E6%8E%A5/e5bbec35.png" alt="重命名 Nextcloud 分享链接_2018-11-26-15-20-09.png"></p><p><a href="https://github.com/nextcloud/server/issues/4536">https://github.com/nextcloud/server/issues/4536</a></p><hr><p>项目已经更新至:</p><p><a href="https://github.com/DecaTec/sharerenamer/">https://github.com/DecaTec/sharerenamer/</a></p><p><a href="https://apps.nextcloud.com/apps/sharerenamer">https://apps.nextcloud.com/apps/sharerenamer</a></p><p>然而不支持最新版 nextcloud</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Nextcloud </tag>
+            
+            <tag> 重命名 </tag>
             
         </tags>
       
