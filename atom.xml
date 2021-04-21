@@ -355,6 +355,34 @@
   </entry>
   
   <entry>
+    <title>安装 mosh 与 byobu</title>
+    <link href="https://www.coder17.com/posts/install-mosh-byobu/"/>
+    <id>https://www.coder17.com/posts/install-mosh-byobu/</id>
+    <published>2019-11-24T13:02:00.000Z</published>
+    <updated>2019-11-24T13:02:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-mosh"><a href="#1-mosh" class="headerlink" title="1 mosh"></a>1 mosh</h2><p>在延迟过高的服务器上操作时，使用 mosh 来通过 UDP 连接加强体验。甚至网络中断后重连或系统休眠后仍能维持连接。<br>默认使用 60000 以上端口，一个 UDP 只能有一个连接。<br>此处配置成和 ssh 使用相同端口来方便连接。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install mosh</span><br></pre></td></tr></table></figure><p>连接时： </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosh -p &lt;mosh port&gt; --ssh=<span class="string">&#x27;ssh -p &lt;ssh port&gt;&#x27;</span> &lt;user&gt;@&lt;server address&gt;</span><br></pre></td></tr></table></figure><h3 id="1-1-WinSCP-中使用-mosh"><a href="#1-1-WinSCP-中使用-mosh" class="headerlink" title="1.1 WinSCP 中使用 mosh"></a>1.1 WinSCP 中使用 mosh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosh -p !<span class="comment"># --ssh=&#x27;ssh -p !#&#x27; !U@!@</span></span><br></pre></td></tr></table></figure><h3 id="1-2-端口转发注意点"><a href="#1-2-端口转发注意点" class="headerlink" title="1.2 端口转发注意点"></a>1.2 端口转发注意点</h3><p>因为 mosh 所使用的端口是客户端连接时指定的，所以不能转发到不同的端口。<br>比如通过把服务器的 60001 UDP 转发到 50001，再使用 mosh -p 50001，是无法连接的。<br>需要转发到相同端口连接。<br>为避免麻烦，使用与转发的 ssh TCP 端口相同的端口即可。</p><h2 id="2-byobu"><a href="#2-byobu" class="headerlink" title="2 byobu"></a>2 byobu</h2><p>mosh 单一端口只支持一个连接，所以要多线操作时不方便使用多连接的方式，因此需要分屏操作。<br>tmux 快捷键十分反人类，难以记忆，得不偿失。虽然可以修改，但往往使用 docker 或公用服务器时一一修改非常麻烦。<br>因此选择默认快捷键适合人类使用的 byobu。byobu 是日语びょうぶ屏風。<br>byobu 可以选择基于 tmux 后端还是 screen 后端。使用 <code>byobu-select-backend</code> 进行切换。<br>一般 ubuntu 会内置 byobu，非常方便。</p><h3 id="2-1-快捷键"><a href="#2-1-快捷键" class="headerlink" title="2.1 快捷键"></a>2.1 快捷键</h3><p>F2 新建 Window， F3 F4 移动到 Window<br>Shift F2 上下分割，Ctrl F2 左右分割<br>Shift F3 F4 移动到分屏，Ctrl F6 关闭当前分屏<br>Shift + 方向键 移动到分屏<br>F5 重载配置文件，Shift F5 似乎是切换状态栏<br>F6 Detach session<br>F7 滚动模式，按 pgup pgdn 滚屏，回车退出<br>Alt + pgup/pgdn 直接滚屏<br>F8 修改 Window 名<br>F9 配置，Shift + F12 切换F键有效性<br>Shift + F11 最大化当前窗口</p><h3 id="2-2-时间换行问题"><a href="#2-2-时间换行问题" class="headerlink" title="2.2 时间换行问题"></a>2.2 时间换行问题</h3><p>有时状态栏最后一位时间会换行，导致状态栏错位。这是因为当前终端字体不支持系统 logo 的特殊字符显示。按 F9 进配置，选择 <code>Toggle status notifications</code>，去掉 logo，Apply 即可。</p><h3 id="2-3-提示符风格"><a href="#2-3-提示符风格" class="headerlink" title="2.3 提示符风格"></a>2.3 提示符风格</h3><p>默认配色不是默认配色，使用 <code>byobu-disable-prompt</code> 恢复默认。</p><h3 id="2-4-256色不支持"><a href="#2-4-256色不支持" class="headerlink" title="2.4 256色不支持"></a>2.4 256色不支持</h3><p>部分版本切换到默认配色时会不支持 256 色，<code>echo $TERM</code> 返回 <code>screen</code>。<br>这是默认 tmux 配置的问题。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim <span class="variable">$BYOBU_PREFIX</span>/share/byobu/profiles/tmux</span><br></pre></td></tr></table></figure><p>查找 <code>set -g default-terminal &quot;screenr&quot;</code> 修改为 <code>set -g default-terminal &quot;screen-256color&quot;</code></p><h3 id="2-5-支持滚轮和鼠标"><a href="#2-5-支持滚轮和鼠标" class="headerlink" title="2.5 支持滚轮和鼠标"></a>2.5 支持滚轮和鼠标</h3><p>Alt + F12 切换鼠标支持</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%AE%89%E8%A3%85%20mosh%20%E4%B8%8E%20byobu/image-20210421235258827.png" alt="image-20210421235258827"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;1-mosh&quot;&gt;&lt;a href=&quot;#1-mosh&quot; class=&quot;headerlink&quot; title=&quot;1 mosh&quot;&gt;&lt;/a&gt;1 mosh&lt;/h2&gt;&lt;p&gt;在延迟过高的服务器上操作时，使用 mosh 来通过 UDP 连接加强体验。甚至网络中断后重连或系统休眠后仍能</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
+    
+    <category term="mosh" scheme="https://www.coder17.com/tags/mosh/"/>
+    
+    <category term="byobu" scheme="https://www.coder17.com/tags/byobu/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Windows 远程投屏方案</title>
     <link href="https://www.coder17.com/posts/remote-control/"/>
     <id>https://www.coder17.com/posts/remote-control/</id>
@@ -478,6 +506,34 @@
   </entry>
   
   <entry>
+    <title>ss-tunnel 转发 dns</title>
+    <link href="https://www.coder17.com/posts/ss-tunnel-dns/"/>
+    <id>https://www.coder17.com/posts/ss-tunnel-dns/</id>
+    <published>2019-05-19T11:35:00.000Z</published>
+    <updated>2019-05-19T11:35:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup sudo /usr/<span class="built_in">local</span>/bin/ss-tunnel -c /etc/shadowsocks-libev/config.json -l 53 -v -b 127.0.0.1 -L 8.8.8.8:53 -u &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span clas</summary>
+      
+    
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
+    
+    <category term="Shadowsocks" scheme="https://www.coder17.com/tags/Shadowsocks/"/>
+    
+    <category term="ss-tunnel" scheme="https://www.coder17.com/tags/ss-tunnel/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Proxychains 配置支持多场景和自定义 DNS</title>
     <link href="https://www.coder17.com/posts/proxychains-dns/"/>
     <id>https://www.coder17.com/posts/proxychains-dns/</id>
@@ -507,96 +563,30 @@
   </entry>
   
   <entry>
-    <title>Windows 10 商店应用无法启动解决</title>
-    <link href="https://www.coder17.com/posts/uwp-crash/"/>
-    <id>https://www.coder17.com/posts/uwp-crash/</id>
-    <published>2018-12-10T15:00:00.000Z</published>
-    <updated>2018-12-10T15:00:00.000Z</updated>
+    <title>安装 zsh</title>
+    <link href="https://www.coder17.com/posts/install-zsh/"/>
+    <id>https://www.coder17.com/posts/install-zsh/</id>
+    <published>2019-05-18T19:16:00.000Z</published>
+    <updated>2020-11-30T14:51:00.000Z</updated>
     
-    <content type="html"><![CDATA[<p>Bug 10 的桌面版商店应用全崩了，提示没有权限啥啥啥，脑壳疼。<br>今天发现截图软件崩了，试图重启的时候弹出一个框告诉我访问啥啥没权限。  </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/a15862ae.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-40-49.png"></p><p>哦擦这是什么鬼呢。</p><p>顺着提示找到路径 <code>C:\Users\&lt;username&gt;\AppData\Local\Microsoft\WindowsApps</code>，发现是放置所有从 Windows Store 安装的桌面应用的地方。注意是桌面应用而不是 UWP 应用。<br>进到目录里看到所有的 exe 都是 0KB 没有图标的，双击后弹出一样的错误框。查看整个 WindowsApps 目录发现是没有大小的。 </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/a0ce7d67.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-43-09.png"></p><p>起初以为是目录文件损坏，找出了一周前的系统备份镜像发现备份中的这个目录也是一样的 0KB。这就比较棘手了。 </p><p>尝试启动了一下 WSL 的那个 Ubuntu 图标，发现也报一样的错误。搜索后发现 Github 上<a href="https://github.com/Microsoft/WSL/issues/2323">有一个 issue</a> 在研究这个问题。<br>看了看其中的解决方式，重置 Windows Store 什么的都不好使。<br>尝试右键管理员运行，依然报错。但注意到选择管理员运行后先弹出了 UAC 提权框，其中的程序图标是正常显示的。于是怀疑并不是这个 exe 本身有权限问题，而是 exe 运行后访问的某个资源有权限问题。<br>在 Github 的那个 issue 中看到<a href="https://github.com/Microsoft/WSL/issues/2323#issuecomment-412823470">有人建议</a>使用 <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procmon">Process Monitor</a> 检测一下到底是什么权限问题。 </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/754e95d7.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-53-13.png"></p><p>于是使用 Procmon 抓取启动后的 <code>ACCESS DENIED</code> 记录：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/f958d8d3.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-53-29.png"></p><p>看到三条注册表访问和一条文件访问，从路径看那条文件访问的嫌疑很大。于是查看该路径 <code>C:\Users\&lt;username&gt;\AppData\Local\Packages</code> 的权限：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/db6e5d86.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-54-45.png"></p><p>发现只有自己，感觉不太对，又在任务管理器中查看了 PID 10148 的那个 svchost 进程，发现用户名是 SYSTEM。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/4190a952.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-55-52.png"></p><p>那么问题应该很明显了，这个宿主进程没有权限访问存储了 Windows 商店应用数据的目录。</p><p>为了确认问题，找了另一个机器查看对应目录的权限，发现应该除了当前用户之外，还有 SYSTEM 用户和 Administrators 用户组的完全访问权限。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/be890d1d.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-57-14.png"></p><p>于是给对应目录添加了这两组权限，再试，还报错。重新抓取动作后发现这次是 <code>C:\Users\&lt;username&gt;\AppData\Local\Microsoft</code> 目录又没权限访问。重复上述步骤添加权限后，顺利启动。问题解决。</p><p>虽然不知道是什么原因导致权限丢失，不过十有八九是 Bug 10 的某个补丁包干的好事。吔屎啦微软。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;Bug 10 的桌面版商店应用全崩了，提示没有权限啥啥啥，脑壳疼。&lt;br&gt;今天发现截图软件崩了，试图重启的时候弹出一个框告诉我访问啥啥没权限。  &lt;/p&gt;
-&lt;p&gt;&lt;img src= &quot;/images/loading.gif&quot; data-lazy-src=&quot;/blogimg/</summary>
-      
-    
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
-    
-    
-    <category term="Windows 10" scheme="https://www.coder17.com/tags/Windows-10/"/>
-    
-    <category term="Windows" scheme="https://www.coder17.com/tags/Windows/"/>
-    
-    <category term="UWP" scheme="https://www.coder17.com/tags/UWP/"/>
-    
-    <category term="Store" scheme="https://www.coder17.com/tags/Store/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>重命名 Nextcloud 分享链接</title>
-    <link href="https://www.coder17.com/posts/nextcloud-share-rename/"/>
-    <id>https://www.coder17.com/posts/nextcloud-share-rename/</id>
-    <published>2018-11-26T06:20:00.000Z</published>
-    <updated>2018-11-26T06:20:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://github.com/LazyShpee/sharerenamer">https://github.com/LazyShpee/sharerenamer</a></p><blockquote><p>  Choose ‘download’ and put the files in the apps subfolder of nextcloud, make sure they are in a folder called ‘sharerenamer’ and all in there, not in another subfolder in there (like ‘master’). Then make sure the files are owned by the webserver user (like, www-run or something) and you can enable the app in the app interface.</p></blockquote><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E9%87%8D%E5%91%BD%E5%90%8D%20Nextcloud%20%E5%88%86%E4%BA%AB%E9%93%BE%E6%8E%A5/e5bbec35.png" alt="重命名 Nextcloud 分享链接_2018-11-26-15-20-09.png"></p><p><a href="https://github.com/nextcloud/server/issues/4536">https://github.com/nextcloud/server/issues/4536</a></p><hr><p>项目已经更新至:</p><p><a href="https://github.com/DecaTec/sharerenamer/">https://github.com/DecaTec/sharerenamer/</a></p><p><a href="https://apps.nextcloud.com/apps/sharerenamer">https://apps.nextcloud.com/apps/sharerenamer</a></p><p>然而不支持最新版 nextcloud</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="1-zsh"><a href="#1-zsh" class="headerlink" title="1. zsh"></a>1. zsh</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install zsh</span><br></pre></td></tr></table></figure><h2 id="2-oh-my-zsh-and-theme"><a href="#2-oh-my-zsh-and-theme" class="headerlink" title="2. oh my zsh and theme"></a>2. <a href="https://github.com/robbyrussell/oh-my-zsh">oh my zsh</a> and theme</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sh -c &quot;$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;</span><br><span class="line">sudo apt install fonts-powerline</span><br><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZSH_THEME=&quot;agnoster&quot; # (this is one of the fancy ones)</span><br><span class="line"><span class="meta">#</span><span class="bash"> see https://github.com/robbyrussell/oh-my-zsh/wiki/Themes<span class="comment">#agnoster</span></span></span><br></pre></td></tr></table></figure><h2 id="3-WSL-ColorTool"><a href="#3-WSL-ColorTool" class="headerlink" title="3. WSL: ColorTool"></a>3. WSL: <a href="https://github.com/Microsoft/Terminal/tree/master/src/tools/ColorTool">ColorTool</a></h2><h2 id="4-Ctrl-Backspace-and-Ctrl-Delete"><a href="#4-Ctrl-Backspace-and-Ctrl-Delete" class="headerlink" title="4. Ctrl + Backspace and Ctrl + Delete"></a>4. <code>Ctrl + Backspace</code> and <code>Ctrl + Delete</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;bindkey &#x27;^H&#x27; backward-kill-word&quot; &gt;&gt; ~/.zshrc</span><br><span class="line">echo &quot;bindkey &#x27;^[[3;5~&#x27; kill-word&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><p><a href="https://github.com/robbyrussell/oh-my-zsh/issues/7609">Why don’t Ctrl+Backspace and Ctrl+Delete work? · Issue #7609 · robbyrussell/oh-my-zsh · GitHub</a></p><h2 id="6-ll"><a href="#6-ll" class="headerlink" title="6. ll"></a>6. ll</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;alias ll=&#x27;ls -alhF&#x27;&quot; &gt;&gt; ~/.bash_aliases</span><br><span class="line">echo &quot;source \$HOME/.bash_aliases&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="5-Plugins"><a href="#5-Plugins" class="headerlink" title="5. Plugins"></a>5. Plugins</h2><h2 id="5-1-zsh-syntax-highlighting"><a href="#5-1-zsh-syntax-highlighting" class="headerlink" title="5.1 zsh-syntax-highlighting"></a>5.1 <a href="https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md">zsh-syntax-highlighting</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-syntax-highlighting</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure><h2 id="5-2-zsh-autosuggestions"><a href="#5-2-zsh-autosuggestions" class="headerlink" title="5.2 zsh-autosuggestions"></a>5.2 <a href="https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md">zsh-autosuggestions</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/zsh-users/zsh-autosuggestions $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-autosuggestions</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure><h2 id="5-3-zsh-z"><a href="#5-3-zsh-z" class="headerlink" title="5.3 zsh-z"></a>5.3 <a href="https://github.com/agkozak/zsh-z#installation">zsh-z</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/agkozak/zsh-z $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-z</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-z</span><br></pre></td></tr></table></figure><h2 id="5-x-Enable"><a href="#5-x-Enable" class="headerlink" title="5.x Enable"></a>5.x Enable</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">plugins</span>=(</span><br><span class="line">    git</span><br><span class="line">    extract</span><br><span class="line">    z</span><br><span class="line">    zsh-syntax-highlighting</span><br><span class="line">    zsh-autosuggestions</span><br><span class="line">)</span><br></pre></td></tr></table></figure><h2 id="6-WSL-fix-z-precmd-1-nice-5-failed-operation-not-permitted"><a href="#6-WSL-fix-z-precmd-1-nice-5-failed-operation-not-permitted" class="headerlink" title="6. WSL: fix \_z\_precmd:1: nice(5) failed: operation not permitted"></a>6. WSL: fix <code>\_z\_precmd:1: nice(5) failed: operation not permitted</code></h2><blockquote><p>By default, <code>zsh</code> tries to run background jobs at a lower priority, which Windows won’t let it do. A good workaround is to put</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> $(uname -a) <span class="keyword">in</span></span><br><span class="line">*Microsoft*) <span class="built_in">unsetopt</span> BG_NICE ;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure><p>in your <code>.zshrc</code> file. That alters <code>zsh</code>‘s default behavior and fixes the problem entirely, in my experience.</p></blockquote><p><a href="https://github.com/rupa/z/issues/230">_z_precmd:1: nice(5) failed: operation not permitted · Issue #230 · rupa/z · GitHub</a></p><h2 id="7-Hide-local-username-and-host-name"><a href="#7-Hide-local-username-and-host-name" class="headerlink" title="7. Hide local username and host name"></a>7. Hide local username and host name</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;DEFAULT_USER=\&quot;\$USER\&quot;&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="8-Change-host-name-text-color"><a href="#8-Change-host-name-text-color" class="headerlink" title="8. Change  host name text color"></a>8. Change  host name text color</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.oh-my-zsh/themes/agnoster.zsh-theme</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@@ -89,7 +89,7 @@ <span class="function"><span class="title">prompt_end</span></span>() &#123;</span><br><span class="line"> <span class="comment"># Context: user@hostname (who am I and where am I)</span></span><br><span class="line"> <span class="function"><span class="title">prompt_context</span></span>() &#123;</span><br><span class="line">   <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$USER</span>&quot;</span> != <span class="string">&quot;<span class="variable">$DEFAULT_USER</span>&quot;</span> || -n <span class="string">&quot;<span class="variable">$SSH_CLIENT</span>&quot;</span> ]]; <span class="keyword">then</span></span><br><span class="line">-    prompt_segment black default <span class="string">&quot;%(!.%&#123;%F&#123;yellow&#125;%&#125;.)%n@%m&quot;</span></span><br><span class="line">+    prompt_segment cyan white <span class="string">&quot;%(!.%&#123;%F&#123;yellow&#125;%&#125;.)%n@%m&quot;</span></span><br><span class="line">   <span class="keyword">fi</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/LazyShpee/sharerenamer&quot;&gt;https://github.com/LazyShpee/sharerenamer&lt;/a&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;  Choose ‘download’</summary>
+    <summary type="html">&lt;h2 id=&quot;1-zsh&quot;&gt;&lt;a href=&quot;#1-zsh&quot; class=&quot;headerlink&quot; title=&quot;1. zsh&quot;&gt;&lt;/a&gt;1. zsh&lt;/h2&gt;&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutte</summary>
       
     
     
     
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
+    <category term="Linux" scheme="https://www.coder17.com/categories/Linux/"/>
     
     
-    <category term="Nextcloud" scheme="https://www.coder17.com/tags/Nextcloud/"/>
+    <category term="Linux" scheme="https://www.coder17.com/tags/Linux/"/>
     
-    <category term="重命名" scheme="https://www.coder17.com/tags/%E9%87%8D%E5%91%BD%E5%90%8D/"/>
+    <category term="zsh" scheme="https://www.coder17.com/tags/zsh/"/>
     
-  </entry>
-  
-  <entry>
-    <title>解决（小米）笔记本插电时升频太快导致过热</title>
-    <link href="https://www.coder17.com/posts/cpu-overheat/"/>
-    <id>https://www.coder17.com/posts/cpu-overheat/</id>
-    <published>2018-09-16T15:00:00.000Z</published>
-    <updated>2018-09-16T15:00:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>买了这个带指纹的小米十三寸之后，别的什么都好，就是一插交流电，CPU 温度就噌噌噌上来了，风扇也跟着起飞。不插电源用电池的时候就很安静。<br>查了好多资料，包括一些买了小米的忧伤老外写的东西，建议无非是四个：</p><ol><li>装 XTU 调核心电压；</li><li>装 <a href="https://github.com/hirschmann/nbfc">Notebook Fan Control</a> 调风扇转速；</li><li>刷 BIOS 玄学降温；</li><li>在电源策略里限制 CPU 最大频率为 99%。</li></ol><p>首先 Inten XTU 是不好使的，新版 BIOS 早就封死调电压的入口了。而且其实也不是 CPU 电压的问题，而是 Windows 的电源策略太激进。我曾经刷回旧版 BIOS 调低了 CPU 核心电压，几乎没有效果。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/113ba839.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-52-29.png"></p><p>然后装风扇转速控制我也试过，治标不治本，小米这个风扇是有点过于主动，但如果调低转速机器就会非常烫，不是问题的根源。</p><p>刷 BIOS 我试过网上传出的两个版本，又去小米售后专门刷了最新版：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/2e16dc31.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-52-56.png"></p><p>不负责任地讲一句，没卵用。  </p><p>限制 CPU 频率的办法确实好用，但这是以牺牲性能为代价的，调到99%之后禁用了睿频，那我花那么多钱买这 i7 有何用？  </p><p>研究好久终于发现问题的根源是 Windows 的电源策略。<br>相关控制参数在电源方案里设置，但默认隐藏。<br>通过修改注册表可以显示，但相当麻烦。<br>参考：<br><a href="http://forum.notebookreview.com/threads/guide-power-options-power-plans-show-all-hidden-settings.767612/">http://forum.notebookreview.com/threads/guide-power-options-power-plans-show-all-hidden-settings.767612/</a><br><a href="https://docs.google.com/spreadsheets/d/17XBNNdMdX-Bkt1kb8dJW3FP4br0VL7G94tdFBo8SW48/edit?pli=1#gid=870536397">https://docs.google.com/spreadsheets/d/17XBNNdMdX-Bkt1kb8dJW3FP4br0VL7G94tdFBo8SW48/edit?pli=1#gid=870536397</a></p><p>因此使用小软件 <a href="https://bitsum.com/parkcontrol/">ParkControl</a> 解决：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/5e693df5.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-54-41.png"></p><p>安装后勾上这个就可以卸载了。（其实这个小软件本来的功能是解锁 CPU 停车设置，让 CPU 工作得更猛烈一些的）<br>然后在电源计划里修改相关的值：  </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/9da959ad.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-54-58.png"></p><p>搞成和电池状态差不多就行了，尤其是第一个升频阈值，默认是60%，一不小心就升频了。<br>保存之后重启（可能不重启也行），妈妈再也不担心我插电的时候风扇上天了。</p><p>神他妈爱抖露，偶像CPU。  </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/90487196.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-55-28.png"></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/85fcc598.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-55-37.png"></p><p><a href="https://weibo.com/6174652641/GzCzRpTkM">https://weibo.com/6174652641/GzCzRpTkM</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;买了这个带指纹的小米十三寸之后，别的什么都好，就是一插交流电，CPU 温度就噌噌噌上来了，风扇也跟着起飞。不插电源用电池的时候就很安静。&lt;br&gt;查了好多资料，包括一些买了小米的忧伤老外写的东西，建议无非是四个：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;装 XTU 调核心电压；&lt;/li&gt;
-</summary>
-      
-    
-    
-    
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/tags/Windows/"/>
-    
-    <category term="BIOS" scheme="https://www.coder17.com/tags/BIOS/"/>
-    
-    <category term="笔记本" scheme="https://www.coder17.com/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC/"/>
-    
-    <category term="散热" scheme="https://www.coder17.com/tags/%E6%95%A3%E7%83%AD/"/>
-    
-    <category term="小米" scheme="https://www.coder17.com/tags/%E5%B0%8F%E7%B1%B3/"/>
+    <category term="oh my zsh" scheme="https://www.coder17.com/tags/oh-my-zsh/"/>
     
   </entry>
   

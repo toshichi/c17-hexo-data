@@ -16,6 +16,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/install-zsh/</loc>
+    
+    <lastmod>2020-11-30</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/windows-10-usb-icon-fix/</loc>
     
     <lastmod>2020-08-23</lastmod>
@@ -114,6 +121,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/install-mosh-byobu/</loc>
+    
+    <lastmod>2019-11-24</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/remote-control/</loc>
     
     <lastmod>2019-11-14</lastmod>
@@ -138,6 +152,13 @@
     <loc>https://www.coder17.com/posts/linux-git-branch-name/</loc>
     
     <lastmod>2019-05-21</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/ss-tunnel-dns/</loc>
+    
+    <lastmod>2019-05-19</lastmod>
     
   </url>
   
@@ -753,6 +774,13 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/ss-tunnel/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/Android/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -936,6 +964,34 @@
   
   <url>
     <loc>https://www.coder17.com/tags/%E7%A9%BA%E6%B0%94%E8%B4%A8%E9%87%8F/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/mosh/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/byobu/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/zsh/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/oh-my-zsh/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

@@ -346,6 +346,35 @@
     
     
     <entry>
+      <title>安装 mosh 与 byobu</title>
+      <link href="posts/install-mosh-byobu/"/>
+      <url>posts/install-mosh-byobu/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-mosh"><a href="#1-mosh" class="headerlink" title="1 mosh"></a>1 mosh</h2><p>在延迟过高的服务器上操作时，使用 mosh 来通过 UDP 连接加强体验。甚至网络中断后重连或系统休眠后仍能维持连接。<br>默认使用 60000 以上端口，一个 UDP 只能有一个连接。<br>此处配置成和 ssh 使用相同端口来方便连接。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install mosh</span><br></pre></td></tr></table></figure><p>连接时： </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosh -p &lt;mosh port&gt; --ssh=<span class="string">&#x27;ssh -p &lt;ssh port&gt;&#x27;</span> &lt;user&gt;@&lt;server address&gt;</span><br></pre></td></tr></table></figure><h3 id="1-1-WinSCP-中使用-mosh"><a href="#1-1-WinSCP-中使用-mosh" class="headerlink" title="1.1 WinSCP 中使用 mosh"></a>1.1 WinSCP 中使用 mosh</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mosh -p !<span class="comment"># --ssh=&#x27;ssh -p !#&#x27; !U@!@</span></span><br></pre></td></tr></table></figure><h3 id="1-2-端口转发注意点"><a href="#1-2-端口转发注意点" class="headerlink" title="1.2 端口转发注意点"></a>1.2 端口转发注意点</h3><p>因为 mosh 所使用的端口是客户端连接时指定的，所以不能转发到不同的端口。<br>比如通过把服务器的 60001 UDP 转发到 50001，再使用 mosh -p 50001，是无法连接的。<br>需要转发到相同端口连接。<br>为避免麻烦，使用与转发的 ssh TCP 端口相同的端口即可。</p><h2 id="2-byobu"><a href="#2-byobu" class="headerlink" title="2 byobu"></a>2 byobu</h2><p>mosh 单一端口只支持一个连接，所以要多线操作时不方便使用多连接的方式，因此需要分屏操作。<br>tmux 快捷键十分反人类，难以记忆，得不偿失。虽然可以修改，但往往使用 docker 或公用服务器时一一修改非常麻烦。<br>因此选择默认快捷键适合人类使用的 byobu。byobu 是日语びょうぶ屏風。<br>byobu 可以选择基于 tmux 后端还是 screen 后端。使用 <code>byobu-select-backend</code> 进行切换。<br>一般 ubuntu 会内置 byobu，非常方便。</p><h3 id="2-1-快捷键"><a href="#2-1-快捷键" class="headerlink" title="2.1 快捷键"></a>2.1 快捷键</h3><p>F2 新建 Window， F3 F4 移动到 Window<br>Shift F2 上下分割，Ctrl F2 左右分割<br>Shift F3 F4 移动到分屏，Ctrl F6 关闭当前分屏<br>Shift + 方向键 移动到分屏<br>F5 重载配置文件，Shift F5 似乎是切换状态栏<br>F6 Detach session<br>F7 滚动模式，按 pgup pgdn 滚屏，回车退出<br>Alt + pgup/pgdn 直接滚屏<br>F8 修改 Window 名<br>F9 配置，Shift + F12 切换F键有效性<br>Shift + F11 最大化当前窗口</p><h3 id="2-2-时间换行问题"><a href="#2-2-时间换行问题" class="headerlink" title="2.2 时间换行问题"></a>2.2 时间换行问题</h3><p>有时状态栏最后一位时间会换行，导致状态栏错位。这是因为当前终端字体不支持系统 logo 的特殊字符显示。按 F9 进配置，选择 <code>Toggle status notifications</code>，去掉 logo，Apply 即可。</p><h3 id="2-3-提示符风格"><a href="#2-3-提示符风格" class="headerlink" title="2.3 提示符风格"></a>2.3 提示符风格</h3><p>默认配色不是默认配色，使用 <code>byobu-disable-prompt</code> 恢复默认。</p><h3 id="2-4-256色不支持"><a href="#2-4-256色不支持" class="headerlink" title="2.4 256色不支持"></a>2.4 256色不支持</h3><p>部分版本切换到默认配色时会不支持 256 色，<code>echo $TERM</code> 返回 <code>screen</code>。<br>这是默认 tmux 配置的问题。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim <span class="variable">$BYOBU_PREFIX</span>/share/byobu/profiles/tmux</span><br></pre></td></tr></table></figure><p>查找 <code>set -g default-terminal &quot;screenr&quot;</code> 修改为 <code>set -g default-terminal &quot;screen-256color&quot;</code></p><h3 id="2-5-支持滚轮和鼠标"><a href="#2-5-支持滚轮和鼠标" class="headerlink" title="2.5 支持滚轮和鼠标"></a>2.5 支持滚轮和鼠标</h3><p>Alt + F12 切换鼠标支持</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%AE%89%E8%A3%85%20mosh%20%E4%B8%8E%20byobu/image-20210421235258827.png" alt="image-20210421235258827"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> mosh </tag>
+            
+            <tag> byobu </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Windows 远程投屏方案</title>
       <link href="posts/remote-control/"/>
       <url>posts/remote-control/</url>
@@ -468,6 +497,35 @@
     
     
     <entry>
+      <title>ss-tunnel 转发 dns</title>
+      <link href="posts/ss-tunnel-dns/"/>
+      <url>posts/ss-tunnel-dns/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup sudo /usr/<span class="built_in">local</span>/bin/ss-tunnel -c /etc/shadowsocks-libev/config.json -l 53 -v -b 127.0.0.1 -L 8.8.8.8:53 -u &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> Shadowsocks </tag>
+            
+            <tag> ss-tunnel </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Proxychains 配置支持多场景和自定义 DNS</title>
       <link href="posts/proxychains-dns/"/>
       <url>posts/proxychains-dns/</url>
@@ -489,6 +547,35 @@
             <tag> Proxychains </tag>
             
             <tag> DNS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>安装 zsh</title>
+      <link href="posts/install-zsh/"/>
+      <url>posts/install-zsh/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-zsh"><a href="#1-zsh" class="headerlink" title="1. zsh"></a>1. zsh</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install zsh</span><br></pre></td></tr></table></figure><h2 id="2-oh-my-zsh-and-theme"><a href="#2-oh-my-zsh-and-theme" class="headerlink" title="2. oh my zsh and theme"></a>2. <a href="https://github.com/robbyrussell/oh-my-zsh">oh my zsh</a> and theme</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sh -c &quot;$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;</span><br><span class="line">sudo apt install fonts-powerline</span><br><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ZSH_THEME=&quot;agnoster&quot; # (this is one of the fancy ones)</span><br><span class="line"><span class="meta">#</span><span class="bash"> see https://github.com/robbyrussell/oh-my-zsh/wiki/Themes<span class="comment">#agnoster</span></span></span><br></pre></td></tr></table></figure><h2 id="3-WSL-ColorTool"><a href="#3-WSL-ColorTool" class="headerlink" title="3. WSL: ColorTool"></a>3. WSL: <a href="https://github.com/Microsoft/Terminal/tree/master/src/tools/ColorTool">ColorTool</a></h2><h2 id="4-Ctrl-Backspace-and-Ctrl-Delete"><a href="#4-Ctrl-Backspace-and-Ctrl-Delete" class="headerlink" title="4. Ctrl + Backspace and Ctrl + Delete"></a>4. <code>Ctrl + Backspace</code> and <code>Ctrl + Delete</code></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;bindkey &#x27;^H&#x27; backward-kill-word&quot; &gt;&gt; ~/.zshrc</span><br><span class="line">echo &quot;bindkey &#x27;^[[3;5~&#x27; kill-word&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><p><a href="https://github.com/robbyrussell/oh-my-zsh/issues/7609">Why don’t Ctrl+Backspace and Ctrl+Delete work? · Issue #7609 · robbyrussell/oh-my-zsh · GitHub</a></p><h2 id="6-ll"><a href="#6-ll" class="headerlink" title="6. ll"></a>6. ll</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;alias ll=&#x27;ls -alhF&#x27;&quot; &gt;&gt; ~/.bash_aliases</span><br><span class="line">echo &quot;source \$HOME/.bash_aliases&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="5-Plugins"><a href="#5-Plugins" class="headerlink" title="5. Plugins"></a>5. Plugins</h2><h2 id="5-1-zsh-syntax-highlighting"><a href="#5-1-zsh-syntax-highlighting" class="headerlink" title="5.1 zsh-syntax-highlighting"></a>5.1 <a href="https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md">zsh-syntax-highlighting</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-syntax-highlighting</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-syntax-highlighting</span><br></pre></td></tr></table></figure><h2 id="5-2-zsh-autosuggestions"><a href="#5-2-zsh-autosuggestions" class="headerlink" title="5.2 zsh-autosuggestions"></a>5.2 <a href="https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md">zsh-autosuggestions</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/zsh-users/zsh-autosuggestions $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-autosuggestions</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-autosuggestions</span><br></pre></td></tr></table></figure><h2 id="5-3-zsh-z"><a href="#5-3-zsh-z" class="headerlink" title="5.3 zsh-z"></a>5.3 <a href="https://github.com/agkozak/zsh-z#installation">zsh-z</a></h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/agkozak/zsh-z $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-z</span><br><span class="line">chmod -R 755 $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-z</span><br></pre></td></tr></table></figure><h2 id="5-x-Enable"><a href="#5-x-Enable" class="headerlink" title="5.x Enable"></a>5.x Enable</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">plugins</span>=(</span><br><span class="line">    git</span><br><span class="line">    extract</span><br><span class="line">    z</span><br><span class="line">    zsh-syntax-highlighting</span><br><span class="line">    zsh-autosuggestions</span><br><span class="line">)</span><br></pre></td></tr></table></figure><h2 id="6-WSL-fix-z-precmd-1-nice-5-failed-operation-not-permitted"><a href="#6-WSL-fix-z-precmd-1-nice-5-failed-operation-not-permitted" class="headerlink" title="6. WSL: fix \_z\_precmd:1: nice(5) failed: operation not permitted"></a>6. WSL: fix <code>\_z\_precmd:1: nice(5) failed: operation not permitted</code></h2><blockquote><p>By default, <code>zsh</code> tries to run background jobs at a lower priority, which Windows won’t let it do. A good workaround is to put</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> $(uname -a) <span class="keyword">in</span></span><br><span class="line">*Microsoft*) <span class="built_in">unsetopt</span> BG_NICE ;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure><p>in your <code>.zshrc</code> file. That alters <code>zsh</code>‘s default behavior and fixes the problem entirely, in my experience.</p></blockquote><p><a href="https://github.com/rupa/z/issues/230">_z_precmd:1: nice(5) failed: operation not permitted · Issue #230 · rupa/z · GitHub</a></p><h2 id="7-Hide-local-username-and-host-name"><a href="#7-Hide-local-username-and-host-name" class="headerlink" title="7. Hide local username and host name"></a>7. Hide local username and host name</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;DEFAULT_USER=\&quot;\$USER\&quot;&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure><h2 id="8-Change-host-name-text-color"><a href="#8-Change-host-name-text-color" class="headerlink" title="8. Change  host name text color"></a>8. Change  host name text color</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.oh-my-zsh/themes/agnoster.zsh-theme</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@@ -89,7 +89,7 @@ <span class="function"><span class="title">prompt_end</span></span>() &#123;</span><br><span class="line"> <span class="comment"># Context: user@hostname (who am I and where am I)</span></span><br><span class="line"> <span class="function"><span class="title">prompt_context</span></span>() &#123;</span><br><span class="line">   <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$USER</span>&quot;</span> != <span class="string">&quot;<span class="variable">$DEFAULT_USER</span>&quot;</span> || -n <span class="string">&quot;<span class="variable">$SSH_CLIENT</span>&quot;</span> ]]; <span class="keyword">then</span></span><br><span class="line">-    prompt_segment black default <span class="string">&quot;%(!.%&#123;%F&#123;yellow&#125;%&#125;.)%n@%m&quot;</span></span><br><span class="line">+    prompt_segment cyan white <span class="string">&quot;%(!.%&#123;%F&#123;yellow&#125;%&#125;.)%n@%m&quot;</span></span><br><span class="line">   <span class="keyword">fi</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> zsh </tag>
+            
+            <tag> oh my zsh </tag>
             
         </tags>
       
