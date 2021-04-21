@@ -30,6 +30,41 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/posts/galaxy-s6-system/</loc>
+    
+    <lastmod>2020-04-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/vps-boot-from-iso/</loc>
+    
+    <lastmod>2019-09-19</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/msxi-sign-install/</loc>
+    
+    <lastmod>2019-06-15</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/uwp-crash/</loc>
+    
+    <lastmod>2018-12-10</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/posts/cpu-overheat/</loc>
+    
+    <lastmod>2018-09-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/posts/windows-update-restart/</loc>
     
     <lastmod>2018-09-13</lastmod>
@@ -424,6 +459,34 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/Windows/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Windows-10/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/UWP/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Store/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/Windows-8-1/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -439,6 +502,48 @@
   
   <url>
     <loc>https://www.coder17.com/tags/Intel/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Windows-Terminal/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/DevOps/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/msxi/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E8%87%AA%E7%AD%BE%E5%90%8D/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E7%BC%96%E8%AF%91/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/SignTools/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -515,6 +620,27 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/Ubuntu/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E8%85%BE%E8%AE%AF%E4%BA%91/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E5%BC%95%E5%AF%BC-iso/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/%E5%A4%9A%E8%AF%B4/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -564,6 +690,27 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/Galaxy-S6/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/SM-G9200/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E5%88%B7%E6%9C%BA/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/%E5%BE%AE%E5%8D%9A/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -600,13 +747,6 @@
   
   <url>
     <loc>https://www.coder17.com/tags/%E6%A0%BC%E5%BC%8F%E5%8C%96/</loc>
-    <lastmod>2021-04-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/tags/Windows/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -676,6 +816,27 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/%E7%AC%94%E8%AE%B0%E6%9C%AC/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E6%95%A3%E7%83%AD/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E5%B0%8F%E7%B1%B3/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/iptables/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
@@ -728,6 +889,13 @@
   
   <url>
     <loc>https://www.coder17.com/categories/Services/</loc>
+    <lastmod>2021-04-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/categories/Linux/</loc>
     <lastmod>2021-04-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

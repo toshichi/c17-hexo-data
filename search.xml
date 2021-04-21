@@ -4,6 +4,167 @@
   
     
     <entry>
+      <title>废物利用为 Galaxy S6 SM-G9200 刷入可用系统</title>
+      <link href="posts/galaxy-s6-system/"/>
+      <url>posts/galaxy-s6-system/</url>
+      
+        <content type="html"><![CDATA[<p>Galaxy S6 发布于2015年，中国大陆公开版是双卡单4G，初始系统版本 5.0。我将其作为备用机多年来一直使用当年自行修改的旧版 6.0 系统，时过境迁现在已兼容性较差。三星已经发布了7.0版本的系统更新，因此试图更新到最新版本的 offical 系统。但中国版系统阉割严重，且有大量中国毒瘤App，无法直接使用。</p><p>尝试 Odin 刷入港版系统，不管是四件套还是一体包，单刷还是全部，均会验证失败。查阅得知该型号虽然港版和中国（内地，下略）版均标示型号为<code>SM-G9200</code>，但港版机型代号为<code>zerofltezh</code>，中国版为<code>zerofltezc</code>，基带不同，港版不支持中国电信网络，因此无法混刷。</p><p>故底包只能采用中国版官方固件。在此基础上刷入 GApps 使手机可用。</p><h2 id="1-刷入完整系统"><a href="#1-刷入完整系统" class="headerlink" title="1. 刷入完整系统"></a>1. 刷入完整系统</h2><p>使用 <a href="https://samfirmtool.com/"><code>SamFirm</code></a> 下载最新版<code>CHC</code>区域固件四件套：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%BA%9F%E7%89%A9%E5%88%A9%E7%94%A8%E4%B8%BA%20Galaxy%20S6%20SM-G9200%20%E5%88%B7%E5%85%A5%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F/image-20200425054145843.png" alt="image-20200425054145843"></p><p>使用最新版 <code>Odin</code> 刷入手机，重启，确认正常动作。</p><h2 id="2-刷入-CF-Auto-Root"><a href="#2-刷入-CF-Auto-Root" class="headerlink" title="2. 刷入  CF-Auto-Root"></a>2. 刷入  CF-Auto-Root</h2><p>在 <a href="https://desktop.firmware.mobi/">其网站主页</a> 输入型号G9200后，选择 <code>zerofltezc</code> 版本：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%BA%9F%E7%89%A9%E5%88%A9%E7%94%A8%E4%B8%BA%20Galaxy%20S6%20SM-G9200%20%E5%88%B7%E5%85%A5%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F/image-20200425054507054.png" alt="image-20200425054507054"></p><p>点击最新固件，在其下载页面单击 Configure：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%BA%9F%E7%89%A9%E5%88%A9%E7%94%A8%E4%B8%BA%20Galaxy%20S6%20SM-G9200%20%E5%88%B7%E5%85%A5%E5%8F%AF%E7%94%A8%E7%B3%BB%E7%BB%9F/image-20200425054555517.png" alt="image-20200425054555517"></p><p>在配置选项中，<code>Installation type</code> 选择 <code>Systemless Image</code>，<code>Advanced Encryption Options</code> 中 <code>dm-verify</code> 选择 <code>Remove</code> ，其他保持默认，点击 <code>Generate</code> 生成刷机镜像，可能需要排队，且下载速度较慢。</p><p>下载后使用 Odin 在 AP 中刷入手机，重启，确认正常动作。</p><h2 id="3-刷入-Magisk"><a href="#3-刷入-Magisk" class="headerlink" title="3. 刷入 Magisk"></a>3. 刷入 Magisk</h2><p>SuperSU 作者已经弃坑不再更新，当前使用 <a href="https://github.com/topjohnwu/Magisk"><code>Magisk</code></a> 管理SU权限。但我们目前没有安装 custom recovery，故不使用 zip 包直接安装，而采用 patch 系统镜像并用 Odin 刷入的方式安装。</p><ol><li>在 GitHub Release 页面获取最新的 <code>Magisk Manager</code> 并安装。</li><li>使用 <code>7-zip</code> 打开 rom 四件套中的 AP 文件，解压其中 <code>boot.img</code> 并复制到手机中。</li><li>运行 <code>Magisk Manager</code> ，点击安装 Magisk，选择 Patch 镜像，并继续在文件浏览中选择刚才提取的 <code>boot.img</code>。（注：根据官方文档，可以选择 Patch boot 或者 recovery，但测试 recovery 不成功，故此处采用 boot）</li><li>将 patch 过后的 IMG 文件复制回电脑，更名为 <code>boot.img</code>，并使用 <code>7-zip</code> 等压缩软件打包为 tar 格式。</li><li>在 Odin 的 AP 中选中刚才打包的 tar 包，刷入手机。</li><li>重启，进入 <code>Magisk Manager</code> ，选择同意下载安装，再次重启后确认正常动作。</li></ol><h2 id="4-刷入修改版-TWRP-recovery"><a href="#4-刷入修改版-TWRP-recovery" class="headerlink" title="4. 刷入修改版 TWRP recovery"></a>4. 刷入修改版 TWRP recovery</h2><p>TWRP 没有正式提供 G9200 版本的支持。多年前 <a href="https://www.weibo.com/1649111590">Xiao1u</a> 曾提供过修改过的兼容版本 <code>G9200-PC1-TWRP-3.0-PC1-0324.tar</code> ，搜索即可获得，此版本对 7.0 系统的兼容不完美，有可能会导致 bootloop。参考 <a href="https://jtechboard.blogspot.com/2017/09/galaxy-s6-sm-g9200-china-model.html">J Tech board 的解决方案</a>，在确认 <code>dm-verify</code> 已关闭后，使用 Odin 刷入该文件。刷入时取消 Odin 中 Auto Reboot 的勾选。刷完后使用 Vol+ Home Pow 三键进入 recovery，什么都不做直接选择重启到系统，询问是否阻止系统还原 Recovery 时选择忽略。确认依然能正常进入系统。</p><h2 id="5-删除自带的中国-App-和字体等"><a href="#5-删除自带的中国-App-和字体等" class="headerlink" title="5. 删除自带的中国 App 和字体等"></a>5. 删除自带的中国 App 和字体等</h2><p>如果不删除，后面刷入 GApps 可能导致系统空间不足。即使删除后仍要使用，可以事后重新安装到用户空间。</p><p>安装 <a href="https://apkpure.com/jp/system-app-remover-root-needed/com.jumobile.manager.systemapp">System App Remover</a> 查看想要移除的内置应用，长按可以获得该应用的路径。使用 <a href="https://apkpure.com/solid-explorer-file-manager/pl.solidexplorer2">Solid Explorer</a> 定位并删除文件。</p><h2 id="6-刷入-Gapps"><a href="#6-刷入-Gapps" class="headerlink" title="6. 刷入 Gapps"></a>6. 刷入 Gapps</h2><p>在 <a href="https://opengapps.org/">OpenGapps</a> 的主页获得 zip 刷机包，传输至手机，重启至 TWRP 后选择刷入。注意此处如果直接刷入 7.0 系统对应的 nano 或者 pico 包，<a href="https://github.com/opengapps/opengapps/issues/724#issuecomment-497997441">会导致系统 WebView 被删除</a>，从而导致 Google 账户无法登录等问题，无法使用。</p><p>解决方案有两个思路，一是安装新的 Chrome WebView 替代被删除的原生 WebView，二是避免原生 WebView 被删除。经测试，即使安装Chrome 也仍然不能恢复该组件正常使用，可能三星对允许使用的 WebView 做了限制，或有其他兼容性问题。避免 WebView 被删除则可以通过<a href="https://github.com/opengapps/opengapps/wiki/Advanced-Features-and-Options">添加配置文件</a> ，或者<a href="https://github.com/opengapps/opengapps/issues/724#issuecomment-498086440">添加 package-overlay 重新编译</a> 等方法。这里使用相对比较简单的<a href="https://github.com/opengapps/opengapps/issues/724#issuecomment-612578593">修改安装脚本</a>方式完成。</p><p>下载 pico 版本 OpenGApps zip 包后，解压提取 <code>install.sh</code> 文件，搜索：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> List of GApps files that should NOT be automatically removed as they are also included <span class="keyword">in</span> (many) ROMs removal_bypass_list</span></span><br></pre></td></tr></table></figure><p>并在其后的空引号内加入 <code>WebViewGoogle</code>，保存退出，将修改后的文件压入 zip 包，重启手机进入 TWRP 刷入即可。</p><p>刷好后清空缓存，进入系统开发者模式，查看 “实装的 WebView” 选项不为空，即可。推荐重启手机，双清后从向导开始重新初始化系统，避免谷歌系列服务出现授权问题。</p><h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>避免购买在中国大陆境内售卖的任何具有中国定制 Rom 的电子产品（包括无线耳机等具有中国区定制 Firmware 的产品），并 7x24 连接<strong>全球互联网</strong>，和全球大多数国家和地区的用户保持类似的软件使用习惯，可以避免绝大多数的烦恼。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Android </tag>
+            
+            <tag> Galaxy S6 </tag>
+            
+            <tag> SM-G9200 </tag>
+            
+            <tag> 刷机 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>在 Ubuntu VPS 上引导 iso 安装纯净系统</title>
+      <link href="posts/vps-boot-from-iso/"/>
+      <url>posts/vps-boot-from-iso/</url>
+      
+        <content type="html"><![CDATA[<p>租用 VPS 厂商的机器时，一般只能预装厂商原有的镜像。有时镜像并不纯净，厂商会在里面加料。因此需要安装原版系统。下面以腾讯云重新安装 Ubuntu 18.04 LTS 为例。</p><h2 id="1-检测系统环境"><a href="#1-检测系统环境" class="headerlink" title="1. 检测系统环境"></a>1. 检测系统环境</h2><h3 id="1-1-确定系统有-grub"><a href="#1-1-确定系统有-grub" class="headerlink" title="1.1 确定系统有 grub"></a>1.1 确定系统有 grub</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure><h3 id="1-2-确认分区布局"><a href="#1-2-确认分区布局" class="headerlink" title="1.2 确认分区布局"></a>1.2 确认分区布局</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df -h</span><br></pre></td></tr></table></figure><p>查看 <code>/</code>  和 <code>/boot</code> 目录是否在不同分区。如果仅有根目录，处理较为容易，否则在后续步骤中需要注意。</p><h2 id="2-下载系统镜像"><a href="#2-下载系统镜像" class="headerlink" title="2. 下载系统镜像"></a>2. 下载系统镜像</h2><p>注意：Ubuntu 如果使用常规 iso，安装会报错，因此使用网络安装版（Network installer）的iso。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -O /boot/isoboot.iso http://archive.ubuntu.com/ubuntu/dists/bionic-updates/main/installer-amd64/current/images/netboot/mini.iso</span><br></pre></td></tr></table></figure><h2 id="3-准备-Memdisk"><a href="#3-准备-Memdisk" class="headerlink" title="3. 准备 Memdisk"></a>3. 准备 Memdisk</h2><p>原理是将 iso 镜像读入内存。使用 apt 安装 Syslinux：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install syslinux -y</span><br></pre></td></tr></table></figure><p>复制 memdisk 文件到引导目录：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp -f /usr/lib/syslinux/memdisk /boot/memdisk</span><br></pre></td></tr></table></figure><h2 id="4-修改-Grub-引导"><a href="#4-修改-Grub-引导" class="headerlink" title="4. 修改 Grub 引导"></a>4. 修改 Grub 引导</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/grub.d/41_custom</span><br></pre></td></tr></table></figure><p>插入以下内容到 EOF 之前：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">menuentry &#x27;OS Web Install&#x27; &#123;</span><br><span class="line">    insmod part_msdos</span><br><span class="line">        insmod part_gpt</span><br><span class="line">        insmod ext2</span><br><span class="line">    set root=(hd0,msdos1)</span><br><span class="line">    echo &#x27;Loading memdisk ...&#x27;</span><br><span class="line">    linux16 /boot/memdisk raw iso</span><br><span class="line">    echo &#x27;Loading ISO ...&#x27;</span><br><span class="line">    initrd16 /boot/isoboot.iso</span><br><span class="line">    echo &#x27;Booting ISO ...&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>注意，此处根据刚才分析分区布局时候的结果而有所不同：</p><blockquote><ul><li>如果你的服务器是单块硬盘，而且只有一个分区，那么root的值为 <strong>(hd0,msdos1)</strong></li><li>如果你的服务器的单块硬盘，存在不止一个分区，看 /boot 分区在哪个盘上，比如在 /dev/vda5 上，那就是 <strong>(hd0,msdos5)</strong></li><li>其他更复杂的情况，重启服务器，到达 Grub 界面时按下 <strong>C</strong> 键，进入 Grub 命令行，并按照以下步骤操作：</li></ul></blockquote><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">grub&gt;</span><span class="bash"> ls</span></span><br><span class="line">(hd0) (hd0,msdos1) (hd0,msdos5)</span><br><span class="line"><span class="meta">grub&gt;</span><span class="bash"> ls (hd0,msdos1)/</span></span><br><span class="line">error: unknown filesystem. # 说明这个分区不是正确的启动分区，继续尝试</span><br><span class="line"><span class="meta">grub&gt;</span><span class="bash"> ls (hd0,msdos5)/</span></span><br><span class="line">lost+found/ etc/ (各种文件夹) # 说明这个分区是正确的启动分区</span><br><span class="line"></span><br><span class="line">reboot #回到系统</span><br></pre></td></tr></table></figure><p>修改 <code>/etc/default/grub</code> 配置文件增大 <code>GRUB_TIMEOUT</code> 超时时间，然后更新 Grub 配置：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update-grub</span><br></pre></td></tr></table></figure><p>之后确认是否正确写入：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure><h2 id="5-备份配置"><a href="#5-备份配置" class="headerlink" title="5. 备份配置"></a>5. 备份配置</h2><p>备份网络配置等</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/netplan/50-cloud-init.yaml</span><br></pre></td></tr></table></figure><h2 id="6-重装"><a href="#6-重装" class="headerlink" title="6. 重装"></a>6. 重装</h2><p>重启，使用 VNC 连接，启动时选择 <strong>OS Web Install</strong> 并操作重装。</p><p>因为使用的是最小镜像，需要联网下载大量安装包，过程可能比较漫长，耐心等待即可。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E5%9C%A8%20Ubuntu%20%E4%B8%8A%E5%BC%95%E5%AF%BC%20iso/image-20210421212105375.png" alt="image-20210421212105375"></p><hr><p>参考：</p><p><a href="https://blog.ilemonrain.com/linux/grub-memdisk-boot-iso.html">https://blog.ilemonrain.com/linux/grub-memdisk-boot-iso.html</a></p><p><a href="https://www.imbeee.com/2017/12/10/install-pure-system-on-vps-and-encrypt-it/">https://www.imbeee.com/2017/12/10/install-pure-system-on-vps-and-encrypt-it/</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> VPS </tag>
+            
+            <tag> Ubuntu </tag>
+            
+            <tag> 腾讯云 </tag>
+            
+            <tag> 引导 iso </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>不装 VS Windows Terminal 编译 msxi 自签名安装</title>
+      <link href="posts/msxi-sign-install/"/>
+      <url>posts/msxi-sign-install/</url>
+      
+        <content type="html"><![CDATA[<p>Windows Terminal 一直没有发布可以直接安装的二进制文件，想自行编译的时候，看到系统需求中包含体积巨大的 Visual Studio 和 Windows SDK，脑袋都大了。直接下载其他人编译好的安装包又不放心，那么就想个办法避免在本地环境编译吧。</p><h2 id="1-编译结果获取"><a href="#1-编译结果获取" class="headerlink" title="1. 编译结果获取"></a>1. 编译结果获取</h2><p>首先想到 Azure DevOps，这个可以简单理解成微软提供的在线 CI 平台，写好编译文件就可以调用微软的自带所有编译环境的镜像直接在线编译，并生成二进制下载。这个服务可以使用 edu 教育账号免费使用，有 edu 邮箱的都可以用。我曾经使用这个编译过其他人久不更新的 MFC 项目。自己写一个 ，或者修改微软生成的 <code>azure-pipelines.yml</code> 即可。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678181063.png" alt="1560678181063"></p><p>那么就从 GitHub 上把微软的代码拿过来，再写个 pipeline 直接编译吧。这时注意到，GitHub 上的项目中，居然已经包含了写好的 pipeline。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678325392.png" alt="1560678325392"></p><p>想了想也是自然，微软写的东西当然自己也会用 Azure DevOps 啊。</p><p>接下来注意到，在 GitHub 仓库的 Readme 中，已经有 Azure Pipelines 的编译结果图标了。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678474529.png" alt="1560678474529"></p><p>单击图标，打开软的 DevOps 仓库，可见每次 push 代码都是会自动编译的。进一步分析发现，只有合并到 master 分支时会编译出二进制文件。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678578167.png" alt="1560678578167"></p><p>那么我们选择其中一个 master 分支的 CI job：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678636549.png" alt="1560678636549"></p><p>可以看到，右上角有 Artifacts 按钮，说明这个 CI 是会上传编译出来的二进制文件到服务器的。不清楚这三个有什么区别，我起初以为分别对应 x64、x86 和 arm64 的编译结果，但我下载第一个压缩包中，是包含了三个平台的编译结果的。压缩包很大，150多M，内容如下：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678772276.png" alt="1560678772276"></p><p>其中的 <code>CascadiaPackage_0.0.1.0_x64.msix</code> 就是我们要的二进制安装包。</p><h2 id="2-安装尝试"><a href="#2-安装尝试" class="headerlink" title="2. 安装尝试"></a>2. 安装尝试</h2><p>首先把系统调成开发者模式。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560678844942.png" alt="1560678844942"></p><p>然后双击 msix 文件直接安装，发现安装失败，提示安装包没有签名。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560679034249.png" alt="1560679034249"></p><p>一番搜索之后，发现如果使用 VS 在本机直接部署，VS 会自动帮你签名。如果使用 VS 命令行工具直接编译出来的结果，是没有签名的。</p><p>在 GitHub 仓库的一个 <a href="https://github.com/microsoft/Terminal/issues/489#issuecomment-496170540">issue</a> 中有人提到，需要用 <code>SignTool.exe</code> 来为这个安装包签名。</p><h2 id="3-证书生成"><a href="#3-证书生成" class="headerlink" title="3. 证书生成"></a>3. 证书生成</h2><p>签名首先需要一个证书。在这里我们直接自签发一个证书并添加信任就行了。参考刚才的 issue 中提到的脚本，打开管理员权限的 Power Shell ，并 cd 到 msix 安装包所在目录中，执行如下命令：</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">New-SelfSignedCertificate</span> <span class="literal">-Type</span> Custom <span class="literal">-Subject</span> <span class="string">&quot;CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US&quot;</span> <span class="literal">-KeyUsage</span> DigitalSignature <span class="literal">-FriendlyName</span> <span class="string">&quot;WindowsTerminal&quot;</span> <span class="literal">-CertStoreLocation</span> <span class="string">&quot;Cert:\LocalMachine\My&quot;</span> <span class="literal">-TextExtension</span> <span class="selector-tag">@</span>(<span class="string">&quot;2.5.29.37=&#123;text&#125;1.3.6.1.5.5.7.3.3&quot;</span>, <span class="string">&quot;2.5.29.19=&#123;text&#125;&quot;</span>)</span><br></pre></td></tr></table></figure><p>此时会显示一个证书指纹，复制其中指纹并替换掉下面命令中的 <code>C5C9D98CE9A23FB72C20B4D039876F3D93C3E1FF</code>，同时修改命令中的密码。</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$password</span> = <span class="built_in">ConvertTo-SecureString</span> <span class="literal">-String</span> <span class="string">&quot;随便设置一个密码&quot;</span> <span class="literal">-Force</span> <span class="literal">-AsPlainText</span></span><br><span class="line"><span class="built_in">Export-PfxCertificate</span> <span class="literal">-cert</span> <span class="string">&quot;Cert:\LocalMachine\My\C5C9D98CE9A23FB72C20B4D039876F3D93C3E1FF&quot;</span> <span class="literal">-FilePath</span> WindowsTerminal.pfx <span class="literal">-Password</span> <span class="variable">$password</span></span><br><span class="line"><span class="built_in">Remove-Item</span> <span class="literal">-Path</span> <span class="string">&quot;Cert:\LocalMachine\My\C5C9D98CE9A23FB72C20B4D039876F3D93C3E1FF&quot;</span></span><br></pre></td></tr></table></figure><p>此时当前目录会生成一个 <code>WindowsTerminal.pfx</code> 证书。双击之，安装到计算机存储的受信任人（Trusted People）目录中，中间会要你输入刚才脚本里设置的密码。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560679602449.png" alt="1560679602449"></p><p>好了，证书搞定了。</p><h2 id="4-提取安装签名工具"><a href="#4-提取安装签名工具" class="headerlink" title="4. 提取安装签名工具"></a>4. 提取安装签名工具</h2><p>下面使用  <code>SignTool.exe</code> 工具进行签名。这个工具是 <a href="https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk">Windows 10 SDK</a> 中的一个工具。去微软网站查看发现，这货体积巨大，包含了许多开发 Windows 所需的工具包。但我们并不需要其他的部分，所以这里投机取巧一下，只安装所需的部分。</p><p>首先要下载 ISO 格式的安装镜像，不要直接下 Installer。大概 800M 左右，半夜直连下载速度飞快，白天就不行了，视情况使用更加科学的上网方式。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560679726239.png" alt="1560679726239"></p><p>下好之后，使用 Windows 自带的 Mount 功能映射为虚拟光驱。打开 <code>Installers</code> 目录，找到 <code>Windows App Certification Kit x64-x86_en-us.msi</code> 这个包，双击安装。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560679991475.png" alt="1560679991475"></p><p>这个工具包就包含了我们需要的 <code>SignTools.exe</code> ，其他的部分不需要，可以删掉这个镜像了。在 <code>C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe</code> 路径可以找到我们需要的工具。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560680492261.png" alt="1560680492261"></p><h2 id="5-签名安装"><a href="#5-签名安装" class="headerlink" title="5. 签名安装"></a>5. 签名安装</h2><p>在 msix 和证书文件所在目录打开 cmd，执行以下命令完成签名：</p><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:\Program Files (x86)\Windows Kits\<span class="number">10</span>\App Certification Kit\signtool.exe&quot; sign /fd SHA256 /a  /f WindowsTerminal.pfx /p 你的密码 CascadiaPackage_0.<span class="number">0</span>.<span class="number">1</span>.<span class="number">0</span>_x64.msix</span><br></pre></td></tr></table></figure><p>签好后再双击 msix 包，就可以顺利安装了。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560680665789.png" alt="1560680665789"></p><p>Enjoy！</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%20Terminal%20msxi%E8%87%AA%E7%AD%BE%E5%90%8D%E5%AE%89%E8%A3%85/1560681595443.png" alt="1560681595443"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows Terminal </tag>
+            
+            <tag> DevOps </tag>
+            
+            <tag> msxi </tag>
+            
+            <tag> 自签名 </tag>
+            
+            <tag> 编译 </tag>
+            
+            <tag> SignTools </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Windows 10 商店应用无法启动解决</title>
+      <link href="posts/uwp-crash/"/>
+      <url>posts/uwp-crash/</url>
+      
+        <content type="html"><![CDATA[<p>Bug 10 的桌面版商店应用全崩了，提示没有权限啥啥啥，脑壳疼。<br>今天发现截图软件崩了，试图重启的时候弹出一个框告诉我访问啥啥没权限。  </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/a15862ae.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-40-49.png"></p><p>哦擦这是什么鬼呢。</p><p>顺着提示找到路径 <code>C:\Users\&lt;username&gt;\AppData\Local\Microsoft\WindowsApps</code>，发现是放置所有从 Windows Store 安装的桌面应用的地方。注意是桌面应用而不是 UWP 应用。<br>进到目录里看到所有的 exe 都是 0KB 没有图标的，双击后弹出一样的错误框。查看整个 WindowsApps 目录发现是没有大小的。 </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/a0ce7d67.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-43-09.png"></p><p>起初以为是目录文件损坏，找出了一周前的系统备份镜像发现备份中的这个目录也是一样的 0KB。这就比较棘手了。 </p><p>尝试启动了一下 WSL 的那个 Ubuntu 图标，发现也报一样的错误。搜索后发现 Github 上<a href="https://github.com/Microsoft/WSL/issues/2323">有一个 issue</a> 在研究这个问题。<br>看了看其中的解决方式，重置 Windows Store 什么的都不好使。<br>尝试右键管理员运行，依然报错。但注意到选择管理员运行后先弹出了 UAC 提权框，其中的程序图标是正常显示的。于是怀疑并不是这个 exe 本身有权限问题，而是 exe 运行后访问的某个资源有权限问题。<br>在 Github 的那个 issue 中看到<a href="https://github.com/Microsoft/WSL/issues/2323#issuecomment-412823470">有人建议</a>使用 <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procmon">Process Monitor</a> 检测一下到底是什么权限问题。 </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/754e95d7.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-53-13.png"></p><p>于是使用 Procmon 抓取启动后的 <code>ACCESS DENIED</code> 记录：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/f958d8d3.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-53-29.png"></p><p>看到三条注册表访问和一条文件访问，从路径看那条文件访问的嫌疑很大。于是查看该路径 <code>C:\Users\&lt;username&gt;\AppData\Local\Packages</code> 的权限：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/db6e5d86.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-54-45.png"></p><p>发现只有自己，感觉不太对，又在任务管理器中查看了 PID 10148 的那个 svchost 进程，发现用户名是 SYSTEM。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/4190a952.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-55-52.png"></p><p>那么问题应该很明显了，这个宿主进程没有权限访问存储了 Windows 商店应用数据的目录。</p><p>为了确认问题，找了另一个机器查看对应目录的权限，发现应该除了当前用户之外，还有 SYSTEM 用户和 Administrators 用户组的完全访问权限。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Windows%2010%20%E5%95%86%E5%BA%97%E5%BA%94%E7%94%A8%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E8%A7%A3%E5%86%B3/be890d1d.png" alt="Windows 10 商店应用无法启动解决_2018-12-11-18-57-14.png"></p><p>于是给对应目录添加了这两组权限，再试，还报错。重新抓取动作后发现这次是 <code>C:\Users\&lt;username&gt;\AppData\Local\Microsoft</code> 目录又没权限访问。重复上述步骤添加权限后，顺利启动。问题解决。</p><p>虽然不知道是什么原因导致权限丢失，不过十有八九是 Bug 10 的某个补丁包干的好事。吔屎啦微软。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> Windows 10 </tag>
+            
+            <tag> UWP </tag>
+            
+            <tag> Store </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>解决（小米）笔记本插电时升频太快导致过热</title>
+      <link href="posts/cpu-overheat/"/>
+      <url>posts/cpu-overheat/</url>
+      
+        <content type="html"><![CDATA[<p>买了这个带指纹的小米十三寸之后，别的什么都好，就是一插交流电，CPU 温度就噌噌噌上来了，风扇也跟着起飞。不插电源用电池的时候就很安静。<br>查了好多资料，包括一些买了小米的忧伤老外写的东西，建议无非是四个：</p><ol><li>装 XTU 调核心电压；</li><li>装 <a href="https://github.com/hirschmann/nbfc">Notebook Fan Control</a> 调风扇转速；</li><li>刷 BIOS 玄学降温；</li><li>在电源策略里限制 CPU 最大频率为 99%。</li></ol><p>首先 Inten XTU 是不好使的，新版 BIOS 早就封死调电压的入口了。而且其实也不是 CPU 电压的问题，而是 Windows 的电源策略太激进。我曾经刷回旧版 BIOS 调低了 CPU 核心电压，几乎没有效果。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/113ba839.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-52-29.png"></p><p>然后装风扇转速控制我也试过，治标不治本，小米这个风扇是有点过于主动，但如果调低转速机器就会非常烫，不是问题的根源。</p><p>刷 BIOS 我试过网上传出的两个版本，又去小米售后专门刷了最新版：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/2e16dc31.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-52-56.png"></p><p>不负责任地讲一句，没卵用。  </p><p>限制 CPU 频率的办法确实好用，但这是以牺牲性能为代价的，调到99%之后禁用了睿频，那我花那么多钱买这 i7 有何用？  </p><p>研究好久终于发现问题的根源是 Windows 的电源策略。<br>相关控制参数在电源方案里设置，但默认隐藏。<br>通过修改注册表可以显示，但相当麻烦。<br>参考：<br><a href="http://forum.notebookreview.com/threads/guide-power-options-power-plans-show-all-hidden-settings.767612/">http://forum.notebookreview.com/threads/guide-power-options-power-plans-show-all-hidden-settings.767612/</a><br><a href="https://docs.google.com/spreadsheets/d/17XBNNdMdX-Bkt1kb8dJW3FP4br0VL7G94tdFBo8SW48/edit?pli=1#gid=870536397">https://docs.google.com/spreadsheets/d/17XBNNdMdX-Bkt1kb8dJW3FP4br0VL7G94tdFBo8SW48/edit?pli=1#gid=870536397</a></p><p>因此使用小软件 <a href="https://bitsum.com/parkcontrol/">ParkControl</a> 解决：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/5e693df5.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-54-41.png"></p><p>安装后勾上这个就可以卸载了。（其实这个小软件本来的功能是解锁 CPU 停车设置，让 CPU 工作得更猛烈一些的）<br>然后在电源计划里修改相关的值：  </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/9da959ad.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-54-58.png"></p><p>搞成和电池状态差不多就行了，尤其是第一个升频阈值，默认是60%，一不小心就升频了。<br>保存之后重启（可能不重启也行），妈妈再也不担心我插电的时候风扇上天了。</p><p>神他妈爱抖露，偶像CPU。  </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/90487196.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-55-28.png"></p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/%E8%A7%A3%E5%86%B3%EF%BC%88%E5%B0%8F%E7%B1%B3%EF%BC%89%E7%AC%94%E8%AE%B0%E6%9C%AC%E6%8F%92%E7%94%B5%E6%97%B6%E5%8D%87%E9%A2%91%E5%A4%AA%E5%BF%AB%E5%AF%BC%E8%87%B4%E8%BF%87%E7%83%AD/85fcc598.png" alt="解决（小米）笔记本插电时升频太快导致过热_2018-11-22-03-55-37.png"></p><p><a href="https://weibo.com/6174652641/GzCzRpTkM">https://weibo.com/6174652641/GzCzRpTkM</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Hacking </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> BIOS </tag>
+            
+            <tag> 笔记本 </tag>
+            
+            <tag> 散热 </tag>
+            
+            <tag> 小米 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>禁止 Windows 10 更新后自动重启</title>
       <link href="posts/windows-update-restart/"/>
       <url>posts/windows-update-restart/</url>
