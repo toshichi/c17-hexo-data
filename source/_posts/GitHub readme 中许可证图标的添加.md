@@ -1,10 +1,10 @@
 ---
 title: GitHub readme 中许可证图标的添加
 date: 2016-07-08
-tags: [GitHub, 许图标]
+tags: [GitHub, 图标]
 category: Hacking
 id: github-icons
-cover: .images/GitHub%20readme%20%E4%B8%AD%E8%AE%B8%E5%8F%AF%E8%AF%81%E5%9B%BE%E6%A0%87%E7%9A%84%E6%B7%BB%E5%8A%A0/image-20210421033327133.png)
+cover: .images/GitHub%20readme%20%E4%B8%AD%E8%AE%B8%E5%8F%AF%E8%AF%81%E5%9B%BE%E6%A0%87%E7%9A%84%E6%B7%BB%E5%8A%A0/image-20210421033327133.png
 ---
 
 逛 GitHub 的时候经常能看到别人的 readme.md 里有各种许可协议的图标：
