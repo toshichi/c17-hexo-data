@@ -1,6 +1,7 @@
 ---
 title: Linux 显示 git 分支名
-date: 2019-05-22 04:16
+date: 2018-10-31 11:55
+updated: 2019-05-22 04:16
 tags: [Linux, git]
 category: Linux
 id: linux-git-branch-name

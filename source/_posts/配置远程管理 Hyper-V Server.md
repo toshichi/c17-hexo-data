@@ -1,6 +1,6 @@
 ---
 title: 配置远程管理 Hyper-V Server
-date: 2018-11-22 04:03:29
+date: 2018-10-09 12:55
 tags: [Windows, Hyper-V Server]
 category: Windows
 id: hyper-v-server-management

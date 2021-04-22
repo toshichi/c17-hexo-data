@@ -1,6 +1,7 @@
 ---
 title: Proxychains 配置支持多场景和自定义 DNS
-date: 2019-05-19 18:20
+date: 2018-08-16 18:55
+updated: 2019-05-19 18:20
 tags: [Linux, Proxychains, DNS]
 category: Linux
 id: proxychains-dns

@@ -1,6 +1,6 @@
 ---
 title: 新建 Windows 服务
-date: 2019-05-19 18:33
+date: 2018-11-08 16:07
 tags: [Windows, 服务, srvany]
 category: Windows
 id: create-windows-service

@@ -1,6 +1,7 @@
 ---
 title: WSL 开启 SSH
-date: 2020-10-08 12:17
+date: 2018-10-12 15:37
+updated: 2020-10-08 12:17
 tags: [WSL, ssh]
 category: Windows
 id: wsl-turn-on-ssh
@@ -14,8 +15,8 @@ sudo dpkg-reconfigure openssh-server
 sudo service ssh start
 ```
 
-注意编辑密钥  
-`~/.ssh/authorized_keys`  
+注意编辑密钥 
+`~/.ssh/authorized_keys` 
 文件权限 600，ssh 目录权限 755
 
 ## WSL2

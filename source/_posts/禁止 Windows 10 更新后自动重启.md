@@ -1,6 +1,6 @@
 ---
 title: 禁止 Windows 10 更新后自动重启
-date: 2018-09-14
+date: 2018-09-14 11:37
 tags: [Windows, 自动更新, 重启]
 category: Windows
 id: windows-update-restart

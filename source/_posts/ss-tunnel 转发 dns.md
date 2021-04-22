@@ -1,6 +1,6 @@
 ---
 title: ss-tunnel 转发 dns
-date: 2019-05-19 20:35
+date: 2018-08-13 12:38
 tags: [Linux, ss-tunnel, Shadowsocks]
 category: Linux
 id: ss-tunnel-dns

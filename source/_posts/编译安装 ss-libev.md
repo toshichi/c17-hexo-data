@@ -1,6 +1,6 @@
 ---
 title: 编译安装 ss-libev
-date: 2019-05-19 20:27
+date: 2018-08-13 12:38
 tags: [ss-libev, 编译, Shadowsocks]
 category: Linux
 id: compile-ss-libev
@@ -22,3 +22,12 @@ sudo make install
 ```
 
 From <http://shadowsocks.org/en/download/servers.html>
+
+Docker：
+
+``` bash
+docker pull shadowsocks/shadowsocks-libev
+docker run -e PASSWORD=<password> -p<server-port>:8388 -p<server-port>:8388/udp -d shadowsocks/shadowsocks-libev
+```
+ 
+From <http://shadowsocks.org/en/download/servers.html> 

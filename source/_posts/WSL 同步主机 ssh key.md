@@ -1,6 +1,7 @@
 ---
 title: WSL 同步主机 ssh key
-date: 2019-05-19 18:39
+date: 2018-08-16 19:05
+updated: 2019-05-19 18:39
 tags: [WSL, ssh]
 category: Windows
 id: wsl-sync-ssh-keys

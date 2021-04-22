@@ -1,6 +1,6 @@
 ---
 title: Windows 远程桌面固定 DPI
-date: 2018-11-22 03:58:21
+date: 2018-09-23 16:14
 tags: [Windows, RDP, DPI]
 category: Windows
 id: windows-rdp-fix-dpi

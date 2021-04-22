@@ -1,6 +1,7 @@
 ---
 title: WinSCP 获取 sudo 权限
-date: 2018-11-26 03:18:06
+date: 2018-08-17 17:25
+updated: 2018-11-26 03:18:06
 tags: [WinSCP, sudo]
 category: Windows
 id: winscp-sudo
