@@ -33,33 +33,6 @@
     
     
     <entry>
-      <title>WSL 开启 SSH</title>
-      <link href="posts/wsl-turn-on-ssh/"/>
-      <url>posts/wsl-turn-on-ssh/</url>
-      
-        <content type="html"><![CDATA[<h2 id="WSL1"><a href="#WSL1" class="headerlink" title="WSL1"></a>WSL1</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg-reconfigure openssh-server</span><br><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><p>注意编辑密钥<br><code>~/.ssh/authorized_keys</code><br>文件权限 600，ssh 目录权限 755</p><h2 id="WSL2"><a href="#WSL2" class="headerlink" title="WSL2"></a>WSL2</h2><h3 id="1-修改端口到高位"><a href="#1-修改端口到高位" class="headerlink" title="1. 修改端口到高位"></a>1. 修改端口到高位</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><h3 id="2-生成主机密钥"><a href="#2-生成主机密钥" class="headerlink" title="2. 生成主机密钥"></a>2. 生成主机密钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/ssh</span><br><span class="line">ssh-keygen -A</span><br></pre></td></tr></table></figure><h3 id="3-启动服务"><a href="#3-启动服务" class="headerlink" title="3. 启动服务"></a>3. 启动服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><h3 id="4-设置端口转发"><a href="#4-设置端口转发" class="headerlink" title="4. 设置端口转发"></a>4. 设置端口转发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/port-forward.sh</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">IP=$(ifconfig eth0 | grep <span class="string">&#x27;inet &#x27;</span> | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>)</span><br><span class="line">netsh.exe interface portproxy delete v4tov4 listenport=23333</span><br><span class="line">netsh.exe interface portproxy add    v4tov4 listenport=23333 connectaddress=<span class="variable">$IP</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 700 ~/port-forward.sh</span><br></pre></td></tr></table></figure><p>使用管理员权限 cmd 执行：</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</span><br></pre></td></tr></table></figure><h3 id="5-设置开机自启"><a href="#5-设置开机自启" class="headerlink" title="5. 设置开机自启"></a>5. 设置开机自启</h3><p>在 Windows 中打开计划任务 Task Scheduler，添加新任务，勾选使用最高权限执行。条件为系统启动和用户登录时。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008122247581.png" alt="image-20201008122247581"></p><p>添加两个操作，分别完成 ssh 启动和端口转发。</p><ol><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root -- service ssh start</code></li><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</code></li></ol><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008131114568.png" alt="image-20201008131114568"></p><p>为了避免服务意外终止，可以增加第三个触发条件，每隔固定时间（图中为一小时）重复触发。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20210422100712502.png" alt="image-20210422100712502"></p><h3 id="6-设置防火墙"><a href="#6-设置防火墙" class="headerlink" title="6. 设置防火墙"></a>6. 设置防火墙</h3><p>Windows 安全中心防火墙页面点击左下详细设置，在左侧入站规则中添加新的端口规则，允许外部访问 SSH 端口</p><p>参考：</p><p><a href="https://qiita.com/gengen16k/items/18262af0781fd32fc9cd">https://qiita.com/gengen16k/items/18262af0781fd32fc9cd</a></p><p><a href="https://tombomemo.com/wsl2-install-settings">https://tombomemo.com/wsl2-install-settings</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Windows </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> WSL </tag>
-            
-            <tag> ssh </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Windows WebDAV 文件大小限制</title>
       <link href="posts/windows-dav-limit/"/>
       <url>posts/windows-dav-limit/</url>
@@ -419,31 +392,6 @@
     
     
     <entry>
-      <title>Portainer 启动/升级</title>
-      <link href="posts/protainer-launch-update/"/>
-      <url>posts/protainer-launch-update/</url>
-      
-        <content type="html"><![CDATA[<h2 id="Launch"><a href="#Launch" class="headerlink" title="Launch"></a>Launch</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker volume create portainer_data</span><br><span class="line">docker run -d -p 127.0.0.1:9000:9000 -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data --restart unless-stopped --name portainer portainer/portainer</span><br></pre></td></tr></table></figure><p>From <a href="https://portainer.io/install.html">https://portainer.io/install.html</a> </p><h2 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h2><ul><li><p>在 Web 界面执行 Duplicate/Edit</p></li><li><p>直接确认后，会自动拉取新镜像并停止旧 Container，但不能自动拉起新 Container</p></li><li><p>SSH 登录，手动删除旧 Container，再使用上述第二条命令重新拉起即可</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker rm portainer</span><br></pre></td></tr></table></figure></li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> Services </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Portainer </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>QNAP 硬盘不休眠解决</title>
       <link href="posts/qnap-hdd-wont-sleep/"/>
       <url>posts/qnap-hdd-wont-sleep/</url>
@@ -587,33 +535,6 @@
     
     
     <entry>
-      <title>搭建 Shadowsocks 客户端服务端并加为服务</title>
-      <link href="posts/shadowsocks-server/"/>
-      <url>posts/shadowsocks-server/</url>
-      
-        <content type="html"><![CDATA[<p><a href="https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e">https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e</a></p><h2 id="1-install-and-config"><a href="#1-install-and-config" class="headerlink" title="1. install and config"></a>1. install and config</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python-pip</span><br><span class="line">sudo apt install shadowsocks</span><br><span class="line">or</span><br><span class="line">sudo pip install git+https://github.com/shadowsocks/shadowsocks.git@master</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2. 配置"></a>2. 配置</h2><h3 id="2-1-客户端"><a href="#2-1-客户端" class="headerlink" title="2.1 客户端"></a>2.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;27.102.111.111&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>: <span class="number">12345</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-2-服务端"><a href="#2-2-服务端" class="headerlink" title="2.2 服务端"></a>2.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/ssserver.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;port_password&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;3389&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;2003&quot;</span>: <span class="string">&quot;passsss&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>:<span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>:<span class="number">3389</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>:<span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>:<span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="3-add-as-service"><a href="#3-add-as-service" class="headerlink" title="3. add as service"></a>3. add as service</h2><h3 id="3-1-客户端"><a href="#3-1-客户端" class="headerlink" title="3.1 客户端"></a>3.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Client Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/bin/sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/shadowsocks.service</span><br><span class="line">sudo systemctl start shadowsocks.service</span><br><span class="line">service shadowsocks status</span><br></pre></td></tr></table></figure><h3 id="3-2-服务端"><a href="#3-2-服务端" class="headerlink" title="3.2 服务端"></a>3.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/ssserver.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Server Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/local/bin/ssserver -c /etc/ssserver.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/ssserver.service</span><br><span class="line">sudo systemctl start ssserver.service</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> Services </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Shadowsocks </tag>
-            
-            <tag> 服务端 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Nginx 禁止未授权 URL 访问（HTTP 444）</title>
       <link href="posts/nginx-ban-url/"/>
       <url>posts/nginx-ban-url/</url>
@@ -633,35 +554,6 @@
             <tag> Nginx </tag>
             
             <tag> 过滤 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Certbot cloudflare 泛域名证书配置</title>
-      <link href="posts/certbot-cloudflare-wildcard/"/>
-      <url>posts/certbot-cloudflare-wildcard/</url>
-      
-        <content type="html"><![CDATA[<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install software-properties-common</span><br><span class="line">sudo add-apt-repository universe</span><br><span class="line">sudo add-apt-repository ppa:certbot/certbot</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install -y certbot python3-certbot-dns-cloudflare</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2.  配置"></a>2.  配置</h2><blockquote><p>  Use of this plugin requires a configuration file containing Cloudflare API credentials, obtained from your Cloudflare account page.</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/letsencrypt/cloudflare.ini</span><br></pre></td></tr></table></figure><p>  Example credentials file:</p>  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Cloudflare API credentials used by Certbot</span></span><br><span class="line"><span class="attr">dns_cloudflare_email</span> = cloudflare@example.com</span><br><span class="line"><span class="attr">dns_cloudflare_api_key</span> = <span class="number">0123456789</span>abcdef0123456789abcdef01234567</span><br></pre></td></tr></table></figure><p>  The path to this file can be provided interactively or using the –dns-cloudflare-credentials command-line argument. Certbot records the path to this file for use during renewal, but does not store the file’s contents.</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 600 /etc/letsencrypt/cloudflare.ini</span><br></pre></td></tr></table></figure></blockquote><h2 id="3-获取"><a href="#3-获取" class="headerlink" title="3. 获取"></a>3. 获取</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot -a dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -i nginx -d <span class="string">&quot;*.coder17.com&quot;</span> -d coder17.com</span><br></pre></td></tr></table></figure><p>注意不能完全信任其对 nginx 的修改</p><p>如果不需要自动修改 nginx 则：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot certonly -a dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -d <span class="string">&quot;home.coder17.com&quot;</span> -d <span class="string">&quot;frph.coder17.com&quot;</span> -d <span class="string">&quot;*.frph.coder17.com&quot;</span> -d <span class="string">&quot;*.home.coder17.com&quot;</span></span><br></pre></td></tr></table></figure><h2 id="4-更新测试"><a href="#4-更新测试" class="headerlink" title="4. 更新测试"></a>4. 更新测试</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot renew --dry-run</span><br></pre></td></tr></table></figure><h2 id="5-部署自动更新"><a href="#5-部署自动更新" class="headerlink" title="5. 部署自动更新"></a>5. 部署自动更新</h2><p>默认情况下会自动添加自动更新，每天两次。<br>使用 <code>sudo systemctl list-timers</code> 查看，配置文件位于 <code>/etc/systemctl/system/timers.target.wants/certbot.timer</code></p><p>如果运行有问题，使用下面命令创建 crontab 任务，每两个月一次。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo crontab -e</span><br><span class="line"></span><br><span class="line">0 0 1 */2 * /usr/bin/certbot renew &gt;&gt; <span class="string">&quot;/var/log/certbot_<span class="subst">$(date +<span class="string">&quot;\%Y-\%m-\%d&quot;</span>)</span>.log&quot;</span> 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">sudo service cron restart</span><br></pre></td></tr></table></figure><h2 id="6-转换证书格式"><a href="#6-转换证书格式" class="headerlink" title="6. 转换证书格式"></a>6. 转换证书格式</h2><p>默认申请的是 pem 格式证书，位于 <code>/etc/letsencrypt/live</code> 中，需要转换为 Windows 使用的 pfx 格式时，使用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="built_in">export</span> -out certificate.pfx -inkey privkey.pem -<span class="keyword">in</span> cert.pem -certfile chain.pem -passout pass:</span><br></pre></td></tr></table></figure><h2 id="7-复制"><a href="#7-复制" class="headerlink" title="7. 复制"></a>7. 复制</h2><p>因为 live 目录中为软连接，复制时需要使用 <code>-L</code> 参数，如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -Lr /etc/letsencrypt/live /mnt/hgfs/certs</span><br></pre></td></tr></table></figure><p>Refer: <a href="https://certbot-dns-cloudflare.readthedocs.io/en/stable/">https://certbot-dns-cloudflare.readthedocs.io/en/stable/</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Services </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Certbot </tag>
-            
-            <tag> cloudflare </tag>
-            
-            <tag> 泛域名证书 </tag>
             
         </tags>
       
@@ -881,203 +773,6 @@
     
     
     <entry>
-      <title>Linux 显示 git 分支名</title>
-      <link href="posts/linux-git-branch-name/"/>
-      <url>posts/linux-git-branch-name/</url>
-      
-        <content type="html"><![CDATA[<ol><li><p>Download <a href="https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh">this</a></p></li><li><p>Copy to <code>~/.git-prompt.sh</code>, or wget it.</p></li><li><p><code>.bashrc</code></p></li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">source</span> ~/.git-prompt.sh</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PS1=<span class="string">&#x27;\[\e]0;\u@\h: \w\a\]$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1)\[\033[00m\]\$ &#x27;</span></span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> Linux </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Linux </tag>
-            
-            <tag> git </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>frp 转发安装为服务</title>
-      <link href="posts/frp-install-service/"/>
-      <url>posts/frp-install-service/</url>
-      
-        <content type="html"><![CDATA[<p>下载 frp 到 <code>/opt/frp</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R tojo /opt/frp</span><br><span class="line">sudo chmod -R 755 /opt/frp</span><br></pre></td></tr></table></figure><h2 id="1-配置"><a href="#1-配置" class="headerlink" title="1 配置"></a>1 配置</h2><h3 id="1-1-客户端"><a href="#1-1-客户端" class="headerlink" title="1.1 客户端"></a>1.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/frp/frpc.ini</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[common]</span></span><br><span class="line"><span class="attr">server_addr</span> = frp.coder17.com</span><br><span class="line"><span class="attr">server_port</span> = <span class="number">3389</span></span><br><span class="line"></span><br><span class="line"><span class="section">[ssh]</span></span><br><span class="line"><span class="attr">type</span> = tcp</span><br><span class="line"><span class="attr">local_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">local_port</span> = <span class="number">22</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">60022</span></span><br><span class="line"></span><br><span class="line"><span class="section">[ss-tcp]</span></span><br><span class="line"><span class="attr">type</span> = tcp</span><br><span class="line"><span class="attr">local_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">local_port</span> = <span class="number">8848</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">60088</span></span><br><span class="line"></span><br><span class="line"><span class="section">[ss-udp]</span></span><br><span class="line"><span class="attr">type</span> = udp</span><br><span class="line"><span class="attr">local_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">local_port</span> = <span class="number">8848</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">60088</span></span><br></pre></td></tr></table></figure><h3 id="1-2-服务端"><a href="#1-2-服务端" class="headerlink" title="1.2 服务端"></a>1.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/frp/frps.ini</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port &#x3D; 3389</span><br><span class="line">vhost_http_port &#x3D; 60080</span><br><span class="line">vhost_https_port &#x3D; 60443</span><br><span class="line">subdomain_host &#x3D; frp.coder17.com</span><br><span class="line">dashboard_port &#x3D; 60000</span><br><span class="line">dashboard_user &#x3D; tojo</span><br><span class="line">dashboard_pwd &#x3D; 1qaz@WSX3edc</span><br></pre></td></tr></table></figure><h2 id="2-安装为服务"><a href="#2-安装为服务" class="headerlink" title="2 安装为服务"></a>2 安装为服务</h2><h3 id="2-1-客户端"><a href="#2-1-客户端" class="headerlink" title="2.1 客户端"></a>2.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/frpc.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=frp Client Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/opt/frp/frpc -c /opt/frp/frpc.ini</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br><span class="line"></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/frpc.service</span><br><span class="line">sudo systemctl start frpc.service</span><br><span class="line">service frpc status</span><br></pre></td></tr></table></figure><h3 id="2-2-服务端"><a href="#2-2-服务端" class="headerlink" title="2.2 服务端"></a>2.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/frps.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=frp Server Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/opt/frp/frps -c /opt/frp/frps.ini</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br><span class="line"></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/frps.service</span><br><span class="line">sudo systemctl start frps.service</span><br><span class="line">service frps status</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> Services </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> frp </tag>
-            
-            <tag> 安装服务 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>ss-tunnel 转发 dns</title>
-      <link href="posts/ss-tunnel-dns/"/>
-      <url>posts/ss-tunnel-dns/</url>
-      
-        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup sudo /usr/<span class="built_in">local</span>/bin/ss-tunnel -c /etc/shadowsocks-libev/config.json -l 53 -v -b 127.0.0.1 -L 8.8.8.8:53 -u &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> Linux </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Linux </tag>
-            
-            <tag> Shadowsocks </tag>
-            
-            <tag> ss-tunnel </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>编译安装 ss-libev</title>
-      <link href="posts/compile-ss-libev/"/>
-      <url>posts/compile-ss-libev/</url>
-      
-        <content type="html"><![CDATA[<p><a href="https://github.com/madeye/shadowsocks-libev">https://github.com/madeye/shadowsocks-libev</a><br><a href="http://shadowsocks.org/en/download/servers.html">http://shadowsocks.org/en/download/servers.html</a></p><p>Ubuntu 16.04 下无法从源安装，dpkg 编译失败，需要从源码编译</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev libev-dev libudns-dev libsodium-dev libmbedtls-dev libc-ares-dev automake</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocks/shadowsocks-libev.git</span><br><span class="line"><span class="built_in">cd</span> shadowsocks-libev</span><br><span class="line">git submodule update --init</span><br><span class="line">./autogen.sh &amp;&amp; ./configure &amp;&amp; make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure><p>From <a href="http://shadowsocks.org/en/download/servers.html">http://shadowsocks.org/en/download/servers.html</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Linux </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Shadowsocks </tag>
-            
-            <tag> 编译 </tag>
-            
-            <tag> ss-libev </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>WSL 同步主机 ssh key</title>
-      <link href="posts/wsl-sync-ssh-keys/"/>
-      <url>posts/wsl-sync-ssh-keys/</url>
-      
-        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br><span class="line">vim ~/.zshrc</span><br><span class="line"></span><br><span class="line">mv -f ~/.ssh/known_hosts ~/.ssh/known_hosts.bak</span><br><span class="line">chmod -R 0755 ~/.ssh</span><br><span class="line">cp -r /mnt/c/Users/sykie/.ssh/* ~/.ssh</span><br><span class="line">chmod 0600 ~/.ssh/*</span><br><span class="line">chmod 0755 ~/.ssh</span><br><span class="line">mv -f ~/.ssh/known_hosts.bak ~/.ssh/known_hosts</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> Windows </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> WSL </tag>
-            
-            <tag> ssh </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>新建 Windows 服务</title>
-      <link href="posts/create-windows-service/"/>
-      <url>posts/create-windows-service/</url>
-      
-        <content type="html"><![CDATA[<ol><li><p>下载 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17657">Windows NT Resource Kit</a></p></li><li><p>添加指向 <code>srvany.exe</code> 的服务</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc create &lt;name&gt; binpath= &quot;C:\Program Files (x86)\Windows Resource Kits\Tools\srvany.exe&quot; <span class="built_in">start</span>= auto displayname= &quot;&lt;Display Name&gt;&quot;</span><br></pre></td></tr></table></figure></li><li><p>修改注册表</p><p> 定位到</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\&lt;name&gt;</span><br></pre></td></tr></table></figure><p> 添加子键</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Key Name: Parameters</span><br><span class="line">Class : &lt;leave blank&gt;</span><br></pre></td></tr></table></figure><p> 在子键下新建字符串值，指向真正要启动的程序</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Value Name: Application</span><br><span class="line">Data Type : REG_SZ</span><br><span class="line">String : &lt;path&gt;\&lt;application.ext&gt;</span><br></pre></td></tr></table></figure></li><li><p>进 services.msc 看看，启动</p></li></ol><p>参考：<a href="https://support.microsoft.com/en-us/help/137890/how-to-create-a-user-defined-service">https://support.microsoft.com/en-us/help/137890/how-to-create-a-user-defined-service</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Windows </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Windows </tag>
-            
-            <tag> 服务 </tag>
-            
-            <tag> srvany </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>配置 ssh key 登录和改 sshd 端口</title>
-      <link href="posts/config-sshd/"/>
-      <url>posts/config-sshd/</url>
-      
-        <content type="html"><![CDATA[<h2 id="保存-ssh-key"><a href="#保存-ssh-key" class="headerlink" title="保存 ssh-key"></a>保存 ssh-key</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line">chmod 500 .ssh/authorized_keys</span><br></pre></td></tr></table></figure><h2 id="禁用密码登录与改端口"><a href="#禁用密码登录与改端口" class="headerlink" title="禁用密码登录与改端口"></a>禁用密码登录与改端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line"></span><br><span class="line"># 启用密钥验证</span><br><span class="line">RSAAuthentication yes # below 16.0</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 指定公钥数据库文件</span><br><span class="line">AuthorizedKeysFile %h&#x2F;.ssh&#x2F;authorized_keys # below 16.0</span><br><span class="line">AuthorizedKeysFile .ssh&#x2F;authorized_keys # 18.0</span><br><span class="line"></span><br><span class="line">PasswordAuthentication no</span><br><span class="line"></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service sshd restart</span><br></pre></td></tr></table></figure><p>or</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> Linux </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Linux </tag>
-            
-            <tag> ssh </tag>
-            
-            <tag> 端口 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>ConEmu 里 tqdm 等进度条吃屎解决</title>
       <link href="posts/tqdm-sucks-in-conemu/"/>
       <url>posts/tqdm-sucks-in-conemu/</url>
@@ -1097,35 +792,6 @@
             <tag> ConEmu </tag>
             
             <tag> tqdm </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Proxychains 配置支持多场景和自定义 DNS</title>
-      <link href="posts/proxychains-dns/"/>
-      <url>posts/proxychains-dns/</url>
-      
-        <content type="html"><![CDATA[<p>Proxychains 开启时使用的是写死的公用 DNS 4.2.2.2，并不科学。同时只能支持一个代理或代理链，需要切换使用多个代理时并不方便。</p><p>下面以使用 <code>pc</code> 和 <code>pf</code> 两个命令分别连接两个不同的代理为例:</p><h2 id="链接-ss-的代理"><a href="#链接-ss-的代理" class="headerlink" title="链接 ss 的代理"></a>链接 ss 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxychains.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">socks5  127.0.0.1 1080</span><br></pre></td></tr></table></figure><h2 id="链接-fiddler-的代理"><a href="#链接-fiddler-的代理" class="headerlink" title="链接 fiddler 的代理"></a>链接 fiddler 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxyfiddler.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">http  127.0.0.1 8888</span><br></pre></td></tr></table></figure><h2 id="usage"><a href="#usage" class="headerlink" title="usage"></a>usage</h2><ul><li><code>pc xx</code> : use socks5 proxy 127.0.0.1:4411 to connect to xx</li><li><code>pf xx</code> : use http proxy 127.0.0.1:8888 to connect to xx, usually fiddler</li></ul><h2 id="Proxychains-4-NG"><a href="#Proxychains-4-NG" class="headerlink" title="Proxychains 4 NG"></a>Proxychains 4 NG</h2><p>新版没有以前不能解析域名的问题，直接安装即可。<br>但 Proxychains4 不支持 git，原因不明，会报错，因此使用 ProxychainsNG</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/rofl0r/proxychains-ng.git</span><br><span class="line"><span class="built_in">cd</span> proxychains-ng</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line"><span class="built_in">cd</span> .. &amp;&amp; rm -rf proxychains-ng</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=\<span class="string">&#x27;proxychains4\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=\<span class="string">&#x27;proxychains4 -f /etc/proxyfiddler.conf\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br></pre></td></tr></table></figure><hr><h2 id="以下适用于-Proxychains-3-版本，已过时"><a href="#以下适用于-Proxychains-3-版本，已过时" class="headerlink" title="以下适用于 Proxychains 3 版本，已过时"></a>以下适用于 Proxychains 3 版本，已过时</h2><h3 id="改源码支持指定-dns"><a href="#改源码支持指定-dns" class="headerlink" title="改源码支持指定 dns"></a>改源码支持指定 dns</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="variable">$HOME</span>/.proxychains</span><br><span class="line">sudo vim /usr/lib/proxychains3/proxyresolv</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># This script is called by proxychains to resolve DNS names</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DNS server used to resolve names</span></span><br><span class="line">DNS_SERVER=<span class="variable">$&#123;PROXYRESOLV_DNS:-4.2.2.2&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> = 0 ] ; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot; usage:&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;  proxyresolv &lt;hostname&gt; &quot;</span></span><br><span class="line">    <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> LD_PRELOAD=libproxychains.so.3</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$DNS_SERVER</span> = <span class="string">&quot;none&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    dig <span class="variable">$1</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    dig <span class="variable">$1</span> @<span class="variable">$DNS_SERVER</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=<span class="string">&#x27;ln -sf /etc/proxyfiddler.conf $HOME/.proxychains/proxychains.conf; PROXYRESOLV_DNS=none proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=<span class="string">&#x27;ln -sf /etc/proxychains.conf $HOME/.proxychains/proxychains.conf; proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"></span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line">sudo ln -s ~/.proxychains /root/.proxychains</span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> Linux </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Linux </tag>
-            
-            <tag> Proxychains </tag>
-            
-            <tag> DNS </tag>
             
         </tags>
       
@@ -1275,60 +941,6 @@
     
     
     <entry>
-      <title>WinSCP 获取 sudo 权限</title>
-      <link href="posts/winscp-sudo/"/>
-      <url>posts/winscp-sudo/</url>
-      
-        <content type="html"><![CDATA[<ol><li><p>查看 sftp 路径</p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/ssh/sshd_config|grep sftp</span><br><span class="line">Subsystem sftp /usr/lib/openssh/sftp-server</span><br></pre></td></tr></table></figure></li><li><p>编辑 sudo</p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo visudo</span><br><span class="line"></span><br><span class="line"><span class="comment"># Allow members of group sudo to execute any command</span></span><br><span class="line">%sudo   ALL=(ALL:ALL) ALL</span><br><span class="line">tojo    ALL=NOPASSWD:  /usr/lib/openssh/sftp-server</span><br></pre></td></tr></table></figure></li><li><p>可选</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/WinSCP%20%E8%8E%B7%E5%8F%96%20sudo%20%E6%9D%83%E9%99%90/8baf2e2e.png" alt="WinSCP 获取 sudo 权限_2018-11-26-03-18-06.png"></p></li></ol>]]></content>
-      
-      
-      <categories>
-          
-          <category> Windows </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> WinSCP </tag>
-            
-            <tag> sudo </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Nextcloud https 协议有混合内容无法显示</title>
-      <link href="posts/nextcloud-https-mixed-content/"/>
-      <url>posts/nextcloud-https-mixed-content/</url>
-      
-        <content type="html"><![CDATA[<p>提示 csp 屏蔽，一般由反向代理导致。</p><h3 id="Docker部署时："><a href="#Docker部署时：" class="headerlink" title="Docker部署时："></a>Docker部署时：</h3><p>设置环境变量：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">APACHE_DISABLE_REWRITE_IP:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">TRUSTED_PROXIES:</span> <span class="number">172.16</span><span class="number">.0</span><span class="number">.0</span><span class="string">/12</span> <span class="comment"># 反向代理地址，一般为 docker 虚拟网关地址</span></span><br></pre></td></tr></table></figure><p>或者设置：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">OVERWRITEPROTOCOL:</span> <span class="string">https</span></span><br></pre></td></tr></table></figure><p>From: <a href="https://github.com/nextcloud/docker">https://github.com/nextcloud/docker</a></p><h3 id="独立部署时："><a href="#独立部署时：" class="headerlink" title="独立部署时："></a>独立部署时：</h3><p>修改 config/config.php：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;overwrite.cli.url&#x27;</span> =&gt; <span class="string">&#x27;https://cloud.myserver.com&#x27;</span>, </span><br><span class="line"><span class="string">&#x27;overwriteprotocol&#x27;</span> =&gt; <span class="string">&#x27;https&#x27;</span>,</span><br></pre></td></tr></table></figure><p>From: <a href="https://help.nextcloud.com/t/nextcloud-wont-load-any-mixed-content/13565">https://help.nextcloud.com/t/nextcloud-wont-load-any-mixed-content/13565</a> </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Nextcloud%20https%20%E5%8D%8F%E8%AE%AE%E6%9C%89%E6%B7%B7%E5%90%88%E5%86%85%E5%AE%B9%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA/53dc8f1d.png" alt="Https 协议有混合内容无法显示_2018-11-26-03-09-48.png"></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Services </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Nextcloud </tag>
-            
-            <tag> https </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Windows 远程桌面同时查看内容（shadow）</title>
       <link href="posts/windows-rdp-shadow/"/>
       <url>posts/windows-rdp-shadow/</url>
@@ -1358,6 +970,91 @@
     
     
     <entry>
+      <title>新建 Windows 服务</title>
+      <link href="posts/create-windows-service/"/>
+      <url>posts/create-windows-service/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>下载 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=17657">Windows NT Resource Kit</a></p></li><li><p>添加指向 <code>srvany.exe</code> 的服务</p> <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc create &lt;name&gt; binpath= &quot;C:\Program Files (x86)\Windows Resource Kits\Tools\srvany.exe&quot; <span class="built_in">start</span>= auto displayname= &quot;&lt;Display Name&gt;&quot;</span><br></pre></td></tr></table></figure></li><li><p>修改注册表</p><p> 定位到</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\&lt;name&gt;</span><br></pre></td></tr></table></figure><p> 添加子键</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Key Name: Parameters</span><br><span class="line">Class : &lt;leave blank&gt;</span><br></pre></td></tr></table></figure><p> 在子键下新建字符串值，指向真正要启动的程序</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Value Name: Application</span><br><span class="line">Data Type : REG_SZ</span><br><span class="line">String : &lt;path&gt;\&lt;application.ext&gt;</span><br></pre></td></tr></table></figure></li><li><p>进 services.msc 看看，启动</p></li></ol><p>参考：<a href="https://support.microsoft.com/en-us/help/137890/how-to-create-a-user-defined-service">https://support.microsoft.com/en-us/help/137890/how-to-create-a-user-defined-service</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Windows </tag>
+            
+            <tag> 服务 </tag>
+            
+            <tag> srvany </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux 显示 git 分支名</title>
+      <link href="posts/linux-git-branch-name/"/>
+      <url>posts/linux-git-branch-name/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>Download <a href="https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh">this</a></p></li><li><p>Copy to <code>~/.git-prompt.sh</code>, or wget it.</p></li><li><p><code>.bashrc</code></p></li></ol><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">source</span> ~/.git-prompt.sh</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PS1=<span class="string">&#x27;\[\e]0;\u@\h: \w\a\]$&#123;debian_chroot:+($debian_chroot)&#125;\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[01;33m\]$(__git_ps1)\[\033[00m\]\$ &#x27;</span></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> git </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Certbot cloudflare 泛域名证书配置</title>
+      <link href="posts/certbot-cloudflare-wildcard/"/>
+      <url>posts/certbot-cloudflare-wildcard/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install software-properties-common</span><br><span class="line">sudo add-apt-repository universe</span><br><span class="line">sudo add-apt-repository ppa:certbot/certbot</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install -y certbot python3-certbot-dns-cloudflare</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2.  配置"></a>2.  配置</h2><blockquote><p>  Use of this plugin requires a configuration file containing Cloudflare API credentials, obtained from your Cloudflare account page.</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/letsencrypt/cloudflare.ini</span><br></pre></td></tr></table></figure><p>  Example credentials file:</p>  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Cloudflare API credentials used by Certbot</span></span><br><span class="line"><span class="attr">dns_cloudflare_email</span> = cloudflare@example.com</span><br><span class="line"><span class="attr">dns_cloudflare_api_key</span> = <span class="number">0123456789</span>abcdef0123456789abcdef01234567</span><br></pre></td></tr></table></figure><p>  The path to this file can be provided interactively or using the –dns-cloudflare-credentials command-line argument. Certbot records the path to this file for use during renewal, but does not store the file’s contents.</p>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 600 /etc/letsencrypt/cloudflare.ini</span><br></pre></td></tr></table></figure></blockquote><h2 id="3-获取"><a href="#3-获取" class="headerlink" title="3. 获取"></a>3. 获取</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot -a dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -i nginx -d <span class="string">&quot;*.coder17.com&quot;</span> -d coder17.com</span><br></pre></td></tr></table></figure><p>注意不能完全信任其对 nginx 的修改</p><p>如果不需要自动修改 nginx 则：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot certonly -a dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -d <span class="string">&quot;home.coder17.com&quot;</span> -d <span class="string">&quot;frph.coder17.com&quot;</span> -d <span class="string">&quot;*.frph.coder17.com&quot;</span> -d <span class="string">&quot;*.home.coder17.com&quot;</span></span><br></pre></td></tr></table></figure><h2 id="4-更新测试"><a href="#4-更新测试" class="headerlink" title="4. 更新测试"></a>4. 更新测试</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo certbot renew --dry-run</span><br></pre></td></tr></table></figure><h2 id="5-部署自动更新"><a href="#5-部署自动更新" class="headerlink" title="5. 部署自动更新"></a>5. 部署自动更新</h2><p>默认情况下会自动添加自动更新，每天两次。<br>使用 <code>sudo systemctl list-timers</code> 查看，配置文件位于 <code>/etc/systemctl/system/timers.target.wants/certbot.timer</code></p><p>如果运行有问题，使用下面命令创建 crontab 任务，每两个月一次。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo crontab -e</span><br><span class="line"></span><br><span class="line">0 0 1 */2 * /usr/bin/certbot renew &gt;&gt; <span class="string">&quot;/var/log/certbot_<span class="subst">$(date +<span class="string">&quot;\%Y-\%m-\%d&quot;</span>)</span>.log&quot;</span> 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">sudo service cron restart</span><br></pre></td></tr></table></figure><h2 id="6-转换证书格式"><a href="#6-转换证书格式" class="headerlink" title="6. 转换证书格式"></a>6. 转换证书格式</h2><p>默认申请的是 pem 格式证书，位于 <code>/etc/letsencrypt/live</code> 中，需要转换为 Windows 使用的 pfx 格式时，使用：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="built_in">export</span> -out certificate.pfx -inkey privkey.pem -<span class="keyword">in</span> cert.pem -certfile chain.pem -passout pass:</span><br></pre></td></tr></table></figure><h2 id="7-复制"><a href="#7-复制" class="headerlink" title="7. 复制"></a>7. 复制</h2><p>因为 live 目录中为软连接，复制时需要使用 <code>-L</code> 参数，如下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -Lr /etc/letsencrypt/live /mnt/hgfs/certs</span><br></pre></td></tr></table></figure><p>Refer: <a href="https://certbot-dns-cloudflare.readthedocs.io/en/stable/">https://certbot-dns-cloudflare.readthedocs.io/en/stable/</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Certbot </tag>
+            
+            <tag> cloudflare </tag>
+            
+            <tag> 泛域名证书 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>网络打印机提示需要用户干预</title>
       <link href="posts/windows-printer-error/"/>
       <url>posts/windows-printer-error/</url>
@@ -1379,6 +1076,33 @@
             <tag> Windows </tag>
             
             <tag> 网络打印机 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>WSL 开启 SSH</title>
+      <link href="posts/wsl-turn-on-ssh/"/>
+      <url>posts/wsl-turn-on-ssh/</url>
+      
+        <content type="html"><![CDATA[<h2 id="WSL1"><a href="#WSL1" class="headerlink" title="WSL1"></a>WSL1</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg-reconfigure openssh-server</span><br><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><p>注意编辑密钥<br><code>~/.ssh/authorized_keys</code><br>文件权限 600，ssh 目录权限 755</p><h2 id="WSL2"><a href="#WSL2" class="headerlink" title="WSL2"></a>WSL2</h2><h3 id="1-修改端口到高位"><a href="#1-修改端口到高位" class="headerlink" title="1. 修改端口到高位"></a>1. 修改端口到高位</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><h3 id="2-生成主机密钥"><a href="#2-生成主机密钥" class="headerlink" title="2. 生成主机密钥"></a>2. 生成主机密钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/ssh</span><br><span class="line">ssh-keygen -A</span><br></pre></td></tr></table></figure><h3 id="3-启动服务"><a href="#3-启动服务" class="headerlink" title="3. 启动服务"></a>3. 启动服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><h3 id="4-设置端口转发"><a href="#4-设置端口转发" class="headerlink" title="4. 设置端口转发"></a>4. 设置端口转发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/port-forward.sh</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">IP=$(ifconfig eth0 | grep <span class="string">&#x27;inet &#x27;</span> | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>)</span><br><span class="line">netsh.exe interface portproxy delete v4tov4 listenport=23333</span><br><span class="line">netsh.exe interface portproxy add    v4tov4 listenport=23333 connectaddress=<span class="variable">$IP</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 700 ~/port-forward.sh</span><br></pre></td></tr></table></figure><p>使用管理员权限 cmd 执行：</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</span><br></pre></td></tr></table></figure><h3 id="5-设置开机自启"><a href="#5-设置开机自启" class="headerlink" title="5. 设置开机自启"></a>5. 设置开机自启</h3><p>在 Windows 中打开计划任务 Task Scheduler，添加新任务，勾选使用最高权限执行。条件为系统启动和用户登录时。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008122247581.png" alt="image-20201008122247581"></p><p>添加两个操作，分别完成 ssh 启动和端口转发。</p><ol><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root -- service ssh start</code></li><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</code></li></ol><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008131114568.png" alt="image-20201008131114568"></p><p>为了避免服务意外终止，可以增加第三个触发条件，每隔固定时间（图中为一小时）重复触发。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20210422100712502.png" alt="image-20210422100712502"></p><h3 id="6-设置防火墙"><a href="#6-设置防火墙" class="headerlink" title="6. 设置防火墙"></a>6. 设置防火墙</h3><p>Windows 安全中心防火墙页面点击左下详细设置，在左侧入站规则中添加新的端口规则，允许外部访问 SSH 端口</p><p>参考：</p><p><a href="https://qiita.com/gengen16k/items/18262af0781fd32fc9cd">https://qiita.com/gengen16k/items/18262af0781fd32fc9cd</a></p><p><a href="https://tombomemo.com/wsl2-install-settings">https://tombomemo.com/wsl2-install-settings</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> WSL </tag>
+            
+            <tag> ssh </tag>
             
         </tags>
       
@@ -1443,6 +1167,62 @@
     
     
     <entry>
+      <title>配置 ssh key 登录和改 sshd 端口</title>
+      <link href="posts/config-sshd/"/>
+      <url>posts/config-sshd/</url>
+      
+        <content type="html"><![CDATA[<h2 id="保存-ssh-key"><a href="#保存-ssh-key" class="headerlink" title="保存 ssh-key"></a>保存 ssh-key</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line">chmod 500 .ssh/authorized_keys</span><br></pre></td></tr></table></figure><h2 id="禁用密码登录与改端口"><a href="#禁用密码登录与改端口" class="headerlink" title="禁用密码登录与改端口"></a>禁用密码登录与改端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Port 22</span><br><span class="line"></span><br><span class="line"># 启用密钥验证</span><br><span class="line">RSAAuthentication yes # below 16.0</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 指定公钥数据库文件</span><br><span class="line">AuthorizedKeysFile %h&#x2F;.ssh&#x2F;authorized_keys # below 16.0</span><br><span class="line">AuthorizedKeysFile .ssh&#x2F;authorized_keys # 18.0</span><br><span class="line"></span><br><span class="line">PasswordAuthentication no</span><br><span class="line"></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service sshd restart</span><br></pre></td></tr></table></figure><p>or</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh restart</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> ssh </tag>
+            
+            <tag> 端口 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>frp 转发安装为服务</title>
+      <link href="posts/frp-install-service/"/>
+      <url>posts/frp-install-service/</url>
+      
+        <content type="html"><![CDATA[<p>下载 frp 到 <code>/opt/frp</code></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R tojo /opt/frp</span><br><span class="line">sudo chmod -R 755 /opt/frp</span><br></pre></td></tr></table></figure><h2 id="1-配置"><a href="#1-配置" class="headerlink" title="1 配置"></a>1 配置</h2><h3 id="1-1-客户端"><a href="#1-1-客户端" class="headerlink" title="1.1 客户端"></a>1.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/frp/frpc.ini</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[common]</span></span><br><span class="line"><span class="attr">server_addr</span> = frp.coder17.com</span><br><span class="line"><span class="attr">server_port</span> = <span class="number">3389</span></span><br><span class="line"></span><br><span class="line"><span class="section">[ssh]</span></span><br><span class="line"><span class="attr">type</span> = tcp</span><br><span class="line"><span class="attr">local_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">local_port</span> = <span class="number">22</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">60022</span></span><br><span class="line"></span><br><span class="line"><span class="section">[ss-tcp]</span></span><br><span class="line"><span class="attr">type</span> = tcp</span><br><span class="line"><span class="attr">local_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">local_port</span> = <span class="number">8848</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">60088</span></span><br><span class="line"></span><br><span class="line"><span class="section">[ss-udp]</span></span><br><span class="line"><span class="attr">type</span> = udp</span><br><span class="line"><span class="attr">local_ip</span> = <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line"><span class="attr">local_port</span> = <span class="number">8848</span></span><br><span class="line"><span class="attr">remote_port</span> = <span class="number">60088</span></span><br></pre></td></tr></table></figure><h3 id="1-2-服务端"><a href="#1-2-服务端" class="headerlink" title="1.2 服务端"></a>1.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/frp/frps.ini</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port &#x3D; 3389</span><br><span class="line">vhost_http_port &#x3D; 60080</span><br><span class="line">vhost_https_port &#x3D; 60443</span><br><span class="line">subdomain_host &#x3D; frp.coder17.com</span><br><span class="line">dashboard_port &#x3D; 60000</span><br><span class="line">dashboard_user &#x3D; tojo</span><br><span class="line">dashboard_pwd &#x3D; 1qaz@WSX3edc</span><br></pre></td></tr></table></figure><h2 id="2-安装为服务"><a href="#2-安装为服务" class="headerlink" title="2 安装为服务"></a>2 安装为服务</h2><h3 id="2-1-客户端"><a href="#2-1-客户端" class="headerlink" title="2.1 客户端"></a>2.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/frpc.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=frp Client Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/opt/frp/frpc -c /opt/frp/frpc.ini</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br><span class="line"></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/frpc.service</span><br><span class="line">sudo systemctl start frpc.service</span><br><span class="line">service frpc status</span><br></pre></td></tr></table></figure><h3 id="2-2-服务端"><a href="#2-2-服务端" class="headerlink" title="2.2 服务端"></a>2.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/frps.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=frp Server Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/opt/frp/frps -c /opt/frp/frps.ini</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br><span class="line"></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/frps.service</span><br><span class="line">sudo systemctl start frps.service</span><br><span class="line">service frps status</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> frp </tag>
+            
+            <tag> 安装服务 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>解决（小米）笔记本插电时升频太快导致过热</title>
       <link href="posts/cpu-overheat/"/>
       <url>posts/cpu-overheat/</url>
@@ -1497,6 +1277,226 @@
             <tag> 自动更新 </tag>
             
             <tag> 重启 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>WinSCP 获取 sudo 权限</title>
+      <link href="posts/winscp-sudo/"/>
+      <url>posts/winscp-sudo/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>查看 sftp 路径</p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/ssh/sshd_config|grep sftp</span><br><span class="line">Subsystem sftp /usr/lib/openssh/sftp-server</span><br></pre></td></tr></table></figure></li><li><p>编辑 sudo</p> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo visudo</span><br><span class="line"></span><br><span class="line"><span class="comment"># Allow members of group sudo to execute any command</span></span><br><span class="line">%sudo   ALL=(ALL:ALL) ALL</span><br><span class="line">tojo    ALL=NOPASSWD:  /usr/lib/openssh/sftp-server</span><br></pre></td></tr></table></figure></li><li><p>可选</p><p> <img src= "/images/loading.gif" data-lazy-src="/blogimg/WinSCP%20%E8%8E%B7%E5%8F%96%20sudo%20%E6%9D%83%E9%99%90/8baf2e2e.png" alt="WinSCP 获取 sudo 权限_2018-11-26-03-18-06.png"></p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> WinSCP </tag>
+            
+            <tag> sudo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>WSL 同步主机 ssh key</title>
+      <link href="posts/wsl-sync-ssh-keys/"/>
+      <url>posts/wsl-sync-ssh-keys/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br><span class="line">vim ~/.zshrc</span><br><span class="line"></span><br><span class="line">mv -f ~/.ssh/known_hosts ~/.ssh/known_hosts.bak</span><br><span class="line">chmod -R 0755 ~/.ssh</span><br><span class="line">cp -r /mnt/c/Users/sykie/.ssh/* ~/.ssh</span><br><span class="line">chmod 0600 ~/.ssh/*</span><br><span class="line">chmod 0755 ~/.ssh</span><br><span class="line">mv -f ~/.ssh/known_hosts.bak ~/.ssh/known_hosts</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Windows </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> WSL </tag>
+            
+            <tag> ssh </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Proxychains 配置支持多场景和自定义 DNS</title>
+      <link href="posts/proxychains-dns/"/>
+      <url>posts/proxychains-dns/</url>
+      
+        <content type="html"><![CDATA[<p>Proxychains 开启时使用的是写死的公用 DNS 4.2.2.2，并不科学。同时只能支持一个代理或代理链，需要切换使用多个代理时并不方便。</p><p>下面以使用 <code>pc</code> 和 <code>pf</code> 两个命令分别连接两个不同的代理为例:</p><h2 id="链接-ss-的代理"><a href="#链接-ss-的代理" class="headerlink" title="链接 ss 的代理"></a>链接 ss 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxychains.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">socks5  127.0.0.1 1080</span><br></pre></td></tr></table></figure><h2 id="链接-fiddler-的代理"><a href="#链接-fiddler-的代理" class="headerlink" title="链接 fiddler 的代理"></a>链接 fiddler 的代理</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/proxyfiddler.conf</span><br></pre></td></tr></table></figure><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">quiet_mode</span><br><span class="line">proxy_dns</span><br><span class="line">tcp_read_time_out 15000</span><br><span class="line">tcp_connect_time_out 8000</span><br><span class="line"><span class="section">[ProxyList]</span></span><br><span class="line">http  127.0.0.1 8888</span><br></pre></td></tr></table></figure><h2 id="usage"><a href="#usage" class="headerlink" title="usage"></a>usage</h2><ul><li><code>pc xx</code> : use socks5 proxy 127.0.0.1:4411 to connect to xx</li><li><code>pf xx</code> : use http proxy 127.0.0.1:8888 to connect to xx, usually fiddler</li></ul><h2 id="Proxychains-4-NG"><a href="#Proxychains-4-NG" class="headerlink" title="Proxychains 4 NG"></a>Proxychains 4 NG</h2><p>新版没有以前不能解析域名的问题，直接安装即可。<br>但 Proxychains4 不支持 git，原因不明，会报错，因此使用 ProxychainsNG</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/rofl0r/proxychains-ng.git</span><br><span class="line"><span class="built_in">cd</span> proxychains-ng</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line"><span class="built_in">cd</span> .. &amp;&amp; rm -rf proxychains-ng</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=\<span class="string">&#x27;proxychains4\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=\<span class="string">&#x27;proxychains4 -f /etc/proxyfiddler.conf\&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br></pre></td></tr></table></figure><hr><h2 id="以下适用于-Proxychains-3-版本，已过时"><a href="#以下适用于-Proxychains-3-版本，已过时" class="headerlink" title="以下适用于 Proxychains 3 版本，已过时"></a>以下适用于 Proxychains 3 版本，已过时</h2><h3 id="改源码支持指定-dns"><a href="#改源码支持指定-dns" class="headerlink" title="改源码支持指定 dns"></a>改源码支持指定 dns</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="variable">$HOME</span>/.proxychains</span><br><span class="line">sudo vim /usr/lib/proxychains3/proxyresolv</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># This script is called by proxychains to resolve DNS names</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># DNS server used to resolve names</span></span><br><span class="line">DNS_SERVER=<span class="variable">$&#123;PROXYRESOLV_DNS:-4.2.2.2&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$#</span> = 0 ] ; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot; usage:&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;  proxyresolv &lt;hostname&gt; &quot;</span></span><br><span class="line">    <span class="built_in">exit</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> LD_PRELOAD=libproxychains.so.3</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$DNS_SERVER</span> = <span class="string">&quot;none&quot;</span> ] ; <span class="keyword">then</span></span><br><span class="line">    dig <span class="variable">$1</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    dig <span class="variable">$1</span> @<span class="variable">$DNS_SERVER</span> +tcp | awk <span class="string">&#x27;/A.+[0-9]+\.[0-9]+\.[0-9]/&#123;print $5;&#125;&#x27;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pf=<span class="string">&#x27;ln -sf /etc/proxyfiddler.conf $HOME/.proxychains/proxychains.conf; PROXYRESOLV_DNS=none proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"><span class="built_in">echo</span> <span class="built_in">alias</span> pc=<span class="string">&#x27;ln -sf /etc/proxychains.conf $HOME/.proxychains/proxychains.conf; proxychains&#x27;</span> &gt;&gt; ~/.bash_aliases</span><br><span class="line"></span><br><span class="line">sudo ln -s ~/.bash_aliases /root/.bash_aliases</span><br><span class="line">sudo ln -s ~/.proxychains /root/.proxychains</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> Proxychains </tag>
+            
+            <tag> DNS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>搭建 Shadowsocks 客户端服务端并加为服务</title>
+      <link href="posts/shadowsocks-server/"/>
+      <url>posts/shadowsocks-server/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e">https://gist.github.com/SykieChen/0996b1d1644e2a9d2f7b5b78a71caf2e</a></p><h2 id="1-install-and-config"><a href="#1-install-and-config" class="headerlink" title="1. install and config"></a>1. install and config</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install python-pip</span><br><span class="line">sudo apt install shadowsocks</span><br><span class="line">or</span><br><span class="line">sudo pip install git+https://github.com/shadowsocks/shadowsocks.git@master</span><br></pre></td></tr></table></figure><h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2. 配置"></a>2. 配置</h2><h3 id="2-1-客户端"><a href="#2-1-客户端" class="headerlink" title="2.1 客户端"></a>2.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;27.102.111.111&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>: <span class="number">12345</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-2-服务端"><a href="#2-2-服务端" class="headerlink" title="2.2 服务端"></a>2.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/ssserver.json</span><br></pre></td></tr></table></figure><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>: <span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>: <span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>: <span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>: <span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;port_password&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;3389&quot;</span>: <span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;2003&quot;</span>: <span class="string">&quot;passsss&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;server&quot;</span>:<span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span>:<span class="number">3389</span>,</span><br><span class="line">    <span class="attr">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="attr">&quot;password&quot;</span>:<span class="string">&quot;passsss&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;timeout&quot;</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="attr">&quot;method&quot;</span>:<span class="string">&quot;aes-256-cfb&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="3-add-as-service"><a href="#3-add-as-service" class="headerlink" title="3. add as service"></a>3. add as service</h2><h3 id="3-1-客户端"><a href="#3-1-客户端" class="headerlink" title="3.1 客户端"></a>3.1 客户端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Client Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/bin/sslocal -c /etc/shadowsocks.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/shadowsocks.service</span><br><span class="line">sudo systemctl start shadowsocks.service</span><br><span class="line">service shadowsocks status</span><br></pre></td></tr></table></figure><h3 id="3-2-服务端"><a href="#3-2-服务端" class="headerlink" title="3.2 服务端"></a>3.2 服务端</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/ssserver.service</span><br></pre></td></tr></table></figure><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Unit]</span></span><br><span class="line"><span class="attr">Description</span>=Shadowsocks Server Service</span><br><span class="line"><span class="attr">After</span>=network.target</span><br><span class="line"></span><br><span class="line"><span class="section">[Service]</span></span><br><span class="line"><span class="attr">Type</span>=simple</span><br><span class="line"><span class="attr">User</span>=tojo</span><br><span class="line"><span class="attr">ExecStart</span>=/usr/local/bin/ssserver -c /etc/ssserver.json</span><br><span class="line"></span><br><span class="line"><span class="section">[Install]</span></span><br><span class="line"><span class="attr">WantedBy</span>=multi-user.target</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> /etc/systemd/system/ssserver.service</span><br><span class="line">sudo systemctl start ssserver.service</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Shadowsocks </tag>
+            
+            <tag> 服务端 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ss-tunnel 转发 dns</title>
+      <link href="posts/ss-tunnel-dns/"/>
+      <url>posts/ss-tunnel-dns/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup sudo /usr/<span class="built_in">local</span>/bin/ss-tunnel -c /etc/shadowsocks-libev/config.json -l 53 -v -b 127.0.0.1 -L 8.8.8.8:53 -u &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> Shadowsocks </tag>
+            
+            <tag> ss-tunnel </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>编译安装 ss-libev</title>
+      <link href="posts/compile-ss-libev/"/>
+      <url>posts/compile-ss-libev/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://github.com/madeye/shadowsocks-libev">https://github.com/madeye/shadowsocks-libev</a><br><a href="http://shadowsocks.org/en/download/servers.html">http://shadowsocks.org/en/download/servers.html</a></p><p>Ubuntu 16.04 下无法从源安装，dpkg 编译失败，需要从源码编译</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev libev-dev libudns-dev libsodium-dev libmbedtls-dev libc-ares-dev automake</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocks/shadowsocks-libev.git</span><br><span class="line"><span class="built_in">cd</span> shadowsocks-libev</span><br><span class="line">git submodule update --init</span><br><span class="line">./autogen.sh &amp;&amp; ./configure &amp;&amp; make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure><p>From <a href="http://shadowsocks.org/en/download/servers.html">http://shadowsocks.org/en/download/servers.html</a></p><p>Docker：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull shadowsocks/shadowsocks-libev</span><br><span class="line">docker run -e PASSWORD=&lt;password&gt; -p&lt;server-port&gt;:8388 -p&lt;server-port&gt;:8388/udp -d shadowsocks/shadowsocks-libev</span><br></pre></td></tr></table></figure><p>From <a href="http://shadowsocks.org/en/download/servers.html">http://shadowsocks.org/en/download/servers.html</a> </p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Shadowsocks </tag>
+            
+            <tag> 编译 </tag>
+            
+            <tag> ss-libev </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Nextcloud https 协议有混合内容无法显示</title>
+      <link href="posts/nextcloud-https-mixed-content/"/>
+      <url>posts/nextcloud-https-mixed-content/</url>
+      
+        <content type="html"><![CDATA[<p>提示 csp 屏蔽，一般由反向代理导致。</p><h3 id="Docker部署时："><a href="#Docker部署时：" class="headerlink" title="Docker部署时："></a>Docker部署时：</h3><p>设置环境变量：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">APACHE_DISABLE_REWRITE_IP:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">TRUSTED_PROXIES:</span> <span class="number">172.16</span><span class="number">.0</span><span class="number">.0</span><span class="string">/12</span> <span class="comment"># 反向代理地址，一般为 docker 虚拟网关地址</span></span><br></pre></td></tr></table></figure><p>或者设置：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">OVERWRITEPROTOCOL:</span> <span class="string">https</span></span><br></pre></td></tr></table></figure><p>From: <a href="https://github.com/nextcloud/docker">https://github.com/nextcloud/docker</a></p><h3 id="独立部署时："><a href="#独立部署时：" class="headerlink" title="独立部署时："></a>独立部署时：</h3><p>修改 config/config.php：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;overwrite.cli.url&#x27;</span> =&gt; <span class="string">&#x27;https://cloud.myserver.com&#x27;</span>, </span><br><span class="line"><span class="string">&#x27;overwriteprotocol&#x27;</span> =&gt; <span class="string">&#x27;https&#x27;</span>,</span><br></pre></td></tr></table></figure><p>From: <a href="https://help.nextcloud.com/t/nextcloud-wont-load-any-mixed-content/13565">https://help.nextcloud.com/t/nextcloud-wont-load-any-mixed-content/13565</a> </p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Nextcloud%20https%20%E5%8D%8F%E8%AE%AE%E6%9C%89%E6%B7%B7%E5%90%88%E5%86%85%E5%AE%B9%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA/53dc8f1d.png" alt="Https 协议有混合内容无法显示_2018-11-26-03-09-48.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Nextcloud </tag>
+            
+            <tag> https </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Portainer 启动/升级</title>
+      <link href="posts/protainer-launch-update/"/>
+      <url>posts/protainer-launch-update/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Launch"><a href="#Launch" class="headerlink" title="Launch"></a>Launch</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker volume create portainer_data</span><br><span class="line">docker run -d -p 127.0.0.1:9000:9000 -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data --restart unless-stopped --name portainer portainer/portainer</span><br></pre></td></tr></table></figure><p>From <a href="https://portainer.io/install.html">https://portainer.io/install.html</a> </p><h2 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h2><ul><li><p>在 Web 界面执行 Duplicate/Edit</p></li><li><p>直接确认后，会自动拉取新镜像并停止旧 Container，但不能自动拉起新 Container</p></li><li><p>SSH 登录，手动删除旧 Container，再使用上述第二条命令重新拉起即可</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker rm portainer</span><br></pre></td></tr></table></figure></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Services </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Portainer </tag>
             
         </tags>
       

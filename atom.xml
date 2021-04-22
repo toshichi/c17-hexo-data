@@ -47,32 +47,6 @@
   </entry>
   
   <entry>
-    <title>WSL 开启 SSH</title>
-    <link href="https://www.coder17.com/posts/wsl-turn-on-ssh/"/>
-    <id>https://www.coder17.com/posts/wsl-turn-on-ssh/</id>
-    <published>2020-10-08T03:17:00.000Z</published>
-    <updated>2020-10-08T03:17:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="WSL1"><a href="#WSL1" class="headerlink" title="WSL1"></a>WSL1</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg-reconfigure openssh-server</span><br><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><p>注意编辑密钥<br><code>~/.ssh/authorized_keys</code><br>文件权限 600，ssh 目录权限 755</p><h2 id="WSL2"><a href="#WSL2" class="headerlink" title="WSL2"></a>WSL2</h2><h3 id="1-修改端口到高位"><a href="#1-修改端口到高位" class="headerlink" title="1. 修改端口到高位"></a>1. 修改端口到高位</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><h3 id="2-生成主机密钥"><a href="#2-生成主机密钥" class="headerlink" title="2. 生成主机密钥"></a>2. 生成主机密钥</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/ssh</span><br><span class="line">ssh-keygen -A</span><br></pre></td></tr></table></figure><h3 id="3-启动服务"><a href="#3-启动服务" class="headerlink" title="3. 启动服务"></a>3. 启动服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service ssh start</span><br></pre></td></tr></table></figure><h3 id="4-设置端口转发"><a href="#4-设置端口转发" class="headerlink" title="4. 设置端口转发"></a>4. 设置端口转发</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/port-forward.sh</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">IP=$(ifconfig eth0 | grep <span class="string">&#x27;inet &#x27;</span> | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>)</span><br><span class="line">netsh.exe interface portproxy delete v4tov4 listenport=23333</span><br><span class="line">netsh.exe interface portproxy add    v4tov4 listenport=23333 connectaddress=<span class="variable">$IP</span></span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 700 ~/port-forward.sh</span><br></pre></td></tr></table></figure><p>使用管理员权限 cmd 执行：</p><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</span><br></pre></td></tr></table></figure><h3 id="5-设置开机自启"><a href="#5-设置开机自启" class="headerlink" title="5. 设置开机自启"></a>5. 设置开机自启</h3><p>在 Windows 中打开计划任务 Task Scheduler，添加新任务，勾选使用最高权限执行。条件为系统启动和用户登录时。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008122247581.png" alt="image-20201008122247581"></p><p>添加两个操作，分别完成 ssh 启动和端口转发。</p><ol><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root -- service ssh start</code></li><li>执行 <code>cmd.exe</code>，参数为 <code>/c wsl -u root --exec /bin/bash /home/tojo/port-forward.sh</code></li></ol><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20201008131114568.png" alt="image-20201008131114568"></p><p>为了避免服务意外终止，可以增加第三个触发条件，每隔固定时间（图中为一小时）重复触发。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/WSL%20%E5%BC%80%E5%90%AF%20SSH/image-20210422100712502.png" alt="image-20210422100712502"></p><h3 id="6-设置防火墙"><a href="#6-设置防火墙" class="headerlink" title="6. 设置防火墙"></a>6. 设置防火墙</h3><p>Windows 安全中心防火墙页面点击左下详细设置，在左侧入站规则中添加新的端口规则，允许外部访问 SSH 端口</p><p>参考：</p><p><a href="https://qiita.com/gengen16k/items/18262af0781fd32fc9cd">https://qiita.com/gengen16k/items/18262af0781fd32fc9cd</a></p><p><a href="https://tombomemo.com/wsl2-install-settings">https://tombomemo.com/wsl2-install-settings</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;WSL1&quot;&gt;&lt;a href=&quot;#WSL1&quot; class=&quot;headerlink&quot; title=&quot;WSL1&quot;&gt;&lt;/a&gt;WSL1&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre</summary>
-      
-    
-    
-    
-    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
-    
-    
-    <category term="WSL" scheme="https://www.coder17.com/tags/WSL/"/>
-    
-    <category term="ssh" scheme="https://www.coder17.com/tags/ssh/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Windows WebDAV 文件大小限制</title>
     <link href="https://www.coder17.com/posts/windows-dav-limit/"/>
     <id>https://www.coder17.com/posts/windows-dav-limit/</id>
@@ -431,30 +405,6 @@
   </entry>
   
   <entry>
-    <title>Portainer 启动/升级</title>
-    <link href="https://www.coder17.com/posts/protainer-launch-update/"/>
-    <id>https://www.coder17.com/posts/protainer-launch-update/</id>
-    <published>2020-03-26T08:41:00.000Z</published>
-    <updated>2020-03-26T08:41:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Launch"><a href="#Launch" class="headerlink" title="Launch"></a>Launch</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker volume create portainer_data</span><br><span class="line">docker run -d -p 127.0.0.1:9000:9000 -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data --restart unless-stopped --name portainer portainer/portainer</span><br></pre></td></tr></table></figure><p>From <a href="https://portainer.io/install.html">https://portainer.io/install.html</a> </p><h2 id="Update"><a href="#Update" class="headerlink" title="Update"></a>Update</h2><ul><li><p>在 Web 界面执行 Duplicate/Edit</p></li><li><p>直接确认后，会自动拉取新镜像并停止旧 Container，但不能自动拉起新 Container</p></li><li><p>SSH 登录，手动删除旧 Container，再使用上述第二条命令重新拉起即可</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker rm portainer</span><br></pre></td></tr></table></figure></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;Launch&quot;&gt;&lt;a href=&quot;#Launch&quot; class=&quot;headerlink&quot; title=&quot;Launch&quot;&gt;&lt;/a&gt;Launch&lt;/h2&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutt</summary>
-      
-    
-    
-    
-    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
-    
-    
-    <category term="Portainer" scheme="https://www.coder17.com/tags/Portainer/"/>
-    
-  </entry>
-  
-  <entry>
     <title>QNAP 硬盘不休眠解决</title>
     <link href="https://www.coder17.com/posts/qnap-hdd-wont-sleep/"/>
     <id>https://www.coder17.com/posts/qnap-hdd-wont-sleep/</id>
@@ -561,6 +511,63 @@
     <category term="启动项" scheme="https://www.coder17.com/tags/%E5%90%AF%E5%8A%A8%E9%A1%B9/"/>
     
     <category term="autorun" scheme="https://www.coder17.com/tags/autorun/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>华硕路由添加 DDNS 服务</title>
+    <link href="https://www.coder17.com/posts/asus-ddns/"/>
+    <id>https://www.coder17.com/posts/asus-ddns/</id>
+    <published>2020-03-04T17:05:00.000Z</published>
+    <updated>2020-03-04T17:05:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>以 dockdns 为例，必须安装 Merlin 固件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /jffs/scripts/ddns-start</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># register a subdomain at https://www.duckdns.org/ to get your token</span></span><br><span class="line">SUBDOMAIN=<span class="string">&quot;your_subdomain&quot;</span></span><br><span class="line">TOKEN=<span class="string">&quot;your-token&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># no modification below needed</span></span><br><span class="line">curl --silent <span class="string">&quot;https://www.duckdns.org/update?domains=<span class="variable">$SUBDOMAIN</span>&amp;token=<span class="variable">$TOKEN</span>&amp;ip=<span class="variable">$1</span>&quot;</span> &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"><span class="keyword">if</span> [ $? -eq 0 ];</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    /sbin/ddns_custom_updated 1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    /sbin/ddns_custom_updated 0</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod a+rx /jffs/scripts/*</span><br></pre></td></tr></table></figure><p>并在 web 设置中 <code>Administration -&gt; System</code> 启用用户脚本，在 <code>WAN -&gt; DDNS -&gt; DDNS Service</code> 中设置为<code>custom</code> 即可。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;以 dockdns 为例，必须安装 Merlin 固件。&lt;/p&gt;
+&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;</summary>
+      
+    
+    
+    
+    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
+    
+    
+    <category term="华硕" scheme="https://www.coder17.com/tags/%E5%8D%8E%E7%A1%95/"/>
+    
+    <category term="路由器" scheme="https://www.coder17.com/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/"/>
+    
+    <category term="Merlin" scheme="https://www.coder17.com/tags/Merlin/"/>
+    
+    <category term="DDNS" scheme="https://www.coder17.com/tags/DDNS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Nginx 禁止未授权 URL 访问（HTTP 444）</title>
+    <link href="https://www.coder17.com/posts/nginx-ban-url/"/>
+    <id>https://www.coder17.com/posts/nginx-ban-url/</id>
+    <published>2019-12-20T18:47:00.000Z</published>
+    <updated>2019-12-20T18:47:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    listen [::]:80 default_server;</span><br><span class="line">    listen 443 default_server ssl;</span><br><span class="line">    ssl_certificate &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;fullchain.pem;</span><br><span class="line">    ssl_certificate_key &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;privkey.pem;</span><br><span class="line">    server_name _;</span><br><span class="line">    return 444;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其中证书可以随便指定</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class</summary>
+      
+    
+    
+    
+    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
+    
+    
+    <category term="Nginx" scheme="https://www.coder17.com/tags/Nginx/"/>
+    
+    <category term="过滤" scheme="https://www.coder17.com/tags/%E8%BF%87%E6%BB%A4/"/>
     
   </entry>
   
