@@ -6,7 +6,7 @@
   <link href="https://www.coder17.com/atom.xml" rel="self"/>
   
   <link href="https://www.coder17.com/"/>
-  <updated>2021-02-21T11:48:00.000Z</updated>
+  <updated>2021-05-04T22:48:00.000Z</updated>
   <id>https://www.coder17.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hyper-V 虚拟机桥接公网访问和与宿主机互访</title>
+    <link href="https://www.coder17.com/posts/hyper-v-network/"/>
+    <id>https://www.coder17.com/posts/hyper-v-network/</id>
+    <published>2021-05-04T22:48:00.000Z</published>
+    <updated>2021-05-04T22:48:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>使用 Windows 的 Hyper-V 创建虚拟机时，其 Virtual Switch 的设置和其他虚拟机软件相比比较复杂。Virtual Switch 是不具备 DHCP 功能的交换机，因此需要按照交换机思路配置网络。</p><h2 id="1-桥接物理网卡访问公网"><a href="#1-桥接物理网卡访问公网" class="headerlink" title="1. 桥接物理网卡访问公网"></a>1. 桥接物理网卡访问公网</h2><p>在虚拟交换机管理器中新建交换机，连接类型选择外部，并选择要桥接的物理网卡。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Hyper-V%20%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%92%8C%E5%AE%BF%E4%B8%BB%E6%9C%BA%E4%BA%92%E8%AE%BF/image-20210505073148867.png" alt="image-20210505073148867"></p><p>给虚拟机添加网卡，并连接到这个交换机。在高级设置中可以修改桥接后网卡的 MAC 地址等。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Hyper-V%20%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%92%8C%E5%AE%BF%E4%B8%BB%E6%9C%BA%E4%BA%92%E8%AE%BF/image-20210505073413715.png" alt="image-20210505073413715"></p><p>进入虚拟机设置 IP 地址即可桥接之，如 Ubuntu 20.02 配置为 DHCP 时：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/netplan/00-installer-config.yaml</span><br></pre></td></tr></table></figure><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">network:</span></span><br><span class="line">  <span class="attr">ethernets:</span></span><br><span class="line">    <span class="attr">eth0:</span></span><br><span class="line">      <span class="attr">dhcp4:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">version:</span> <span class="number">2</span></span><br></pre></td></tr></table></figure><h2 id="2-与宿主机互访"><a href="#2-与宿主机互访" class="headerlink" title="2. 与宿主机互访"></a>2. 与宿主机互访</h2><p>在虚拟交换器管理器添加交换机，类型选择内部，注意不要直接使用自带的 Default Switch，会无法控制固定 IP。</p><p>此时在宿主机 Windows 中会出现 <code>vEthernet</code> 开头的，与新交换机连接的虚拟网卡。右键属性，TCP/IPv4，在 IP 地址和掩码中指定一个宿主机使用的 IP 地址和网段。</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Hyper-V%20%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%92%8C%E5%AE%BF%E4%B8%BB%E6%9C%BA%E4%BA%92%E8%AE%BF/image-20210505074152587.png" alt="image-20210505074152587"></p><p>给虚拟机添加网卡，并连接到这个交换机。在虚拟机中手动设置此网卡 IP 为同一网段，注意网关不要设置，否则会与原有公网网关冲突，跃点数默认为0时会导致断网。</p><p>Ubuntu 20.02 的配置：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">network:</span></span><br><span class="line">  <span class="attr">ethernets:</span></span><br><span class="line">    <span class="attr">eth0:</span></span><br><span class="line">      <span class="attr">dhcp4:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">eth1:</span></span><br><span class="line">      <span class="attr">dhcp4:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">addresses:</span> [<span class="number">192.168</span><span class="number">.99</span><span class="number">.2</span><span class="string">/24</span>]</span><br><span class="line">  <span class="attr">version:</span> <span class="number">2</span></span><br></pre></td></tr></table></figure><p>此时路由表中可以看到此网段：</p><p><img src= "/images/loading.gif" data-lazy-src="/blogimg/Hyper-V%20%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%92%8C%E5%AE%BF%E4%B8%BB%E6%9C%BA%E4%BA%92%E8%AE%BF/image-20210505074624014.png" alt="image-20210505074624014"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;使用 Windows 的 Hyper-V 创建虚拟机时，其 Virtual Switch 的设置和其他虚拟机软件相比比较复杂。Virtual Switch 是不具备 DHCP 功能的交换机，因此需要按照交换机思路配置网络。&lt;/p&gt;
+&lt;h2 id=&quot;1-桥接物理网卡访问公网&quot;</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="Hyper-V" scheme="https://www.coder17.com/tags/Hyper-V/"/>
+    
+    <category term="虚拟机" scheme="https://www.coder17.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
+    
+  </entry>
   
   <entry>
     <title>下载 m3u8 推流</title>
@@ -542,32 +569,6 @@
     <category term="Merlin" scheme="https://www.coder17.com/tags/Merlin/"/>
     
     <category term="DDNS" scheme="https://www.coder17.com/tags/DDNS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Nginx 禁止未授权 URL 访问（HTTP 444）</title>
-    <link href="https://www.coder17.com/posts/nginx-ban-url/"/>
-    <id>https://www.coder17.com/posts/nginx-ban-url/</id>
-    <published>2019-12-20T18:47:00.000Z</published>
-    <updated>2019-12-20T18:47:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server;</span><br><span class="line">    listen [::]:80 default_server;</span><br><span class="line">    listen 443 default_server ssl;</span><br><span class="line">    ssl_certificate &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;fullchain.pem;</span><br><span class="line">    ssl_certificate_key &#x2F;etc&#x2F;letsencrypt&#x2F;live&#x2F;coder17.com-0001&#x2F;privkey.pem;</span><br><span class="line">    server_name _;</span><br><span class="line">    return 444;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其中证书可以随便指定</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class</summary>
-      
-    
-    
-    
-    <category term="Services" scheme="https://www.coder17.com/categories/Services/"/>
-    
-    
-    <category term="Nginx" scheme="https://www.coder17.com/tags/Nginx/"/>
-    
-    <category term="过滤" scheme="https://www.coder17.com/tags/%E8%BF%87%E6%BB%A4/"/>
     
   </entry>
   
