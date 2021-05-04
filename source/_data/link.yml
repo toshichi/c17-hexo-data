@@ -8,7 +8,7 @@
 
     - name: 王雨峰
       link: http://wangyufeng.org/
-      avatar: 
+      avatar: https://avatars.githubusercontent.com/u/7182112
       descr: 王雨峰的博客
 
     - name: Randy Peng
@@ -18,7 +18,7 @@
 
     - name: Rayjun
       link: https://rayjun.cn/
-      # avatar: https://pengzhendong.cn/images/avatar.jpg
+      avatar: https://avatars.githubusercontent.com/u/7517993
       descr: 芜园
 
     - name: hudengjin
@@ -28,7 +28,7 @@
       
     - name: Lone
       link: https://lone.wiki/
-      avatar: https://wx2.sinaimg.cn/mw690/0064e5l5ly8gh2uy1r10uj30ry0ry40o.jpg
+      avatar: https://work.yousails.com/file/data/7xkt5asbu2iasyxe3to7/PHID-FILE-4ps5zkehcnbejkquefis/IMG_5268.jpeg
       descr: lone.wiki
 
     - name: Touko Hoshino
