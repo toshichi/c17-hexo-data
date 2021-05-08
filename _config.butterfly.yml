@@ -97,7 +97,8 @@ avatar:
 disable_top_img: false
 
 # The banner image of home page
-index_img: /images/blue98.png
+index_img: /images/n-yuki.jpg
+# index_img: /images/blue98.png
 
 # If the banner of page not setting, it will show the top_img
 default_top_img: /images/n_IMG_20160321_15332198.png
@@ -107,7 +108,7 @@ archive_img: /images/header2.png
 
 # If the banner of tag page not setting, it will show the top_img
 # note: tag page, not tags page (子標籤頁面的 top_img)
-tag_img: /images/header4.png
+tag_img: /images/nec-kb.jpg
 
 # The banner image of tag page
 # format:
@@ -116,7 +117,7 @@ tag_per_img:
 
 # If the banner of category page not setting, it will show the top_img
 # note: category page, not categories page (子分類頁面的 top_img)
-category_img:
+category_img: /images/blue98.png
 
 # The banner image of category page
 # format:
@@ -137,7 +138,7 @@ cover:
     - /images/nheader2.png
     - /images/nheader3.png
     - /images/nheader4.png
-    - /images/header1.jpg
+    - /images/nec-kb.jpg
     - /images/header2.png
     - /images/header3.png
     - /images/header4.jpg
@@ -520,7 +521,7 @@ theme_color:
 # The position of site info, eg: 300px/300em/300rem/10% (主頁標題距離頂部距離)
 index_site_info_top: 10%
 # The height of top_img, eg: 300px/300em/300rem (主頁top_img高度)
-index_top_img_height: 25rem
+index_top_img_height: 30rem
 
 # The user interface setting of category and tag page (category和tag頁的UI設置)
 # index - same as Homepage UI (index 值代表 UI將與首頁的UI一樣)
@@ -535,7 +536,8 @@ background: url(/images/bg1.jpg)
   # - url(/images/bg2.jpg)
 
 # Footer Background
-footer_bg: /images/footer.png
+footer_bg: /images/nec-kb-footer.jpg
+# footer_bg: /images/footer.png
 # footer_bg: false
 
 # the position of bottom right button/default unit: px (右下角按鈕距離底部的距離/默認單位為px)
