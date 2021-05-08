@@ -6039,13 +6039,11 @@ blockquote.pullquote.right {
   --hlscrollbar-bg: #1f1f1f;
   --hlexpand-bg: linear-gradient(180deg, rgba(23,23,23,0.6), rgba(23,23,23,0.9));
 }
-[data-theme='dark'] #web_bg:before,
-[data-theme='dark'] #footer:before,
-[data-theme='dark'] #page-header:before {
+[data-theme='dark'] #web_bg:before {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.7);
   content: '';
 }
 [data-theme='dark'] #article-container code {
