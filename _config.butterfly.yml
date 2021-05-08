@@ -97,7 +97,7 @@ avatar:
 disable_top_img: false
 
 # The banner image of home page
-index_img: /images/n-yuki.jpg
+index_img: /images/n-yuki-cover.jpg
 # index_img: /images/blue98.png
 
 # If the banner of page not setting, it will show the top_img
@@ -841,7 +841,7 @@ lazyload:
   field: site # site/post
   placeholder: /images/loading.gif
   blur: false
-  
+
 # PWA
 # See https://github.com/JLHwung/hexo-offline
 # ---------------
