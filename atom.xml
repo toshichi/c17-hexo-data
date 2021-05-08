@@ -384,14 +384,14 @@
     <published>2020-04-09T03:21:00.000Z</published>
     <updated>2020-04-09T03:21:00.000Z</updated>
     
-    <content type="html"><![CDATA[<p>动态磁盘不会自动释放，因此如果有需要可以手动释放。似乎 exFat 分区效果不佳。</p><p>如果虚拟磁盘已经挂载，需要先卸载。然后运行 <code>diskpart</code>，执行：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select vdisk file&#x3D;&quot;&lt;Path to VHDX&gt;&quot;</span><br><span class="line">attach vdisk readonly</span><br><span class="line">compact vdisk</span><br><span class="line">detach vdisk</span><br></pre></td></tr></table></figure><p>参考：</p><p><a href="https://blog.littlelanmoe.com/%E6%9D%82%E8%B0%88/364">https://blog.littlelanmoe.com/杂谈/364</a></p>]]></content>
+    <content type="html"><![CDATA[<p>动态磁盘不会自动释放，因此如果有需要可以手动释放。似乎 exFat 分区效果不佳。</p><p>如果虚拟磁盘已经挂载，需要先卸载。然后运行 <code>diskpart</code>，执行：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select vdisk file=&quot;&lt;Path to VHDX&gt;&quot;</span><br><span class="line">attach vdisk readonly</span><br><span class="line">compact vdisk</span><br><span class="line">detach vdisk</span><br></pre></td></tr></table></figure><p>参考：</p><p><a href="https://blog.littlelanmoe.com/%E6%9D%82%E8%B0%88/364">https://blog.littlelanmoe.com/杂谈/364</a></p>]]></content>
     
     
       
       
     <summary type="html">&lt;p&gt;动态磁盘不会自动释放，因此如果有需要可以手动释放。似乎 exFat 分区效果不佳。&lt;/p&gt;
 &lt;p&gt;如果虚拟磁盘已经挂载，需要先卸载。然后运行 &lt;code&gt;diskpart&lt;/code&gt;，执行：&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;tab</summary>
+&lt;figure class=&quot;highlight plaintext&quot;&gt;</summary>
       
     
     
