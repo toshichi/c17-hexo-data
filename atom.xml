@@ -6,7 +6,7 @@
   <link href="https://www.coder17.com/atom.xml" rel="self"/>
   
   <link href="https://www.coder17.com/"/>
-  <updated>2021-05-04T22:48:00.000Z</updated>
+  <updated>2021-05-23T18:15:00.000Z</updated>
   <id>https://www.coder17.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>小方摄像头破解 rtsp</title>
+    <link href="https://www.coder17.com/posts/xiaofang-rtsp/"/>
+    <id>https://www.coder17.com/posts/xiaofang-rtsp/</id>
+    <published>2021-05-23T18:15:00.000Z</published>
+    <updated>2021-05-23T18:15:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>适用于第一代小方。并不复杂但坑很多。</p><h2 id="1-降级固件到-v3-0-3-56"><a href="#1-降级固件到-v3-0-3-56" class="headerlink" title="1. 降级固件到 v3.0.3.56"></a>1. 降级固件到 v3.0.3.56</h2><ul><li>  参考 <a href="https://github.com/samtap/fang-hacks/wiki/HowTo:-Flash-original-Xiaomi-firmware-from-sdcard-(factory-reset)">fang-hacks wiki</a> ，在 <a href="https://mega.nz/#!GBghwbpY!btf0jxHPFTPtifqNJNMHXEiRd3H5DkUtOJYOq8QpgfQ">mega</a> 下载固件备份。（<a href="https://drive.google.com/file/d/16aIyjI0jErisPT5XEQcB8m2o5WTMEUNy/view?usp=sharing">镜像</a>）</li><li>  格式化 SD 卡为 FAT32 后将 <code>0.elf</code> 重命名为 <code>FIRMWARE_660R.bin</code>，复制到卡根目录。</li><li>  插卡，用卡针按住 reset 同时摄像头上电，持续按住 15s 以上后松开。</li><li>  等待刷机完成，黄灯闪烁或黄蓝灯交替闪烁。如果始终没有变化，保险起见约 10min 后重新拔插电源。</li><li>  上电后如无语音提醒，按 reset 1s 左右，出现语音。</li><li>  如果自始至终黄灯常亮无反应，尝试<a href="https://www.youtube.com/watch?v=mpzPWYONWZA">此视频</a>描述中的第一个固件（<a href="https://drive.google.com/file/d/1Edcn3XB8gDQHwLoGIVLkaxpp2uGbDGjb/view?usp=sharing">镜像</a>），过后再刷一次原固件。</li><li>  如果反复尝试都没有反应，可能是过热等玄学问题，断电冷静一下可能就好了。</li></ul><h2 id="2-连接-WiFi-（二维码）"><a href="#2-连接-WiFi-（二维码）" class="headerlink" title="2. 连接 WiFi （二维码）"></a>2. 连接 WiFi （二维码）</h2><ul><li>  参考 <a href="https://github.com/samtap/fang-hacks/wiki/Connecting-to-WiFi-without-using-Mi-Home">fang-hacks wiki</a> ，语音提示等待连接时，配置并扫描<a href="https://codepen.io/ril3y/full/gXyzmO/">二维码生成页面</a>。扫描后提示正在连接，指示灯蓝黄交替，但可能不会提示连接成功。</li><li>  如果灯持续交替闪烁，查看路由可见摄像头反复连接断开网络。此时重新拔插摄像头电源。</li><li>  如果仍无改善，则暂时跳过，后面使用脚本设置。</li></ul><h2 id="3-构建-SD-卡文件结构"><a href="#3-构建-SD-卡文件结构" class="headerlink" title="3. 构建 SD 卡文件结构"></a>3. 构建 SD 卡文件结构</h2><ul><li><p>  下载 <a href="https://github.com/samtap/fang-hacks/releases">fang-hacks 的 IMG 镜像</a>，使用 Win32DiskImager 或 balenaEtcher 等工具写入 SD 卡。卡不必过大，1G 即可。</p></li><li><p>写入完成后访问第一个 FAT32 分区（可能需要重新拔插读卡器），修改<code>bootstrap/fang_hacks.cfg</code> </p>  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">DISABLE_CLOUD</span>=<span class="number">1</span></span><br><span class="line"><span class="attr">NETWORK_MODE</span>=<span class="number">1</span></span><br></pre></td></tr></table></figure></li></ul><h2 id="4-连接-WiFi-脚本"><a href="#4-连接-WiFi-脚本" class="headerlink" title="4. 连接 WiFi (脚本)"></a>4. 连接 WiFi (脚本)</h2><ul><li>  如果前面连接网络失败，Clone <a href="https://github.com/davidjb/fang-wlan-setup">设置脚本</a> 到分区根目录，备份原有 <code>snx_autorun.sh</code> 并覆盖之</li><li>  编辑 <code>.wifipasswd</code>  和 <code>.wifissid</code> 写入网络信息</li><li>  摄像头不插卡上电，等待半分钟确定启动完毕后插入卡，会出现提示音，等待半分钟后断电并拔卡后重新上电</li><li>  等待 WiFi 连接完成，此时蓝灯闪烁，在路由器中查看摄像头的 IP</li><li>  在电脑中访问 SD 卡的 FAT32 分区，恢复<code>snx_autorun.sh</code> ，并可删除设置脚本的其他文件</li></ul><h2 id="5-执行破解脚本"><a href="#5-执行破解脚本" class="headerlink" title="5. 执行破解脚本"></a>5. 执行破解脚本</h2><ul><li>  和4的倒数第三步相同，摄像头状态稳定后插入卡，听到提示音之后，访问 <code>http://device-ip/cgi-bin/status</code></li></ul><p><img src="/blogimg/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%20rtsp/image-20210524011143324.png" alt="image-20210524011143324"></p><ul><li>  点击 Apply 执行脚本</li></ul><p><img src="/blogimg/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%20rtsp/image-20210523210054928.png" alt="image-20210523210054928"></p><ul><li>  执行完成后点击 back，此时应可使用 <code>root</code> 和密码 <code>ismart12</code> SSH 连接 22 端口</li></ul><h2 id="6-切断公网访问后的时间服务器设置"><a href="#6-切断公网访问后的时间服务器设置" class="headerlink" title="6. 切断公网访问后的时间服务器设置"></a>6. 切断公网访问后的时间服务器设置</h2><p>出于对中国网络服务的不信任，在路由器上切断摄像头的公网访问。此时时间不能同步，需要在内网架设一个 NTP 时间服务器，并修改部分脚本参数。</p><ul><li>  <code>vi /media/mmcblk0p2/data/etc/scripts/02-ntpd</code> 修改第三行的 time.google.com 为内网服务器地址</li><li>  <code>vi /media/mmcblk0p1/bootstrap/www/action</code> 修改 155 行的地址</li></ul><h2 id="7-其他"><a href="#7-其他" class="headerlink" title="7. 其他"></a>7. 其他</h2><p><img src="/blogimg/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%20rtsp/image-20210523210544967.png" alt="image-20210523210544967"></p><ul><li>  千万不要手贱点击 Expend data partition 后的 Yes ，根据 <a href="https://github.com/samtap/fang-hacks/releases">Release Note</a>，此处有一个已知问题，重启后将耗费非常长的时间调整分区，此时可能亮黄灯并且没有网络连接，完成后可能也没有任何提示，注意不要中途断电。我等待了一小时后断电，插入电脑发现分区调整已经完成，但插回摄像头黄灯常亮无法启动，被迫从第一步恢复固件开始重试。因此不推荐进行此操作。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;适用于第一代小方。并不复杂但坑很多。&lt;/p&gt;
+&lt;h2 id=&quot;1-降级固件到-v3-0-3-56&quot;&gt;&lt;a href=&quot;#1-降级固件到-v3-0-3-56&quot; class=&quot;headerlink&quot; title=&quot;1. 降级固件到 v3.0.3.56&quot;&gt;&lt;/a&gt;1. 降级固件到</summary>
+      
+    
+    
+    
+    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
+    
+    
+    <category term="RTSP" scheme="https://www.coder17.com/tags/RTSP/"/>
+    
+  </entry>
   
   <entry>
     <title>Hyper-V 虚拟机桥接公网访问和与宿主机互访</title>
@@ -538,37 +563,6 @@
     <category term="启动项" scheme="https://www.coder17.com/tags/%E5%90%AF%E5%8A%A8%E9%A1%B9/"/>
     
     <category term="autorun" scheme="https://www.coder17.com/tags/autorun/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>华硕路由添加 DDNS 服务</title>
-    <link href="https://www.coder17.com/posts/asus-ddns/"/>
-    <id>https://www.coder17.com/posts/asus-ddns/</id>
-    <published>2020-03-04T17:05:00.000Z</published>
-    <updated>2020-03-04T17:05:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>以 dockdns 为例，必须安装 Merlin 固件。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /jffs/scripts/ddns-start</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># register a subdomain at https://www.duckdns.org/ to get your token</span></span><br><span class="line">SUBDOMAIN=<span class="string">&quot;your_subdomain&quot;</span></span><br><span class="line">TOKEN=<span class="string">&quot;your-token&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># no modification below needed</span></span><br><span class="line">curl --silent <span class="string">&quot;https://www.duckdns.org/update?domains=<span class="variable">$SUBDOMAIN</span>&amp;token=<span class="variable">$TOKEN</span>&amp;ip=<span class="variable">$1</span>&quot;</span> &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"><span class="keyword">if</span> [ $? -eq 0 ];</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    /sbin/ddns_custom_updated 1</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    /sbin/ddns_custom_updated 0</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod a+rx /jffs/scripts/*</span><br></pre></td></tr></table></figure><p>并在 web 设置中 <code>Administration -&gt; System</code> 启用用户脚本，在 <code>WAN -&gt; DDNS -&gt; DDNS Service</code> 中设置为<code>custom</code> 即可。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;以 dockdns 为例，必须安装 Merlin 固件。&lt;/p&gt;
-&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;</summary>
-      
-    
-    
-    
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
-    
-    
-    <category term="华硕" scheme="https://www.coder17.com/tags/%E5%8D%8E%E7%A1%95/"/>
-    
-    <category term="路由器" scheme="https://www.coder17.com/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/"/>
-    
-    <category term="Merlin" scheme="https://www.coder17.com/tags/Merlin/"/>
-    
-    <category term="DDNS" scheme="https://www.coder17.com/tags/DDNS/"/>
     
   </entry>
   
