@@ -1,6 +1,7 @@
 ---
 title: 小方摄像头破解 rtsp
 date: 2021-05-24 03:15
+updated: 2021-05-24 23:06
 tags: [RTSP]
 category: Hacking
 id: xiaofang-rtsp
@@ -70,3 +71,7 @@ cover: .images/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%2
 ![image-20210523210544967](.images/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%20rtsp/image-20210523210544967.png)
 
 -   千万不要手贱点击 Expend data partition 后的 Yes ，根据 [Release Note](https://github.com/samtap/fang-hacks/releases)，此处有一个已知问题，重启后将耗费非常长的时间调整分区，此时可能亮黄灯并且没有网络连接，完成后可能也没有任何提示，注意不要中途断电。我等待了一小时后断电，插入电脑发现分区调整已经完成，但插回摄像头黄灯常亮无法启动，被迫从第一步恢复固件开始重试。因此不推荐进行此操作。
+
+## 8. RTSP
+
+-   RTSP 地址为 `rtsp://device-ip/unicast`， 可以接入 ZoneMinder 或 Shinobi 等监视服务器，也可使用 MPC 和 PotPlayer 等播放器观看直播
