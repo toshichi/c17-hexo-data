@@ -1,7 +1,7 @@
 ---
 title: 小方摄像头破解 rtsp
 date: 2021-05-24 03:15
-updated: 2021-05-24 23:06
+updated: 2021-06-02 03:15
 tags: [RTSP]
 category: Hacking
 id: xiaofang-rtsp
@@ -75,3 +75,36 @@ cover: .images/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%2
 ## 8. RTSP
 
 -   RTSP 地址为 `rtsp://device-ip/unicast`， 可以接入 ZoneMinder 或 Shinobi 等监视服务器，也可使用 MPC 和 PotPlayer 等播放器观看直播
+
+## 9. OSD 时间显示
+
+参考 [wiki](https://github.com/samtap/fang-hacks/wiki/Controlling-the-text-overlay) 和 [Gitter](https://gitter.im/fang-hacks/Lobby?at=59d26cd9177fb9fe7e2d010c) 
+
+-   下载 [`snx_isp_ctl`](https://mega.nz/#!r1AGVCpZ!sJvjRdjCvu8nNWloYGaUyn_0uDM1eYG7yB6TaRfeLVI) （[镜像](https://drive.google.com/file/d/1Jj5mZDFfsEMe29CED6ch74DFxgtpiJRJ/view?usp=sharing)），复制到 `/media/mmcblk0p2/data/usr/bin`，加上执行权限
+
+-   编辑 `/media/mmcblk0p2/data/etc/scripts/20-rtsp-server` 脚本，在 start 函数倒数第二行添加：
+
+    ``` bash
+    snx_isp_ctl --osdset-en 1 --osdset-ts 1 --osdset-template 1234567890./-:Date --osdset-gain 2 --osdset-bgtransp 0x1 --osdset-bgcolor 0x000000 --osdset-position 0,-31
+    ```
+
+    其中最后的 `--osdset-position 0,-31` 用于调节 OSD 显示在左上角，去除开头的空行。如果显示出现问题可以调大 -31 的值。
+
+## 10. 时区设置
+
+-   在网页上修改时区，格式参照 [ICANN](https://mm.icann.org/pipermail/tz/2016-April/023570.html) 的页面，日本时区为 `JST-9` ，中国时区为 `CST-8` 。
+
+-   此时系统时间正确，但 OSD 使用硬件时间，仍然是 UTC 时区，此处参考[这个 issue](https://github.com/samtap/fang-hacks/issues/78)，修改`/media/mmcblk0p2/data/etc/scripts/02-ntpd`，在 start 函数插入一行 `ntpd -q -n $NTPD_OPTS && hwclock -t`，变为如下代码：
+
+    ``` sh
+    start() 
+    {
+      echo "Starting ntpd..."
+      ntpd -q -n $NTPD_OPTS && hwclock -t
+      ntpd $NTPD_OPTS
+    }
+    ```
+
+-   重启摄像头，OSD 时间与系统时间均正确显示
+
+    ![image-20210602031336997](.images/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%20rtsp/image-20210602031336997.png)
