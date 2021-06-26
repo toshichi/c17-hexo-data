@@ -70,11 +70,77 @@ cover: .images/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%2
 
 ![image-20210523210544967](.images/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%20rtsp/image-20210523210544967.png)
 
--   千万不要手贱点击 Expend data partition 后的 Yes ，根据 [Release Note](https://github.com/samtap/fang-hacks/releases)，此处有一个已知问题，重启后将耗费非常长的时间调整分区，此时可能亮黄灯并且没有网络连接，完成后可能也没有任何提示，注意不要中途断电。我等待了一小时后断电，插入电脑发现分区调整已经完成，但插回摄像头黄灯常亮无法启动，被迫从第一步恢复固件开始重试。因此不推荐进行此操作。
+千万不要手贱点击 Expend data partition 后的 Yes ，根据 [Release Note](https://github.com/samtap/fang-hacks/releases)，此处有一个已知问题，重启后将耗费非常长的时间调整分区，此时可能亮黄灯并且没有网络连接，完成后可能也没有任何提示，注意不要中途断电。我等待了一小时后断电，插入电脑发现分区调整已经完成，但插回摄像头黄灯常亮无法启动，被迫从第一步恢复固件开始重试。因此不推荐进行此操作。
 
 ## 8. RTSP
 
--   RTSP 地址为 `rtsp://device-ip/unicast`， 可以接入 ZoneMinder 或 Shinobi 等监视服务器，也可使用 MPC 和 PotPlayer 等播放器观看直播
+RTSP 地址为 `rtsp://device-ip/unicast`， 可以接入 ZoneMinder 或 Shinobi 等监视服务器，也可使用 MPC 和 PotPlayer 等播放器观看直播
+
+### 8.1 RTSP 守护进程
+
+RTSP 进程不太稳定，过一段时间之后查看经常显示红色 NOK，需要手动禁用后启用再重启服务才能恢复，因此需要一个守护进程自动重启。
+
+参考[这个 issue](https://github.com/samtap/fang-hacks/issues/217) 和其中提到的 [bobby 的这篇文章](http://bobbyromeo.com/home-automation/xiaomi-smart-1080p-wifi-ip-camera-rtsp-streaming-hack/#rtsp_check) （文中还提到了翻转影像等，可以参考）
+-   在`/media/mmcblk0p2/data/usr/bin` 创建 `rtsp-check.sh`
+
+-   ``` bash
+    #!/bin/sh
+     
+    while true; do
+    if pgrep -x "snx_rtsp_server" > /dev/null
+    then
+        :
+    else
+        /media/mmcblk0p2/data/etc/scripts/20-rtsp-server start
+    fi
+    sleep 2
+    done
+    ```
+
+-   添加执行权限 `chmod +x rtsp-check.sh`
+
+-   在 `/media/mmcblk0p2/data/etc/scripts` 创建服务文件 `99-rtsp-check`
+
+-   ``` bash
+    #!/bin/sh
+    PIDFILE="/var/run/rtsp-check.pid"
+     
+    status()
+    {
+      pid="$(cat "$PIDFILE" 2>/dev/null)"
+      if [ "$pid" ]; then
+        kill -0 "$pid" >/dev/null && echo "PID: $pid" || return 1
+      fi
+    }
+     
+    start()
+    {
+      echo "Starting rtsp-check script..."
+      rtsp-check.sh </dev/null >/dev/null 2>&1 &
+      echo "$!" > "$PIDFILE"
+    }
+     
+    stop()
+    {
+      pid="$(cat "$PIDFILE" 2>/dev/null)"
+      if [ "$pid" ]; then
+         kill $pid || rm "$PIDFILE"
+      fi
+    }
+     
+    if [ $# -eq 0 ]; then
+      start
+    else
+      case $1 in start|stop|status)
+        $1
+        ;;
+      esac
+    fi
+    ```
+
+-   之后在 Manage Scripts 页面即可看到新添加的 `99-rtsp-check` 服务，启动之即可监视并自动重启挂掉的 RSTP 服务（刚启动时所有服务的PID基本临近，如果发现 RTSP 的 PID 显著变大，则说明已经被重启过）
+
+    ![image-20210626091639347](.images/%E5%B0%8F%E6%96%B9%E6%91%84%E5%83%8F%E5%A4%B4%E7%A0%B4%E8%A7%A3%20rtsp/image-20210626091639347.png)
 
 ## 9. OSD 时间显示
 
