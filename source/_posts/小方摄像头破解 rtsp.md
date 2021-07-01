@@ -84,7 +84,8 @@ RTSP 进程不太稳定，过一段时间之后查看经常显示红色 NOK，�
 参考[这个 issue](https://github.com/samtap/fang-hacks/issues/217) 和其中提到的 [bobby 的这篇文章](http://bobbyromeo.com/home-automation/xiaomi-smart-1080p-wifi-ip-camera-rtsp-streaming-hack/#rtsp_check) （文中还提到了翻转影像等，可以参考）
 -   在`/media/mmcblk0p2/data/usr/bin` 创建 `rtsp-check.sh`
 
--   ``` bash
+-   
+    ``` bash
     #!/bin/sh
      
     while true; do
@@ -102,7 +103,8 @@ RTSP 进程不太稳定，过一段时间之后查看经常显示红色 NOK，�
 
 -   在 `/media/mmcblk0p2/data/etc/scripts` 创建服务文件 `99-rtsp-check`
 
--   ``` bash
+-   
+    ``` bash
     #!/bin/sh
     PIDFILE="/var/run/rtsp-check.pid"
      
