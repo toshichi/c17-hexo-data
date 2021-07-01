@@ -163,7 +163,7 @@ RTSP 进程不太稳定，过一段时间之后查看经常显示红色 NOK，�
 
 -   在网页上修改时区，格式参照 [ICANN](https://mm.icann.org/pipermail/tz/2016-April/023570.html) 的页面，日本时区为 `JST-9` ，中国时区为 `CST-8` 。
 
--   此时系统时间正确，但 OSD 使用硬件时间，仍然是 UTC 时区，此处参考[这个 issue](https://github.com/samtap/fang-hacks/issues/78)，修改`/media/mmcblk0p2/data/etc/scripts/02-ntpd`，在 start 函数插入一行 `ntpd -q -n $NTPD_OPTS && hwclock -t`，变为如下代码：
+-   此时系统时间正确，但 OSD 使用硬件时间，仍然是 UTC 时区，此处参考[这个 issue](https://github.com/samtap/fang-hacks/issues/78#issuecomment-852339567)，修改`/media/mmcblk0p2/data/etc/scripts/02-ntpd`，在 start 函数插入一行 `ntpd -q -n $NTPD_OPTS && hwclock -t`，变为如下代码：
 
     ``` sh
     start() 
