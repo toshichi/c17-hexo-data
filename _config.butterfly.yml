@@ -11,8 +11,8 @@ menu:
   Categories: /categories/ || fas fa-project-diagram
   Tags: /tags/ || fas fa-tags
   Archives: /archives/ || fas fa-box-open
-  码渣 || fas fa-code:
-    Static: //static.coder17.com/ || fas fa-folder-open
+  # 码渣 || fas fa-code:
+  #   Static: //static.coder17.com/ || fas fa-folder-open
   About: /about/ || fas fa-address-card
   Friends: /link/ || fas fa-user-friends
   '' : /atom.xml || fas fa-rss
