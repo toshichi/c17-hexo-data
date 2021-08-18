@@ -669,27 +669,6 @@
   </url>
   
   <url>
-    <loc>https://www.coder17.com/tags/Docker/</loc>
-    <lastmod>2021-08-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/tags/volume/</loc>
-    <lastmod>2021-08-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/tags/%E5%A4%87%E4%BB%BD/</loc>
-    <lastmod>2021-08-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.coder17.com/tags/C/</loc>
     <lastmod>2021-08-18</lastmod>
     <changefreq>daily</changefreq>
@@ -754,6 +733,27 @@
   
   <url>
     <loc>https://www.coder17.com/tags/%E5%9B%BE%E6%A0%87/</loc>
+    <lastmod>2021-08-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/Docker/</loc>
+    <lastmod>2021-08-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/volume/</loc>
+    <lastmod>2021-08-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/%E5%A4%87%E4%BB%BD/</loc>
     <lastmod>2021-08-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -851,14 +851,14 @@
   </url>
   
   <url>
-    <loc>https://www.coder17.com/tags/%E6%8A%A5%E9%94%99/</loc>
+    <loc>https://www.coder17.com/tags/%E6%89%AB%E6%8F%8F%E7%A1%AC%E7%9B%98/</loc>
     <lastmod>2021-08-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.coder17.com/tags/%E6%89%AB%E6%8F%8F%E7%A1%AC%E7%9B%98/</loc>
+    <loc>https://www.coder17.com/tags/%E6%8A%A5%E9%94%99/</loc>
     <lastmod>2021-08-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -1418,6 +1418,20 @@
   </url>
   
   <url>
+    <loc>https://www.coder17.com/tags/mosh/</loc>
+    <lastmod>2021-08-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.coder17.com/tags/byobu/</loc>
+    <lastmod>2021-08-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.coder17.com/tags/%E9%9B%BE%E9%9C%BE/</loc>
     <lastmod>2021-08-18</lastmod>
     <changefreq>daily</changefreq>
@@ -1440,20 +1454,6 @@
   
   <url>
     <loc>https://www.coder17.com/tags/%E7%A9%BA%E6%B0%94%E8%B4%A8%E9%87%8F/</loc>
-    <lastmod>2021-08-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/tags/mosh/</loc>
-    <lastmod>2021-08-18</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.coder17.com/tags/byobu/</loc>
     <lastmod>2021-08-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
