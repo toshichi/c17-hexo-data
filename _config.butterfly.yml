@@ -88,9 +88,14 @@ katex:
 # Favicon（網站圖標）
 favicon: /images/favicon-32x32.png
 
+# Sitebar icon
+siteicon:
+  img: /images/android-chrome-512x512.png
+  effect: false
+
 # Avatar (頭像)
 avatar:
-  img: /images/android-chrome-512x512.png
+  img: /images/avatar.jpg
   effect: false
 
 # Disable all banner image
