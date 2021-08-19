@@ -834,7 +834,7 @@ pangu:
 lazyload:
   enable: true
   field: site # site/post
-  placeholder: /images/loading.gif
+  placeholder: /images/android-chrome-512x512.png
   blur: false
 
 # PWA
