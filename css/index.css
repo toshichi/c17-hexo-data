@@ -2139,7 +2139,7 @@ blockquote footer cite:before {
   -webkit-box-shadow: var(--card-hover-box-shadow);
   box-shadow: var(--card-hover-box-shadow);
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .error404 #error-wrap .error-content {
     -webkit-box-orient: vertical;
     -moz-box-orient: vertical;
@@ -2168,7 +2168,7 @@ blockquote footer cite:before {
   -moz-background-size: cover;
   background-size: cover;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .error404 #error-wrap .error-content .error-img {
     -webkit-box-flex: 1;
     -moz-box-flex: 1;
@@ -2194,7 +2194,7 @@ blockquote footer cite:before {
   text-align: center;
   font-size: 14px;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .error404 #error-wrap .error-content .error-info {
     -webkit-box-flex: 1.1;
     -moz-box-flex: 1.1;
@@ -2210,7 +2210,7 @@ blockquote footer cite:before {
   margin-top: -4rem;
   font-size: 9em;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .error404 #error-wrap .error-content .error-info .error_title {
     margin-top: -3rem;
   }
@@ -2392,7 +2392,7 @@ blockquote footer cite:before {
 #page .category-lists {
   padding: 1rem 0 1.5rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #page .category-lists {
     padding: 0;
   }
@@ -2400,7 +2400,7 @@ blockquote footer cite:before {
 #page .category-lists .category-title {
   font-size: 2.57em;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #page .category-lists .category-title {
     font-size: 2em;
   }
@@ -2499,7 +2499,7 @@ blockquote footer cite:before {
     flex-direction: column;
   }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .layout {
     padding: 1rem 5px;
   }
@@ -2523,7 +2523,7 @@ blockquote footer cite:before {
   -webkit-box-shadow: var(--card-hover-box-shadow);
   box-shadow: var(--card-hover-box-shadow);
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .layout > div:first-child:not(.recent-posts) {
     padding: 1.8rem 0.7rem !important;
   }
@@ -2695,7 +2695,7 @@ blockquote footer cite:before {
   -ms-transition: all 0.3s;
   transition: all 0.3s;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #recent-posts > .recent-post-item {
     border-radius: 12px 12px 8px 8px;
   }
@@ -2810,7 +2810,7 @@ blockquote footer cite:before {
   margin-top: 0.3rem;
   -webkit-line-clamp: 3;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #recent-posts .recent-post-item {
     -webkit-box-orient: vertical;
     -moz-box-orient: vertical;
@@ -2868,7 +2868,7 @@ blockquote footer cite:before {
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .tag-cloud-list a {
     zoom: 0.85;
   }
@@ -2876,7 +2876,7 @@ blockquote footer cite:before {
 .tag-cloud-title {
   font-size: 2.57em;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .tag-cloud-title {
     font-size: 2em;
   }
@@ -3688,7 +3688,7 @@ blockquote footer cite:before {
   color: var(--white);
   font-size: 1.85em;
 }
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 800px) {
   #page-header #site-title {
     font-size: 2.85em;
   }
@@ -3697,7 +3697,7 @@ blockquote footer cite:before {
   color: var(--white);
   font-size: 1.15em;
 }
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 800px) {
   #page-header #site-subtitle {
     font-size: 1.72em;
   }
@@ -3708,7 +3708,7 @@ blockquote footer cite:before {
   width: 15rem;
   text-align: center;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #page-header #site_social_icons {
     display: block;
   }
@@ -3735,7 +3735,7 @@ blockquote footer cite:before {
 #page-header.not-home-page {
   min-height: 20rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #page-header.not-home-page {
     height: 14rem;
   }
@@ -3746,7 +3746,7 @@ blockquote footer cite:before {
   padding: 0 0.5rem;
   width: 100%;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #page-header #page-site-info {
     top: 7rem;
   }
@@ -3754,7 +3754,7 @@ blockquote footer cite:before {
 #page-header.post-bg {
   min-height: 20rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #page-header.post-bg {
     height: 18rem;
   }
@@ -3782,7 +3782,7 @@ blockquote footer cite:before {
     text-align: left;
   }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #page-header #post-info {
     bottom: 1.1rem;
     padding: 0 1.1rem;
@@ -3875,7 +3875,7 @@ blockquote footer cite:before {
   line-height: 1.5;
   -webkit-line-clamp: 3;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #post-info .post-title {
     font-size: 1.72em;
   }
@@ -3887,12 +3887,12 @@ blockquote footer cite:before {
   color: var(--light-grey);
   font-size: 95%;
 }
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 800px) {
   #post-info #post-meta > .meta-secondline > span:first-child {
     display: none;
   }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #post-info #post-meta {
     font-size: 90%;
   }
@@ -3957,7 +3957,7 @@ blockquote footer cite:before {
   -ms-transition: all 0.5s;
   transition: all 0.5s;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #nav {
     padding: 0 16px;
   }
@@ -4576,7 +4576,7 @@ blockquote footer cite:before {
 #pagination .next-post {
   width: 50%;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #pagination .prev-post,
   #pagination .next-post {
     width: 100%;
@@ -4763,7 +4763,7 @@ blockquote footer cite:before {
   list-style: none;
   counter-reset: li;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #article-container ol,
   #article-container ul {
     padding: 0 0 0 0.4rem;
@@ -4779,7 +4779,7 @@ blockquote footer cite:before {
 #article-container ul ul {
   padding-left: 0.6rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #article-container ol ol,
   #article-container ul ol,
   #article-container ol ul,
@@ -4975,7 +4975,7 @@ blockquote footer cite:before {
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .relatedPosts > .relatedPosts-list > div {
     margin: 2px;
     width: calc(50% - 4px);
@@ -6117,7 +6117,7 @@ blockquote.pullquote.right {
   padding: 0;
   list-style: none;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #article-container .tabs > .nav-tabs > .tab {
     -webkit-box-flex: 1;
     -moz-box-flex: 1;
@@ -6159,7 +6159,7 @@ blockquote.pullquote.right {
   display: none;
   padding: 1.8rem 1.2rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #article-container .tabs > .tab-contents .tab-item-content {
     padding: 1.2rem 0.7rem;
   }
@@ -6598,7 +6598,7 @@ blockquote.pullquote.right {
   -ms-animation: titlescale 0.5s;
   animation: titlescale 0.5s;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .search-dialog {
     top: 0;
     left: 0;
@@ -6705,7 +6705,7 @@ blockquote.pullquote.right {
   overflow-y: auto;
   max-height: 10.5rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   #local-search .search-dialog .search-result-list {
     padding-bottom: 2rem;
     max-height: 75vh !important;
