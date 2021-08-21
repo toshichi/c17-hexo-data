@@ -2367,17 +2367,6 @@
     
     
     <entry>
-      <title>Categories</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>東城十七</title>
       <link href="/about/index.html"/>
       <url>/about/index.html</url>
@@ -2389,9 +2378,9 @@
     
     
     <entry>
-      <title>Tags</title>
-      <link href="/tags/index.html"/>
-      <url>/tags/index.html</url>
+      <title>Categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -2405,6 +2394,17 @@
       <url>/link/index.html</url>
       
         <content type="html"><![CDATA[<h2 id="交换友链"><a href="#交换友链" class="headerlink" title="交换友链"></a>交换友链</h2><p>还没想好写点啥。<br>可以先翻翻文章，如果对口味，想交换链接的话，直接评论就好。<br>不想公开评论的也可以直接<a href="mailto:chen17@coder17.com">发邮件</a>给我啦。<br>如果是别的 SNS 上认识的朋友麻烦说一下，不然我可能对不上号。当然直接在别的平台交流也没问题的。<br>铁子们记得好好维护网站哦~</p>]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Tags</title>
+      <link href="/tags/index.html"/>
+      <url>/tags/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
