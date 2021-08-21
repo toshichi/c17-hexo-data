@@ -4150,7 +4150,7 @@ blockquote footer cite:before {
   padding: 3px;
   width: 115px;
   height: 115px;
-  background: #ffab91;
+  background: #9bd8ea;
   -webkit-animation: configure-clockwise 3s ease-in-out 0s infinite alternate;
   -moz-animation: configure-clockwise 3s ease-in-out 0s infinite alternate;
   -o-animation: configure-clockwise 3s ease-in-out 0s infinite alternate;
@@ -4162,7 +4162,7 @@ blockquote footer cite:before {
   padding: 3px;
   width: 115px;
   height: 115px;
-  background: #3ff9dc;
+  background: #e9f867;
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
   -o-transform: rotate(45deg);
