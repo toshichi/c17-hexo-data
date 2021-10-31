@@ -6,7 +6,7 @@
   <link href="https://www.coder17.com/atom.xml" rel="self"/>
   
   <link href="https://www.coder17.com/"/>
-  <updated>2021-06-26T00:18:00.000Z</updated>
+  <updated>2021-10-31T06:10:00.000Z</updated>
   <id>https://www.coder17.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Ctrl+1 快捷键失效解决</title>
+    <link href="https://www.coder17.com/posts/ctrl-1-shortcut/"/>
+    <id>https://www.coder17.com/posts/ctrl-1-shortcut/</id>
+    <published>2021-10-31T06:10:00.000Z</published>
+    <updated>2021-10-31T06:10:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Ctrl + 1 的快捷键如果被莫名其妙占用，可能是 IME 快捷键中英语美国的默认快捷键无法释放导致。</p><p>如果添加后删除英语美国键盘布局，可能会出现此现象。</p><p>此时即使在键盘快捷键中删除英语美国的快捷键，或者将此键盘布局重新添加后再修改快捷键，也会反复发作。</p><p><img src="/blogimg/Ctrl+1%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%A4%B1%E6%95%88/image-20211031150600311.png" alt="image-20211031150600311"></p><p>修改注册表 <code>HKEY_CURRENT_USER\Control Panel\Input Method\Hot Keys\</code> 将所有00开头的8位数字 key 全部删除，然后重启，问题可能解决。</p><p>此时可以重新设置其他快捷键。</p><p>参考： <a href="http://7v.blog107.fc2.com/blog-entry-51.html">パソコン好きな人の独学ノート 入力言語のホットキーとレジストリ</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Ctrl + 1 的快捷键如果被莫名其妙占用，可能是 IME 快捷键中英语美国的默认快捷键无法释放导致。&lt;/p&gt;
+&lt;p&gt;如果添加后删除英语美国键盘布局，可能会出现此现象。&lt;/p&gt;
+&lt;p&gt;此时即使在键盘快捷键中删除英语美国的快捷键，或者将此键盘布局重新添加后再修改快捷键，也会</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="IME" scheme="https://www.coder17.com/tags/IME/"/>
+    
+    <category term="快捷键" scheme="https://www.coder17.com/tags/%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
+    
+  </entry>
   
   <entry>
     <title>小方摄像头破解 rtsp</title>
@@ -534,35 +562,6 @@
     <category term="QNAP" scheme="https://www.coder17.com/tags/QNAP/"/>
     
     <category term="sudoers" scheme="https://www.coder17.com/tags/sudoers/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>QNAP 添加启动项</title>
-    <link href="https://www.coder17.com/posts/qnap-startup/"/>
-    <id>https://www.coder17.com/posts/qnap-startup/</id>
-    <published>2020-03-12T18:04:00.000Z</published>
-    <updated>2020-03-12T18:04:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在<code>系统设置-&gt;硬件</code>中打开允许 <code>autorun.sh</code> 运行选项，并且编辑该文件。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mount $(/sbin/hal_app --get_boot_pd port_id=0)6 /tmp/config</span><br><span class="line">or sudo mount $(sudo /sbin/hal_app --get_boot_pd port_id=0)6 /tmp/config</span><br><span class="line">vim /tmp/config/autorun.sh</span><br></pre></td></tr></table></figure><p>必须添加 shebang，否则会报错。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br></pre></td></tr></table></figure><p>参考：</p><p><a href="https://wiki.qnap.com/wiki/Running_Your_Own_Application_at_Startup">Running Your Own Application at Startup</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;在&lt;code&gt;系统设置-&amp;gt;硬件&lt;/code&gt;中打开允许 &lt;code&gt;autorun.sh&lt;/code&gt; 运行选项，并且编辑该文件。&lt;/p&gt;
-&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pr</summary>
-      
-    
-    
-    
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
-    
-    
-    <category term="QNAP" scheme="https://www.coder17.com/tags/QNAP/"/>
-    
-    <category term="启动项" scheme="https://www.coder17.com/tags/%E5%90%AF%E5%8A%A8%E9%A1%B9/"/>
-    
-    <category term="autorun" scheme="https://www.coder17.com/tags/autorun/"/>
     
   </entry>
   
