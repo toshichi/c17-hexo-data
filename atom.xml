@@ -6,7 +6,7 @@
   <link href="https://www.coder17.com/atom.xml" rel="self"/>
   
   <link href="https://www.coder17.com/"/>
-  <updated>2021-10-31T06:10:00.000Z</updated>
+  <updated>2021-12-18T22:55:00.000Z</updated>
   <id>https://www.coder17.com/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>微软账户验证码邮件语言变更</title>
+    <link href="https://www.coder17.com/posts/ms-account-language/"/>
+    <id>https://www.coder17.com/posts/ms-account-language/</id>
+    <published>2021-12-18T22:55:00.000Z</published>
+    <updated>2021-12-18T22:55:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>虽然改变了微软账户的显示语言地区等等设置，但微软发来的验证码还是变更前的语言。</p><p>如，账户语言全部设为日本：</p><p><img src="/blogimg/%E5%BE%AE%E8%BD%AF%E8%B4%A6%E6%88%B7%E9%AA%8C%E8%AF%81%E7%A0%81%E9%82%AE%E4%BB%B6%E8%AF%AD%E8%A8%80%E5%8F%98%E6%9B%B4/image-20211219074328366.png" alt="image-20211219074328366"></p><p><img src="/blogimg/%E5%BE%AE%E8%BD%AF%E8%B4%A6%E6%88%B7%E9%AA%8C%E8%AF%81%E7%A0%81%E9%82%AE%E4%BB%B6%E8%AF%AD%E8%A8%80%E5%8F%98%E6%9B%B4/image-20211219074315503.png" alt="image-20211219074315503"></p><p>此时收到的验证码以及推广邮件等依然是中文：</p><p><img src="/blogimg/%E5%BE%AE%E8%BD%AF%E8%B4%A6%E6%88%B7%E9%AA%8C%E8%AF%81%E7%A0%81%E9%82%AE%E4%BB%B6%E8%AF%AD%E8%A8%80%E5%8F%98%E6%9B%B4/image-20211219074419967.png" alt="image-20211219074419967"></p><h2 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h2><p>搜索可以看到微软社区中有无数类似提问，但没有一个得到解决的。</p><p><img src="/blogimg/%E5%BE%AE%E8%BD%AF%E8%B4%A6%E6%88%B7%E9%AA%8C%E8%AF%81%E7%A0%81%E9%82%AE%E4%BB%B6%E8%AF%AD%E8%A8%80%E5%8F%98%E6%9B%B4/image-20211219074522218.png" alt="image-20211219074522218"></p><p>经过尝试发现，需要删除安全设置中的验证邮箱，再重新添加，才能刷新邮件通知的语言设置。</p><h2 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h2><ol><li><p>  登录 <a href="https://account.live.com/proofs/manage/additional">微软账户安全设置页面</a> </p></li><li><p>展开收到不同语言的验证码接受邮箱，删除之。如果提示是主邮箱不能删除，则先手动添加一个不同的邮箱，再删除原来的。</p><p>  <img src="/blogimg/%E5%BE%AE%E8%BD%AF%E8%B4%A6%E6%88%B7%E9%AA%8C%E8%AF%81%E7%A0%81%E9%82%AE%E4%BB%B6%E8%AF%AD%E8%A8%80%E5%8F%98%E6%9B%B4/image-20211219074941286.png" alt="image-20211219074941286"></p></li><li><p>此时原邮箱会收到原语言的提示邮件</p><p>  <img src="/blogimg/%E5%BE%AE%E8%BD%AF%E8%B4%A6%E6%88%B7%E9%AA%8C%E8%AF%81%E7%A0%81%E9%82%AE%E4%BB%B6%E8%AF%AD%E8%A8%80%E5%8F%98%E6%9B%B4/image-20211219075132343.png" alt="image-20211219075132343"></p></li><li><p>重新添加回刚才删掉的邮箱，按照提示输入收到的验证码。这次收到的验证码就已经是新的语言了，更新完成。</p><p>  <img src="/blogimg/%E5%BE%AE%E8%BD%AF%E8%B4%A6%E6%88%B7%E9%AA%8C%E8%AF%81%E7%A0%81%E9%82%AE%E4%BB%B6%E8%AF%AD%E8%A8%80%E5%8F%98%E6%9B%B4/image-20211219075254709.png" alt="image-20211219075254709"></p></li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;问题：&quot;&gt;&lt;a href=&quot;#问题：&quot; class=&quot;headerlink&quot; title=&quot;问题：&quot;&gt;&lt;/a&gt;问题：&lt;/h2&gt;&lt;p&gt;虽然改变了微软账户的显示语言地区等等设置，但微软发来的验证码还是变更前的语言。&lt;/p&gt;
+&lt;p&gt;如，账户语言全部设为日本：&lt;/p&gt;
+&lt;</summary>
+      
+    
+    
+    
+    <category term="Windows" scheme="https://www.coder17.com/categories/Windows/"/>
+    
+    
+    <category term="微软账户" scheme="https://www.coder17.com/tags/%E5%BE%AE%E8%BD%AF%E8%B4%A6%E6%88%B7/"/>
+    
+    <category term="语言" scheme="https://www.coder17.com/tags/%E8%AF%AD%E8%A8%80/"/>
+    
+    <category term="验证码" scheme="https://www.coder17.com/tags/%E9%AA%8C%E8%AF%81%E7%A0%81/"/>
+    
+  </entry>
   
   <entry>
     <title>Ctrl+1 快捷键失效解决</title>
@@ -535,33 +565,6 @@
     <category term="QNAP" scheme="https://www.coder17.com/tags/QNAP/"/>
     
     <category term="crontab" scheme="https://www.coder17.com/tags/crontab/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>QNAP 修改 sudoers</title>
-    <link href="https://www.coder17.com/posts/qnap-mod-sudoers/"/>
-    <id>https://www.coder17.com/posts/qnap-mod-sudoers/</id>
-    <published>2020-03-15T19:50:00.000Z</published>
-    <updated>2020-03-15T19:50:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>威联通 NAS 默认 sudoers 仅包括内置 admin 账户，修改时需要编辑 <code>/usr/etc/sudoers</code> 文件。</p><p>但 <code>/usr/etc</code> 目录中的编辑在重启后均会复原。因此需要在<code>系统设置-&gt;硬件</code>中打开允许 <code>autorun.sh</code> 运行选项，并且编辑该文件。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount $(/sbin/hal_app --get_boot_pd port_id=0)6 /tmp/config</span><br><span class="line">vim /tmp/config/autorun.sh</span><br></pre></td></tr></table></figure><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">mkdir -p /usr/etc/sudoers.d</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Tojo ALL=(ALL) ALL&quot;</span> &gt; /usr/etc/sudoers.d/Tojo</span><br></pre></td></tr></table></figure><p>如此即可在重启后自动修改 sudoers。如果直接向 <code>/usr/etc/sudoers</code> 末尾写入配置的话，由于该配置文件最后一行为 include 命令，因此会导致在此之后写入的配置无法生效。因此选择向其加载的配置目录中写入新文件。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;威联通 NAS 默认 sudoers 仅包括内置 admin 账户，修改时需要编辑 &lt;code&gt;/usr/etc/sudoers&lt;/code&gt; 文件。&lt;/p&gt;
-&lt;p&gt;但 &lt;code&gt;/usr/etc&lt;/code&gt; 目录中的编辑在重启后均会复原。因此需要在&lt;code&gt;系统设置</summary>
-      
-    
-    
-    
-    <category term="Hacking" scheme="https://www.coder17.com/categories/Hacking/"/>
-    
-    
-    <category term="QNAP" scheme="https://www.coder17.com/tags/QNAP/"/>
-    
-    <category term="sudoers" scheme="https://www.coder17.com/tags/sudoers/"/>
     
   </entry>
   
