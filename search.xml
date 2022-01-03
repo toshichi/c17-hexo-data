@@ -972,7 +972,7 @@
       <link href="/posts/winscp-ssh-tool/"/>
       <url>/posts/winscp-ssh-tool/</url>
       
-        <content type="html"><![CDATA[<h2 id="WSL-bash-ConEmu"><a href="#WSL-bash-ConEmu" class="headerlink" title="WSL bash + ConEmu"></a>WSL bash + ConEmu</h2><p><img src="/blogimg/WinSCP%20%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%B7%A5%E5%85%B7%E8%BF%9E%E6%8E%A5%20ssh/71f2b46d.png" alt="71f2b46d.png"></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Program Files\ConEmu\ConEmu64.exe&quot;</span> -run bash.exe -cur_console:c -c <span class="string">&quot;ssh !U@!@ -p !#&quot;</span> -new_console:p5</span><br></pre></td></tr></table></figure><h2 id="WSL-bash-cmd"><a href="#WSL-bash-cmd" class="headerlink" title="WSL bash + cmd"></a>WSL bash + cmd</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Windows\System32\cmd.exe&quot;</span> /k <span class="string">&quot;C:\Windows\Sysnative\bash.exe -c ^&quot;</span>mosh -p !<span class="comment"># --ssh=^&#x27;ssh -p !#^&#x27; !U@!@^&quot;&quot;</span></span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<h2 id="WSL-bash-ConEmu"><a href="#WSL-bash-ConEmu" class="headerlink" title="WSL bash + ConEmu"></a>WSL bash + ConEmu</h2><p><img src="/blogimg/WinSCP%20%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8%E5%B7%A5%E5%85%B7%E8%BF%9E%E6%8E%A5%20ssh/71f2b46d.png" alt="71f2b46d.png"></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Program Files\ConEmu\ConEmu64.exe&quot;</span> -run bash.exe -cur_console:c -c <span class="string">&quot;ssh !U@!@ -p !#&quot;</span> -new_console:p5</span><br></pre></td></tr></table></figure><h2 id="WSL-bash-cmd"><a href="#WSL-bash-cmd" class="headerlink" title="WSL bash + cmd"></a>WSL bash + cmd</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;C:\Windows\System32\cmd.exe&quot;</span> /k <span class="string">&quot;C:\Windows\Sysnative\bash.exe -c ^&quot;</span>mosh -p !<span class="comment"># --ssh=^&#x27;ssh -p !#^&#x27; !U@!@^&quot;&quot;</span></span><br></pre></td></tr></table></figure><h2 id="Windows-Terminal-WSL"><a href="#Windows-Terminal-WSL" class="headerlink" title="Windows Terminal + WSL"></a>Windows Terminal + WSL</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wt.exe -w 0 new-tab -p <span class="string">&quot;Ubuntu-20.04&quot;</span> ssh !U@!@ -p !<span class="comment">#</span></span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
@@ -2434,22 +2434,22 @@
     
     
     <entry>
-      <title>Categories</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title>小伙伴</title>
+      <link href="/link/index.html"/>
+      <url>/link/index.html</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h2 id="交换友链"><a href="#交换友链" class="headerlink" title="交换友链"></a>交换友链</h2><p>还没想好写点啥。<br>可以先翻翻文章，如果对口味，想交换链接的话，直接评论就好。<br>不想公开评论的也可以直接<a href="mailto:chen17@coder17.com">发邮件</a>给我啦。<br>如果是别的 SNS 上认识的朋友麻烦说一下，不然我可能对不上号。当然直接在别的平台交流也没问题的。<br>铁子们记得好好维护网站哦~</p>]]></content>
       
     </entry>
     
     
     
     <entry>
-      <title>小伙伴</title>
-      <link href="/link/index.html"/>
-      <url>/link/index.html</url>
+      <title>Categories</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
-        <content type="html"><![CDATA[<h2 id="交换友链"><a href="#交换友链" class="headerlink" title="交换友链"></a>交换友链</h2><p>还没想好写点啥。<br>可以先翻翻文章，如果对口味，想交换链接的话，直接评论就好。<br>不想公开评论的也可以直接<a href="mailto:chen17@coder17.com">发邮件</a>给我啦。<br>如果是别的 SNS 上认识的朋友麻烦说一下，不然我可能对不上号。当然直接在别的平台交流也没问题的。<br>铁子们记得好好维护网站哦~</p>]]></content>
+        <content type="html"><![CDATA[]]></content>
       
     </entry>
     
